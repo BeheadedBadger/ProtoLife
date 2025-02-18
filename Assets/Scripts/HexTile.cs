@@ -17,6 +17,8 @@ public class HexTile : MonoBehaviour
     bool animationDone = true;
 
     //Fill
+    public Soil soilFill;
+    //Old
     Material soilColour;
     [SerializeField] GameObject soil;
     [SerializeField] GameObject water;
@@ -31,6 +33,7 @@ public class HexTile : MonoBehaviour
     //TODO: Finding neigbors
     //Neighbors
     public List<GameObject> neighboringTiles;
+    public List<HexTile> neighboringHexTiles;
 
     void OnMouseEnter()
     {
@@ -84,7 +87,8 @@ public class HexTile : MonoBehaviour
         {
             if (neighbourRay.transform.position != tileBasicPosition)
             { 
-                neighboringTiles.Add(neighbourRay.transform.gameObject); 
+                neighboringTiles.Add(neighbourRay.transform.gameObject);
+                neighboringHexTiles.Add(neighbourRay.transform.gameObject.GetComponent<HexTile>());
             }
         }
     }
