@@ -35,6 +35,7 @@ Transform:
   - {fileID: 6736716611137994595}
   - {fileID: 8824225872403324779}
   - {fileID: 1072324882723002422}
+  - {fileID: 3713704076592442314}
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -66,8 +67,44 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   gameManager: {fileID: 0}
   grid: {fileID: 6994300592714883372}
+  soilFill: {fileID: 3432870334628144145}
+  soilBasicPosition: {x: 0, y: 0, z: 0}
+  soilSelectedPosition: {x: 0, y: 0, z: 0}
   soil: {fileID: 8658085073445681749}
   water: {fileID: 6212276689664878041}
+  neighboringTiles: []
+  neighboringHexTiles: []
+--- !u!1 &4846589910969721329
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 3713704076592442314}
+  m_Layer: 0
+  m_Name: CoverContainer
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &3713704076592442314
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4846589910969721329}
+  m_LocalRotation: {x: -0, y: 0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 4466402703005397894}
+  m_RootOrder: 5
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &5421703746426507749
 GameObject:
   m_ObjectHideFlags: 0
@@ -230,6 +267,31 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 5c5f112d1cd9db04eb7611c01553e678, type: 3}
+--- !u!1 &408272170464313996 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 919132149155446097, guid: 5c5f112d1cd9db04eb7611c01553e678,
+    type: 3}
+  m_PrefabInstance: {fileID: 678654524872277981}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &3432870334628144145
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 408272170464313996}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fb1425c9f3612a64096d1390bf891267, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  soilModel: {fileID: 0}
+  soilType: 0
+  waterScore: 0
+  nutrientScore: 0
+  parentHex: {fileID: 0}
+  soilBasicPosition: {x: 0, y: 0, z: 0}
+  soilSelectedPosition: {x: 0, y: 0, z: 0}
 --- !u!4 &1072324882723002422 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: 5c5f112d1cd9db04eb7611c01553e678,

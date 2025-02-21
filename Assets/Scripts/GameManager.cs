@@ -1,4 +1,3 @@
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -6,18 +5,30 @@ public class GameManager : MonoBehaviour
 {
     public bool BuildMode;
     public bool DemolishMode;
+
     public int LifeCoins;
 
-    // Start is called before the first frame update
+    public Inventory inventory;
+
+    public SoilObject selectedSoil;
+    //public ScriptableObject selectedItem;
+    //public List<ScriptableObject> SoilLibrary;
+    //public List<ScriptableObject> LifeformLibrary;
+
+
     void Start()
     {
         //Get amount of coins from memory
     }
 
-    // Update is called once per frame
     void Update()
     {
         
+    }
+
+    public void selectSoil(SoilObject soil)
+    {
+        selectedSoil = soil;
     }
 
     public void EnableBuildMode() 
@@ -37,4 +48,9 @@ public class GameManager : MonoBehaviour
         BuildMode = false;
         DemolishMode = false;
     }
+
+    public void selectSoilType(SoilObject.SoilType soilType)
+    {
+        //selectedSoilType = soilType;
+    } 
 }
