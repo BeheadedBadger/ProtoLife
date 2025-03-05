@@ -1,0 +1,4 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements">
+    <Style src="project://database/Assets/UI/UI.uss?fileID=7433441132597879392&amp;guid=82b212c955108b441b77990b6f9c513b&amp;type=3#UI" />
+    <ui:VisualElement style="height: 208px; flex-direction: row; align-items: auto; bottom: -432px; width: 1956px;" />
+</ui:UXML>

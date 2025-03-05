@@ -5,7 +5,7 @@ using UnityEngine;
 public class HexTile : MonoBehaviour
 {
     //SceneManager
-    [SerializeField] GameManager gameManager;
+    [SerializeField] public GameManager gameManager;
 
     //Grid
     [SerializeField] GameObject grid;
