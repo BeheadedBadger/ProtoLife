@@ -53,7 +53,11 @@ public class GameManager : MonoBehaviour
     public void EnableBuildMode() 
     {
         BuildMode = true; 
-        DemolishMode = false;  
+        DemolishMode = false;
+        if (selectedObj == null)
+        {
+            selectedObj = inventory.objects[0];
+        }
     }
 
     public void EnableDemolishMode()

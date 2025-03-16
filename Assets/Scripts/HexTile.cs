@@ -35,7 +35,7 @@ public class HexTile : MonoBehaviour
     void OnMouseEnter()
     {
         if (gameManager.BuildMode == true)
-        { 
+        {
             highlighted = true;
         }
     }
@@ -72,7 +72,7 @@ public class HexTile : MonoBehaviour
         foreach (RaycastHit neighbourRay in neighbourRays)
         {
             if (neighbourRay.transform.position != tileBasicPosition)
-            { 
+            {
                 neighboringTiles.Add(neighbourRay.transform.gameObject);
                 neighboringHexTiles.Add(neighbourRay.transform.gameObject.GetComponent<HexTile>());
             }
@@ -82,7 +82,7 @@ public class HexTile : MonoBehaviour
     void Update()
     {
         if (!gameManager.BuildMode)
-        { 
+        {
             grid.gameObject.SetActive(false);
         }
 
@@ -90,7 +90,7 @@ public class HexTile : MonoBehaviour
         {
             grid.gameObject.SetActive(true);
 
-            if (highlighted) 
+            if (highlighted)
             {
                 if (grid.transform.position != tileSelectedPosition)
                 {
@@ -152,15 +152,8 @@ public class HexTile : MonoBehaviour
 
                 if (highlighted && placementPossible && gameManager.selectedObj.objType == BuildModeObject.ObjectType.Cover)
                 {
-                    if (gameManager.selectedObj.soilTypes.Contains(soilFill.thisSoilType) && soilFill.waterScore == gameManager.selectedObj.waterNeed)
-                    {
-                        GameObject cover = Instantiate(gameManager.selectedObj.prefab, transform);
-                        coverFilled = true;
-                    }
-                    else 
-                    {
-                        //Show some kind of indicator as to why?
-                    }
+                    GameObject cover = Instantiate(gameManager.selectedObj.prefab, transform);
+                    coverFilled = true;
                 }
             }
         }
@@ -168,14 +161,15 @@ public class HexTile : MonoBehaviour
 
     private void CheckIfPlacementIsPossible()
     {
-        if (gameManager.selectedObj.objType == BuildModeObject.ObjectType.Soil && 
+        if (gameManager.selectedObj.objType == BuildModeObject.ObjectType.Soil &&
             !soilFilled && this.soilFill.thisSoilType == SoilObject.SoilType.Ash)
         {
             placementPossible = true;
         }
 
         else if (gameManager.selectedObj.soilTypes.Contains(soilFill.thisSoilType) &&
-            !coverFilled && soilFill.waterScore == gameManager.selectedObj.waterNeed)
+            !coverFilled && soilFill.waterScore - 2 <= gameManager.selectedObj.waterNeed &&
+            soilFill.waterScore + 2 >= gameManager.selectedObj.waterNeed)
         {
             placementPossible = true;
         }
