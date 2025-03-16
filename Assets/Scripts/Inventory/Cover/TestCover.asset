@@ -1,0 +1,39 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f82f5a222ccd0494396f8eb81eab9806, type: 3}
+  m_Name: TestCover
+  m_EditorClassIdentifier: 
+  title: TestCover
+  description: Just some green blobs
+  objType: 1
+  unlocked: 1
+  prefab: {fileID: 6481480145299018851, guid: afee0cc59f58e9e47bb89d4b2f1138fb, type: 3}
+  sprite: {fileID: 21300000, guid: 2546dc44915ecd345ac94066571cafec, type: 3}
+  cost: 30
+  lifeCoinGeneration: 1
+  waterNeed: 3
+  soilTypes: 0200000003000000
+  lifeType: 0
+  lifeForm: {fileID: 6481480145299018851, guid: afee0cc59f58e9e47bb89d4b2f1138fb,
+    type: 3}
+  fossil: {fileID: 0}
+  startingForm: {fileID: 0}
+  mobility: 0
+  maxHealth: 200
+  health: 200
+  foodSources: 04000000
+  waterNeed: 3
+  soilTypes: 0200000003000000
+  lifeSpan: 2
+  age: 0
+  procreationTime: 0.5
+  procreationRate: 2

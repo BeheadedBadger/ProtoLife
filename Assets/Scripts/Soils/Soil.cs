@@ -1,7 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using static UnityEditor.Experimental.GraphView.GraphView;
 
 public class Soil : MonoBehaviour
 {
@@ -22,7 +21,7 @@ public class Soil : MonoBehaviour
     new(0.52f, 0.42f, 0.42f, 1), //Loam
     };
 
-    public void changesoilType(SoilObject.SoilType soilType, HexTile hex)
+    public void ChangeSoilType(SoilObject.SoilType soilType, HexTile hex)
     {
         thisSoilType = soilType;
         parentHex = hex;

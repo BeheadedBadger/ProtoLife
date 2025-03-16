@@ -4,9 +4,11 @@ using UnityEngine;
 [CreateAssetMenu(fileName = "New Inventory", menuName = "Custom/Inventory")]
 public class Inventory : ScriptableObject
 {
-    public List<SoilSlot> SoilItems;
-    public List<InventorySlot> InventoryItems;
-
+    public List<BuildModeObject> objects;
+}
+    //public List<SoilSlot> SoilItems;
+    //public List<InventorySlot> InventoryItems;
+/*
     public void AddSoil(SoilObject _soil)
     {
         if (_soil.unlocked == false) 
@@ -60,4 +62,4 @@ public class InventorySlot
     {
         amount += value;
     }
-}
+}*/

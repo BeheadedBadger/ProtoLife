@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.EventSystems;
 
 public class HexTile : MonoBehaviour
 {
@@ -12,9 +13,10 @@ public class HexTile : MonoBehaviour
     Material gridColour;
     Vector3 tileBasicPosition;
     Vector3 tileSelectedPosition;
-    bool active;
+    bool highlighted;
+    bool placementPossible;
+
     float speed = 0.2f;
-    bool animationDone = true;
 
     //Fill
     public Soil soilFill;
@@ -24,6 +26,8 @@ public class HexTile : MonoBehaviour
     [SerializeField] public GameObject soil;
     [SerializeField] public GameObject water;
 
+    bool coverFilled;
+
     //Neighbors
     public List<GameObject> neighboringTiles;
     public List<HexTile> neighboringHexTiles;
@@ -32,8 +36,7 @@ public class HexTile : MonoBehaviour
     {
         if (gameManager.BuildMode == true)
         { 
-            active = true;
-            animationDone = false;
+            highlighted = true;
         }
     }
 
@@ -41,8 +44,7 @@ public class HexTile : MonoBehaviour
     {
         if (gameManager.BuildMode == true)
         {
-            active = false;
-            animationDone = false;
+            highlighted = false;
         }
     }
 
@@ -58,7 +60,7 @@ public class HexTile : MonoBehaviour
         soilSelectedPosition = new Vector3(soilBasicPosition.x, soilBasicPosition.y - 0.2f, soilBasicPosition.z);
         if (!soilFilled)
         {
-            soilFill.changesoilType(SoilObject.SoilType.Ash, this);
+            soilFill.ChangeSoilType(SoilObject.SoilType.Ash, this);
         }
 
         FindNeighbors(tileBasicPosition);
@@ -88,41 +90,103 @@ public class HexTile : MonoBehaviour
         {
             grid.gameObject.SetActive(true);
 
-            if (active && animationDone == false)
+            if (highlighted) 
             {
-                StartCoroutine(LerpPosition(grid, tileBasicPosition, tileSelectedPosition, speed));
-                StartCoroutine(LerpPosition(soil, soilBasicPosition, soilSelectedPosition, speed));
-
-                if (!soilFilled)
+                if (grid.transform.position != tileSelectedPosition)
                 {
-                    StartCoroutine(LerpColour(gridColour, Color.gray, Color.white, speed));
+                    StartCoroutine(LerpPosition(grid, grid.transform.position, tileSelectedPosition, speed));
                 }
-                if (soilFilled)
+
+                if (soil.transform.position != soilSelectedPosition)
                 {
-                    StartCoroutine(LerpColour(gridColour, Color.gray, Color.red, speed));
+                    StartCoroutine(LerpPosition(soil, soil.transform.position, soilSelectedPosition, speed));
+                }
+
+                CheckIfPlacementIsPossible();
+
+                if (placementPossible && gridColour.color != Color.grey)
+                {
+                    StartCoroutine(LerpColour(gridColour, gridColour.color, Color.grey, speed));
+                }
+
+                if (!placementPossible && gridColour.color != Color.red)
+                {
+                    StartCoroutine(LerpColour(gridColour, gridColour.color, Color.red, speed));
                 }
             }
 
-            if (!active && animationDone == false)
+            if (!highlighted)
             {
-                StartCoroutine(LerpPosition(grid, tileSelectedPosition, tileBasicPosition, speed));
-                StartCoroutine(LerpPosition(soil, soilSelectedPosition, soilBasicPosition, speed));
-                StartCoroutine(LerpColour(gridColour, Color.white, Color.gray, speed));
+                if (grid.transform.position != tileBasicPosition)
+                {
+                    StartCoroutine(LerpPosition(grid, grid.transform.position, tileBasicPosition, speed));
+                }
+
+                if (soil.transform.position != soilBasicPosition)
+                {
+                    StartCoroutine(LerpPosition(soil, soil.transform.position, soilBasicPosition, speed));
+                }
+
+                if (gridColour.color != Color.grey)
+                {
+                    StartCoroutine(LerpColour(gridColour, gridColour.color, Color.grey, speed));
+                }
             }
-            
+
+            //Handle input
             if (Input.GetKeyDown(KeyCode.Mouse0))
             {
-                if (active && !soilFilled)
+                //If the cursor is on the UI, don't place object
+                if (EventSystem.current.IsPointerOverGameObject())
                 {
-                    soilFill.changesoilType(gameManager.selectedSoil.type, this);
+                    return;
+                }
 
-                    grid.gameObject.SetActive(false);
+                if (highlighted && placementPossible && gameManager.selectedObj.objType == BuildModeObject.ObjectType.Soil)
+                {
+                    soilFill.ChangeSoilType(gameManager.selectedSoil.soilType, this);
+
+                    grid.SetActive(false);
                     soilFilled = true;
+                }
+
+                if (highlighted && placementPossible && gameManager.selectedObj.objType == BuildModeObject.ObjectType.Cover)
+                {
+                    if (gameManager.selectedObj.soilTypes.Contains(soilFill.thisSoilType) && soilFill.waterScore == gameManager.selectedObj.waterNeed)
+                    {
+                        GameObject cover = Instantiate(gameManager.selectedObj.prefab, transform);
+                        coverFilled = true;
+                    }
+                    else 
+                    {
+                        //Show some kind of indicator as to why?
+                    }
                 }
             }
         }
     }
 
+    private void CheckIfPlacementIsPossible()
+    {
+        if (gameManager.selectedObj.objType == BuildModeObject.ObjectType.Soil && 
+            !soilFilled && this.soilFill.thisSoilType == SoilObject.SoilType.Ash)
+        {
+            placementPossible = true;
+        }
+
+        else if (gameManager.selectedObj.soilTypes.Contains(soilFill.thisSoilType) &&
+            !coverFilled && soilFill.waterScore == gameManager.selectedObj.waterNeed)
+        {
+            placementPossible = true;
+        }
+
+        else 
+        { 
+            placementPossible = false; 
+        }
+    }
+
+    //Animations
     IEnumerator LerpSize(GameObject obj, Vector3 startScale, Vector3 targetScale, float duration)
     {
         float time = 0;
@@ -158,7 +222,6 @@ public class HexTile : MonoBehaviour
             yield return null;
         }
         obj.color = targetValue;
-        animationDone = true;
     }
 
     IEnumerator LerpPosition(GameObject obj, Vector3 startPosition, Vector3 targetPosition, float duration)
@@ -172,6 +235,5 @@ public class HexTile : MonoBehaviour
             yield return null;
         }
         obj.transform.position = targetPosition;
-        animationDone = true;
     }
 }

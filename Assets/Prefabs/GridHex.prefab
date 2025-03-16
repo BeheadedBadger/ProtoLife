@@ -286,7 +286,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   soilModel: {fileID: 0}
-  soilType: 0
+  thisSoilType: 0
   waterScore: 0
   nutrientScore: 0
   parentHex: {fileID: 0}

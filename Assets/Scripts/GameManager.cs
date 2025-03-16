@@ -4,13 +4,14 @@ public class GameManager : MonoBehaviour
 {
     public bool BuildMode;
     public bool DemolishMode;
-    public bool pointerOverUi;
 
     public int LifeCoins;
 
     public Inventory inventory;
 
+    public BuildModeObject selectedObj;
     public SoilObject selectedSoil;
+
     public float turnsSinceStart;
     float turnSpeed = 0.5f;
     public int days = 0;
@@ -44,9 +45,9 @@ public class GameManager : MonoBehaviour
         }
     }
 
-    public void selectSoil(SoilObject soil)
+    public void selectSoil()
     {
-        selectedSoil = soil;
+        selectedSoil = (SoilObject)selectedObj;
     }
 
     public void EnableBuildMode() 
@@ -66,9 +67,4 @@ public class GameManager : MonoBehaviour
         BuildMode = false;
         DemolishMode = false;
     }
-
-    public void selectSoilType(SoilObject.SoilType soilType)
-    {
-        //selectedSoilType = soilType;
-    } 
 }
