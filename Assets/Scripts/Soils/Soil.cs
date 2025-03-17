@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using static UnityEngine.RuleTile.TilingRuleOutput;
 
 public class Soil : MonoBehaviour
 {
@@ -21,6 +22,8 @@ public class Soil : MonoBehaviour
     new(0.52f, 0.42f, 0.42f, 1), //Loam
     };
 
+    [SerializeField] List<Material> materials;
+
     public void ChangeSoilType(SoilObject.SoilType soilType, HexTile hex)
     {
         thisSoilType = soilType;
@@ -32,10 +35,9 @@ public class Soil : MonoBehaviour
 
         if (soilType != SoilObject.SoilType.Water)
         {
-            SoilAnimationLerp(soilModel, new Vector3(1, 1, 1), new Vector3(0.75f, 0, 0.75f), 0.25f);
-            Material material = soilModel.GetComponent<Renderer>().material;
-
-            StartCoroutine(LerpColour(material, colours[0], colours[(int)soilType], 0.3f));
+            StartCoroutine(SoilAnimationLerp(soilModel, new Vector3(1, 1, 1), new Vector3(0.75f, 0, 0.75f), 0.25f));
+            int matNumber = (int)soilType;
+            soilModel.transform.GetChild(1).GetComponent<Renderer>().material = materials[matNumber];
         }
         else
         {
@@ -57,6 +59,14 @@ public class Soil : MonoBehaviour
         if (this.thisSoilType == SoilObject.SoilType.Water)
         {
             waterScore = 10;
+            foreach (HexTile neighbour in parentHex.neighboringHexTiles)
+            { 
+                if (neighbour.soilFill.waterScore < this.waterScore - 1 && (this.waterScore - 1) > 1)
+                {
+                    neighbour.soilFill.waterScore = this.waterScore - 1;
+                    neighbour.soilFill.CalculateWaterScore();
+                }
+            }
         }
 
         else foreach (HexTile neighbour in parentHex.neighboringHexTiles)
@@ -64,6 +74,11 @@ public class Soil : MonoBehaviour
             if (neighbour.soilFill.waterScore - 1 > this.waterScore)
             {
                 this.waterScore = neighbour.soilFill.waterScore - 1;
+            }
+            if (neighbour.soilFill.waterScore < this.waterScore - 1 && (this.waterScore - 1) > 1 )
+            {
+                neighbour.soilFill.waterScore = this.waterScore - 1;
+                neighbour.soilFill.CalculateWaterScore();
             }
         }
     }

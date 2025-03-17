@@ -26,6 +26,7 @@ public class HexTile : MonoBehaviour
     [SerializeField] public GameObject soil;
     [SerializeField] public GameObject water;
 
+    [SerializeField] public GameObject coverContainer;
     bool coverFilled;
 
     //Neighbors
@@ -61,6 +62,7 @@ public class HexTile : MonoBehaviour
         if (!soilFilled)
         {
             soilFill.ChangeSoilType(SoilObject.SoilType.Ash, this);
+
         }
 
         FindNeighbors(tileBasicPosition);
@@ -145,6 +147,28 @@ public class HexTile : MonoBehaviour
                 if (highlighted && placementPossible && gameManager.selectedObj.objType == BuildModeObject.ObjectType.Soil)
                 {
                     soilFill.ChangeSoilType(gameManager.selectedSoil.soilType, this);
+                    Vector3 heighten = new();
+                    if (gameManager.selectedSoil.soilType == SoilObject.SoilType.Loam)
+                    {
+                        heighten = new Vector3(0, 1.5f, 0);
+                    }
+                    if (gameManager.selectedSoil.soilType == SoilObject.SoilType.Clay)
+                    {
+                        heighten = new Vector3(0, 1f, 0);
+                    }
+                    if (gameManager.selectedSoil.soilType == SoilObject.SoilType.Sand)
+                    {
+                        heighten = new Vector3(0, 0.5f, 0);
+                    }
+                    if (gameManager.selectedSoil.soilType == SoilObject.SoilType.Silt)
+                    {
+                        heighten = new Vector3(0, 0.25f, 0);
+                    }
+
+                    tileBasicPosition += heighten;
+                    tileSelectedPosition += heighten;
+                    soilBasicPosition += heighten;
+                    soilSelectedPosition += heighten;
 
                     grid.SetActive(false);
                     soilFilled = true;
@@ -152,9 +176,8 @@ public class HexTile : MonoBehaviour
 
                 if (highlighted && placementPossible && gameManager.selectedObj.objType == BuildModeObject.ObjectType.Cover)
                 {
-                    GameObject cover = Instantiate(gameManager.selectedObj.prefab, transform);
-                    coverFilled = true;
-                }
+                    GameObject cover = Instantiate(gameManager.selectedObj.prefab, coverContainer.transform.transform);
+                    coverFilled = true;                }
             }
         }
     }
