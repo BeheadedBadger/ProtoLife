@@ -67,7 +67,7 @@ Material:
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _Normals:
-        m_Texture: {fileID: 2800000, guid: b1ed4c6f7c395854581d3b418eda328d, type: 3}
+        m_Texture: {fileID: 2800000, guid: 1b3a2a62e26bcd345a8ba4c3e68b502a, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _OcclusionMap:
@@ -83,7 +83,11 @@ Material:
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _Texture2D:
-        m_Texture: {fileID: 2800000, guid: 95beadec6190c6747a7de759e08b3178, type: 3}
+        m_Texture: {fileID: 2800000, guid: 920d44cf1b7919b45b6cd4515be12733, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _Triplanar_43639b1653df40aca1e20856173e2520_Texture_1:
+        m_Texture: {fileID: 0}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - unity_Lightmaps:
@@ -115,13 +119,13 @@ Material:
     - _Glossiness: 0
     - _GlossyReflections: 0
     - _Metallic: 0
-    - _NormalStrength: 2
+    - _NormalStrength: -0.5
     - _OcclusionStrength: 1
     - _Parallax: 0.005
     - _QueueControl: 0
     - _QueueOffset: 0
     - _ReceiveShadows: 1
-    - _Size: 1
+    - _Size: 0.15
     - _Smoothness: 0.07
     - _SmoothnessTextureChannel: 0
     - _SpecularHighlights: 1

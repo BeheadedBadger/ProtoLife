@@ -24,7 +24,7 @@ public class HexTile : MonoBehaviour
     public Vector3 soilSelectedPosition;
     bool soilFilled;
     [SerializeField] public GameObject soil;
-    [SerializeField] public GameObject water;
+    //[SerializeField] public GameObject water;
 
     [SerializeField] public GameObject coverContainer;
     bool coverFilled;
@@ -150,11 +150,11 @@ public class HexTile : MonoBehaviour
                     Vector3 heighten = new();
                     if (gameManager.selectedSoil.soilType == SoilObject.SoilType.Loam)
                     {
-                        heighten = new Vector3(0, 1.5f, 0);
+                        heighten = new Vector3(0, 1f, 0);
                     }
                     if (gameManager.selectedSoil.soilType == SoilObject.SoilType.Clay)
                     {
-                        heighten = new Vector3(0, 1f, 0);
+                        heighten = new Vector3(0, 0.75f, 0);
                     }
                     if (gameManager.selectedSoil.soilType == SoilObject.SoilType.Sand)
                     {
@@ -177,7 +177,10 @@ public class HexTile : MonoBehaviour
                 if (highlighted && placementPossible && gameManager.selectedObj.objType == BuildModeObject.ObjectType.Cover)
                 {
                     GameObject cover = Instantiate(gameManager.selectedObj.prefab, coverContainer.transform.transform);
-                    coverFilled = true;                }
+                    LifeForm lifeform = cover.GetComponent<LifeForm>();
+                    lifeform.createLifeForm(this);
+                    coverFilled = true;                
+                }
             }
         }
     }

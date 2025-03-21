@@ -41,10 +41,10 @@ public class Soil : MonoBehaviour
         }
         else
         {
-            GameObject water = hex.water;
-            water.gameObject.transform.localScale = new Vector3(0.75f, 0, 0.75f);
-            water.gameObject.SetActive(true);
-            StartCoroutine(LerpSize(water, new Vector3(0.75f, 0, 0.75f), new Vector3(1, 1, 1), 0.25f));
+            //GameObject water = hex.water;
+            //water.gameObject.transform.localScale = new Vector3(0.75f, 0, 0.75f);
+            //water.gameObject.SetActive(true);
+            //StartCoroutine(LerpSize(water, new Vector3(0.75f, 0, 0.75f), new Vector3(1, 1, 1), 0.25f));
             soilModel.gameObject.SetActive(false);
         }
     }
