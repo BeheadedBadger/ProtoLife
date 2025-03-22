@@ -69,25 +69,25 @@ public class CameraControls : MonoBehaviour
 
     void HandleBoundries()
     {
-        if (rig.transform.position.x < -95) 
+        if (rig.transform.position.x < -120) 
         {
-            rig.transform.position = new Vector3(-95, rig.transform.position.y, rig.transform.position.z);
+            rig.transform.position = new Vector3(-120, rig.transform.position.y, rig.transform.position.z);
             newPosition = rig.transform.position;
         }
-        if (rig.transform.position.x > -60)
+        if (rig.transform.position.x > -20)
         {
-            rig.transform.position = new Vector3(-60, rig.transform.position.y, rig.transform.position.z);
+            rig.transform.position = new Vector3(-20, rig.transform.position.y, rig.transform.position.z);
             newPosition = rig.transform.position;
         }
 
-        if (rig.transform.position.z < -90) 
+        if (rig.transform.position.z < -100) 
         {
-            rig.transform.position = new Vector3(rig.transform.position.x, rig.transform.position.y, -90);
+            rig.transform.position = new Vector3(rig.transform.position.x, rig.transform.position.y, -100);
             newPosition = rig.transform.position;
         }
-        if (rig.transform.position.z > -20)
+        if (rig.transform.position.z > -10)
         {
-            rig.transform.position = new Vector3(rig.transform.position.x, rig.transform.position.y, -20);
+            rig.transform.position = new Vector3(rig.transform.position.x, rig.transform.position.y, -10);
             newPosition = rig.transform.position;
         }
 

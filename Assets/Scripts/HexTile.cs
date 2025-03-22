@@ -22,12 +22,12 @@ public class HexTile : MonoBehaviour
     public Soil soilFill;
     public Vector3 soilBasicPosition;
     public Vector3 soilSelectedPosition;
-    bool soilFilled;
+    public bool soilFilled;
     [SerializeField] public GameObject soil;
     //[SerializeField] public GameObject water;
 
     [SerializeField] public GameObject coverContainer;
-    bool coverFilled;
+    public bool coverFilled;
 
     //Neighbors
     public List<GameObject> neighboringTiles;
@@ -206,8 +206,28 @@ public class HexTile : MonoBehaviour
         }
     }
 
-    //Animations
-    IEnumerator LerpSize(GameObject obj, Vector3 startScale, Vector3 targetScale, float duration)
+    public bool CheckIfPlacementIsPossible(LifeFormObject lifeform)
+    {
+        if (lifeform.soilTypes.Contains(soilFill.thisSoilType) &&
+            soilFill.waterScore - 2 <= lifeform.waterNeed &&
+            soilFill.waterScore + 2 >= lifeform.waterNeed)
+        {
+            if (lifeform.objType == BuildModeObject.ObjectType.Cover && !coverFilled)
+            {
+                return true;
+            }
+            else { return false; }
+        }
+
+        else
+        {
+            return false;
+        }
+    }
+
+
+//Animations
+IEnumerator LerpSize(GameObject obj, Vector3 startScale, Vector3 targetScale, float duration)
     {
         float time = 0;
         Vector3 overshootRange = new Vector3(targetScale.x * 1.25f, targetScale.y * 1.25f, targetScale.z * 1.25f);

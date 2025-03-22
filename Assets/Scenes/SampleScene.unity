@@ -2652,12 +2652,12 @@ PrefabInstance:
     - target: {fileID: 7749738502629289059, guid: 5e35c22780aeea54f9a49c6c23fa5c8e,
         type: 3}
       propertyPath: zoomAmount.y
-      value: -500
+      value: -50
       objectReference: {fileID: 0}
     - target: {fileID: 7749738502629289059, guid: 5e35c22780aeea54f9a49c6c23fa5c8e,
         type: 3}
       propertyPath: zoomAmount.z
-      value: 500
+      value: 50
       objectReference: {fileID: 0}
     - target: {fileID: 7749738502629289060, guid: 5e35c22780aeea54f9a49c6c23fa5c8e,
         type: 3}

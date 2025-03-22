@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 
 public class GameManager : MonoBehaviour
@@ -14,14 +15,11 @@ public class GameManager : MonoBehaviour
 
     public float turnsSinceStart;
     float turnSpeed = 0.5f;
-    public int days = 0;
-    public int months = 0;
-    public int years = 0;
-
-    //public ScriptableObject selectedItem;
-    //public List<ScriptableObject> SoilLibrary;
-    //public List<ScriptableObject> LifeformLibrary;
-
+    public int days = 1;
+    public int months = 1;
+    public int years = 1;
+    public DateTime currentDate = new();
+    int nextTimeUpdate = 24;
 
     void Start()
     {
@@ -31,17 +29,15 @@ public class GameManager : MonoBehaviour
     void Update()
     {
         turnsSinceStart += (turnSpeed * Time.deltaTime);
-        days = Mathf.RoundToInt(turnsSinceStart / 24);
 
-        if (days > 30)
-        { 
-            days -= 30;
-            months += 1;
-        }
-        if (months > 12)
+        if (nextTimeUpdate < turnsSinceStart)
         {
-            months -= 12;
-            years += 1;
+            currentDate = currentDate.AddDays(1);
+            nextTimeUpdate = Mathf.RoundToInt(turnsSinceStart) + 24;
+
+            days = currentDate.Day;
+            months = currentDate.Month;
+            years = currentDate.Year;
         }
     }
 

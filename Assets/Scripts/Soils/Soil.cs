@@ -8,7 +8,7 @@ public class Soil : MonoBehaviour
     public GameObject soilModel;
     public SoilObject.SoilType thisSoilType;
     public int waterScore;
-    public int nutrientScore;
+    public int nutrientScore = 10;
     public HexTile parentHex;
 
     public Vector3 soilBasicPosition;
@@ -35,7 +35,7 @@ public class Soil : MonoBehaviour
 
         if (soilType != SoilObject.SoilType.Water)
         {
-            StartCoroutine(SoilAnimationLerp(soilModel, new Vector3(1, 1, 1), new Vector3(0.75f, 0, 0.75f), 0.25f));
+            StartCoroutine(SoilAnimationLerp(soilModel, new Vector3(1, 1, 1), new Vector3(1, 1, 1), 0.25f));
             int matNumber = (int)soilType;
             soilModel.transform.GetChild(1).GetComponent<Renderer>().material = materials[matNumber];
         }
@@ -89,12 +89,12 @@ public class Soil : MonoBehaviour
         Vector3 overshootRange = new Vector3(largerScale.x * 1.25f, largerScale.y * 1.25f, largerScale.z * 1.25f);
 
         //Shrink Old Tile
-        while (time < (duration / 3))
+      /*  while (time < (duration / 3))
         {
             obj.transform.localScale = Vector3.Lerp(largerScale, smallerScale, time / duration);
             time += Time.deltaTime;
             yield return null;
-        }
+        }*/
 
         //Overshoot first
         time = 0;
