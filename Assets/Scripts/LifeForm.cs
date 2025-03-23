@@ -15,6 +15,7 @@ public class LifeForm : MonoBehaviour
     DateTime deathTime;
 
     bool InitializationCompleted = false;
+    DateTime previousUpdate;
     int health;
 
     public void createLifeForm(HexTile parent)
@@ -33,6 +34,7 @@ public class LifeForm : MonoBehaviour
         coinGenerationTime = gameManager.currentDate.AddDays(lifeFormObject.lifeCoinGeneration);
         deathTime = gameManager.currentDate.AddDays(lifeFormObject.lifeSpan);
         feedingTime = gameManager.currentDate.AddDays(lifeFormObject.feedingRate);
+        previousUpdate = gameManager.currentDate;
 
         InitializationCompleted = true;
     }
@@ -40,34 +42,37 @@ public class LifeForm : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (InitializationCompleted)
+        if (InitializationCompleted && gameManager.currentDate > previousUpdate)
         {
+            previousUpdate = gameManager.currentDate;
             CheckTimeBasedEvents();
         }
     }
 
     private void CheckTimeBasedEvents()
     {
+        if (procreationTime < gameManager.currentDate)
+        {
+            AttemptProcreation();
+            procreationTime = procreationTime.AddDays(lifeFormObject.procreationTime);
+        }
+
         if (deathTime < gameManager.currentDate || health <= 0)
         {
             Death();
         }
 
-        if (procreationTime < gameManager.currentDate)
-        {
-            AttemptProcreation();
-            procreationTime.AddDays(lifeFormObject.procreationTime);
-        }
-
         if (coinGenerationTime < gameManager.currentDate)
         {
             gameManager.LifeCoins += lifeFormObject.lifeCoinGeneration;
-            coinGenerationTime.AddDays(1);
+            int days = (gameManager.currentDate - coinGenerationTime).Days;
+            coinGenerationTime = coinGenerationTime.AddDays(1);
         }
 
         if (feedingTime < gameManager.currentDate)
         {
             Feed();
+            feedingTime = feedingTime.AddDays(lifeFormObject.feedingRate);
         }
     }
 
@@ -96,6 +101,7 @@ public class LifeForm : MonoBehaviour
     {
         parentHex.soilFill.nutrientScore += 1;
         //If cover
+        parentHex.coverFilled = false;
         StartCoroutine(CoverDestroyAnimation(this.gameObject, new Vector3(0, 0, 0), new Vector3(1, 1, 1), 0.25f));
         
         Destroy(this.gameObject);
@@ -125,13 +131,15 @@ public class LifeForm : MonoBehaviour
                     {
                         HexTile random = possiblePlacement[UnityEngine.Random.Range(0, possiblePlacement.Count - 1)];
                         GameObject prefab = Instantiate(lifeFormObject.prefab, random.coverContainer.transform);
+                        prefab.transform.localScale = new Vector3(0, 0, 0);
+                        prefab.GetComponent<LifeForm>().createLifeForm(random);
+
                         if (lifeFormObject.objType == BuildModeObject.ObjectType.Cover)
                         {
                             random.coverFilled = true;
                         }
                         //Add other fills
 
-                        createLifeForm(random);
                         possiblePlacement.Remove(random);
                     }
                 }

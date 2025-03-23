@@ -11,6 +11,7 @@ public class UI_Handler : MonoBehaviour
     [SerializeField] GameObject buildModeIconPanel;
     [SerializeField] GameObject itemPrefab;
     [SerializeField] TextMeshProUGUI time;
+    [SerializeField] TextMeshProUGUI lifeCoins;
 
     public void SwitchType(BuildModeObject.ObjectType selection)
     { 
@@ -25,15 +26,18 @@ public class UI_Handler : MonoBehaviour
 
     void Update()
     {
-        if (gameManager.BuildMode)
+        if (gameManager.BuildMode && buildModePanel.activeSelf == false)
         {
             buildModePanel.SetActive(true);
         }
 
-        else {
+        else if (gameManager.BuildMode == false && buildModePanel.activeSelf )
+        {
             buildModePanel.SetActive(false);
         }
+
         time.text = $"Day: {gameManager.days}  Month: {gameManager.months}  Year:{gameManager.years}";
+        lifeCoins.text = Mathf.RoundToInt(gameManager.LifeCoins).ToString("#,#");
     }
 
     public void loadSelection(BuildModeObject.ObjectType selection) 

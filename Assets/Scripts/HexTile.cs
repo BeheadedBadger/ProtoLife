@@ -83,14 +83,15 @@ public class HexTile : MonoBehaviour
 
     void Update()
     {
-        if (!gameManager.BuildMode)
+        if (!gameManager.BuildMode && grid.activeSelf)
         {
             grid.gameObject.SetActive(false);
         }
 
         if (gameManager.BuildMode)
         {
-            grid.gameObject.SetActive(true);
+            if (grid.activeSelf == false)
+            { grid.gameObject.SetActive(true); }
 
             if (highlighted)
             {
@@ -144,45 +145,66 @@ public class HexTile : MonoBehaviour
                     return;
                 }
 
-                if (highlighted && placementPossible && gameManager.selectedObj.objType == BuildModeObject.ObjectType.Soil)
+                if (highlighted && placementPossible)
                 {
-                    soilFill.ChangeSoilType(gameManager.selectedSoil.soilType, this);
-                    Vector3 heighten = new();
-                    if (gameManager.selectedSoil.soilType == SoilObject.SoilType.Loam)
+                    bool paid = CanPay();
+
+                    if (paid == false)
+                    { return; }
+
+                    if (gameManager.selectedObj.objType == BuildModeObject.ObjectType.Soil)
                     {
-                        heighten = new Vector3(0, 1f, 0);
-                    }
-                    if (gameManager.selectedSoil.soilType == SoilObject.SoilType.Clay)
-                    {
-                        heighten = new Vector3(0, 0.75f, 0);
-                    }
-                    if (gameManager.selectedSoil.soilType == SoilObject.SoilType.Sand)
-                    {
-                        heighten = new Vector3(0, 0.5f, 0);
-                    }
-                    if (gameManager.selectedSoil.soilType == SoilObject.SoilType.Silt)
-                    {
-                        heighten = new Vector3(0, 0.25f, 0);
+                        soilFill.ChangeSoilType(gameManager.selectedSoil.soilType, this);
+                        Vector3 heighten = new();
+                        if (gameManager.selectedSoil.soilType == SoilObject.SoilType.Loam)
+                        {
+                            heighten = new Vector3(0, 1f, 0);
+                        }
+                        if (gameManager.selectedSoil.soilType == SoilObject.SoilType.Clay)
+                        {
+                            heighten = new Vector3(0, 0.75f, 0);
+                        }
+                        if (gameManager.selectedSoil.soilType == SoilObject.SoilType.Sand)
+                        {
+                            heighten = new Vector3(0, 0.5f, 0);
+                        }
+                        if (gameManager.selectedSoil.soilType == SoilObject.SoilType.Silt)
+                        {
+                            heighten = new Vector3(0, 0.25f, 0);
+                        }
+
+                        tileBasicPosition += heighten;
+                        tileSelectedPosition += heighten;
+                        soilBasicPosition += heighten;
+                        soilSelectedPosition += heighten;
+
+                        grid.SetActive(false);
+                        soilFilled = true;
                     }
 
-                    tileBasicPosition += heighten;
-                    tileSelectedPosition += heighten;
-                    soilBasicPosition += heighten;
-                    soilSelectedPosition += heighten;
-
-                    grid.SetActive(false);
-                    soilFilled = true;
-                }
-
-                if (highlighted && placementPossible && gameManager.selectedObj.objType == BuildModeObject.ObjectType.Cover)
-                {
-                    GameObject cover = Instantiate(gameManager.selectedObj.prefab, coverContainer.transform.transform);
-                    LifeForm lifeform = cover.GetComponent<LifeForm>();
-                    lifeform.createLifeForm(this);
-                    coverFilled = true;                
+                    if (gameManager.selectedObj.objType == BuildModeObject.ObjectType.Cover)
+                    {
+                        gameManager.LifeCoins -= gameManager.selectedObj.cost;
+                        GameObject cover = Instantiate(gameManager.selectedObj.prefab, coverContainer.transform.transform);
+                        LifeForm lifeform = cover.GetComponent<LifeForm>();
+                        lifeform.createLifeForm(this);
+                        coverFilled = true;
+                    }
                 }
             }
         }
+    }
+
+    private bool CanPay()
+    {
+        if (gameManager.LifeCoins - gameManager.selectedObj.cost < 0)
+        {
+            //Handle can't afford in GameManager
+            return false;
+        }
+
+        gameManager.LifeCoins = (gameManager.LifeCoins - gameManager.selectedObj.cost);
+        return true;
     }
 
     private void CheckIfPlacementIsPossible()

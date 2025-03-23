@@ -12,7 +12,7 @@ public abstract class BuildModeObject : ScriptableObject
     public GameObject prefab;
     public Sprite sprite;
     public int cost;
-    public int lifeCoinGeneration;
+    public float lifeCoinGeneration;
 
     public int waterNeed;
     public List<SoilObject.SoilType> soilTypes;

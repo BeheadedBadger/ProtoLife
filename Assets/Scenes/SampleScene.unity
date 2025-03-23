@@ -370,7 +370,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   BuildMode: 0
   DemolishMode: 0
-  LifeCoins: 0
+  LifeCoins: 200
   inventory: {fileID: 11400000, guid: 296378c6d04fe1449893003d026744b2, type: 2}
   selectedObj: {fileID: 0}
   selectedSoil: {fileID: 0}

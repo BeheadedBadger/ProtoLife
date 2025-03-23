@@ -6,7 +6,7 @@ public class GameManager : MonoBehaviour
     public bool BuildMode;
     public bool DemolishMode;
 
-    public int LifeCoins;
+    public float LifeCoins;
 
     public Inventory inventory;
 
@@ -29,6 +29,9 @@ public class GameManager : MonoBehaviour
     void Update()
     {
         turnsSinceStart += (turnSpeed * Time.deltaTime);
+
+        if (LifeCoins < 0)
+        { LifeCoins = 0; }
 
         if (nextTimeUpdate < turnsSinceStart)
         {
