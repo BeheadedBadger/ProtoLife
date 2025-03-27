@@ -557,6 +557,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: GridTile
       objectReference: {fileID: 0}
+    - target: {fileID: 1151388028547126963, guid: 8b160b758fce7d64fbb6d6608ec3d28f,
+        type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0.08
+      objectReference: {fileID: 0}
     - target: {fileID: 8164078558771037576, guid: 8b160b758fce7d64fbb6d6608ec3d28f,
         type: 3}
       propertyPath: m_Name

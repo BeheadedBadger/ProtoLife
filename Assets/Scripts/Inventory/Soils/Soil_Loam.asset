@@ -18,7 +18,8 @@ MonoBehaviour:
   unlocked: 1
   prefab: {fileID: 0}
   sprite: {fileID: 21300000, guid: 3e9085a4a1dec8340b4af20a7a67a6ae, type: 3}
-  cost: 20
-  generates: 0
-  material: {fileID: 0}
+  cost: 10
+  lifeCoinGeneration: 0
+  waterNeed: 0
+  soilTypes: 
   soilType: 2

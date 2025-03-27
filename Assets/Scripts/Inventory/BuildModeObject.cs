@@ -16,4 +16,6 @@ public abstract class BuildModeObject : ScriptableObject
 
     public int waterNeed;
     public List<SoilObject.SoilType> soilTypes;
+
+    public bool selected;
 }

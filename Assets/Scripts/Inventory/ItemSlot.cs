@@ -1,8 +1,8 @@
-using System;
+using System.Collections;
 using System.Collections.Generic;
+using System.Threading;
 using TMPro;
 using Unity.VisualScripting;
-using UnityEditor.Tilemaps;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -11,6 +11,7 @@ public class ItemSlot : MonoBehaviour
     public GameManager gameManager;
     public BuildModeObject associatedObj;
     bool infoSet;
+
     [SerializeField] TextMeshProUGUI cost;
     [SerializeField] TextMeshProUGUI generates;
     [SerializeField] Image icon;
@@ -18,15 +19,18 @@ public class ItemSlot : MonoBehaviour
     [SerializeField] Button button;
 
     //SoilTypes
-    [SerializeField] GameObject Sand;
-    [SerializeField] GameObject Loam;
-    [SerializeField] GameObject Clay;
-    [SerializeField] GameObject Silt;
-    [SerializeField] GameObject Water;
+    [SerializeField] Image Sand;
+    [SerializeField] Image Loam;
+    [SerializeField] Image Clay;
+    [SerializeField] Image Silt;
+    [SerializeField] Image Water;
+    [SerializeField] Sprite disabled;
 
     //Water requirements
     [SerializeField] List<Image> waterRequirements;
-    [SerializeField] Sprite waterFilled;
+
+    Vector3 activeRotation = new(0, 0, -10);
+    Vector3 inactiveRotation = new(0, 0, 0);
 
     void Update()
     {
@@ -34,9 +38,34 @@ public class ItemSlot : MonoBehaviour
         {
             SetInfo();
         }
+
+        if (infoSet)
+        {
+            if (gameManager.selectedObj == associatedObj && associatedObj.selected == false)
+            {
+                SetToSelected();
+            }
+
+            if (gameManager.selectedObj != associatedObj && associatedObj.selected == true)
+            {
+                SetToUnselected();
+            }
+        }
     }
 
-    public void OnUnlock() 
+    public void SetToUnselected()
+    {
+        StartCoroutine(LerpRotation(this.gameObject, activeRotation, inactiveRotation, 0.2f, false));
+        //gameObject.transform.eulerAngles = new Vector3(0, 0, 0);
+    }
+
+    public void SetToSelected()
+    {
+        StartCoroutine(LerpRotation(this.gameObject, inactiveRotation, activeRotation, 0.2f, true));
+        //gameObject.transform.eulerAngles = new Vector3(0, 0, -5);
+    }
+
+    public void OnUnlock()
     {
         SetInfo();
     }
@@ -70,18 +99,39 @@ public class ItemSlot : MonoBehaviour
         button.enabled = true;
         cost.text = associatedObj.cost.ToString();
         icon.sprite = associatedObj.sprite;
-       
+
         if (associatedObj.objType != BuildModeObject.ObjectType.Soil)
         {
             generates.text = associatedObj.lifeCoinGeneration.ToString();
             SetSoilTypes();
             SetWaterRequirements();
-            waterNeed();
         }
 
         else
         {
             generates.text = "";
+
+            if (associatedObj.title != "Loam")
+            {
+                Loam.sprite = disabled;
+            }
+            if (associatedObj.title != "Sand")
+            {
+                Sand.sprite = disabled;
+            }
+            if (associatedObj.title != "Clay")
+            {
+                Clay.sprite = disabled;
+            }
+            if (associatedObj.title != "Water")
+            {
+                Water.sprite = disabled;
+            }
+            if (associatedObj.title != "Silt")
+            {
+                Silt.sprite = disabled;
+            }
+
             noWaterNeed();
         }
     }
@@ -103,47 +153,78 @@ public class ItemSlot : MonoBehaviour
         }
     }
 
-    private void waterNeed() 
-    {
-        foreach (Image water in waterRequirements)
-        {
-            water.color = new Color(0.34f, 0.34f, 0.34f, 1);
-        }
-    }
-
     private void SetSoilTypes()
     {
-        if (associatedObj.soilTypes.Contains(SoilObject.SoilType.Sand))
+        if (!associatedObj.soilTypes.Contains(SoilObject.SoilType.Sand))
         {
-            Sand.SetActive(true);
+            Sand.sprite = disabled;
         }
 
-        if (associatedObj.soilTypes.Contains(SoilObject.SoilType.Loam))
+        if (!associatedObj.soilTypes.Contains(SoilObject.SoilType.Loam))
         {
-            Loam.SetActive(true);
+            Loam.sprite = disabled;
         }
 
-        if (associatedObj.soilTypes.Contains(SoilObject.SoilType.Clay))
+        if (!associatedObj.soilTypes.Contains(SoilObject.SoilType.Clay))
         {
-            Clay.SetActive(true);
+            Clay.sprite = disabled;
         }
 
-        if (associatedObj.soilTypes.Contains(SoilObject.SoilType.Silt))
+        if (!associatedObj.soilTypes.Contains(SoilObject.SoilType.Silt))
         {
-            Silt.SetActive(true);
+            Silt.sprite = disabled;
         }
 
-        if (associatedObj.soilTypes.Contains(SoilObject.SoilType.Water))
+        if (!associatedObj.soilTypes.Contains(SoilObject.SoilType.Water))
         {
-            Water.SetActive(true);
+            Water.sprite = disabled;
         }
     }
 
     void SetWaterRequirements()
     {
-        for (int i = 0; i < associatedObj.waterNeed; i++)
+        if (associatedObj.waterNeed < 9)
         {
-            waterRequirements[i].sprite = waterFilled;
+            waterRequirements[4].sprite = disabled;
         }
+
+        if (associatedObj.waterNeed < 7)
+        {
+            waterRequirements[3].sprite = disabled;
+        }
+
+        if (associatedObj.waterNeed < 5)
+        {
+            waterRequirements[2].sprite = disabled;
+        }
+
+        if (associatedObj.waterNeed < 3)
+        {
+            waterRequirements[1].sprite = disabled;
+        }
+
+        if (associatedObj.waterNeed < 1)
+        {
+            waterRequirements[0].sprite = disabled;
+        }
+    }
+
+    IEnumerator LerpRotation(GameObject obj, Vector3 startRotation, Vector3 targetRotation, float duration, bool setActive)
+    {
+        float time = 0;
+        while (time < duration)
+        {
+            /*Vector3 currentRotation = new Vector3(Mathf.LerpAngle(startRotation.x, targetRotation.y, Time.deltaTime),
+            Mathf.LerpAngle(startRotation.y, targetRotation.y, Time.deltaTime),
+            Mathf.LerpAngle(startRotation.z, targetRotation.z, Time.deltaTime));
+
+            obj.transform.eulerAngles = Lerp currentRotation;*/
+           obj.transform.rotation = Quaternion.Lerp(Quaternion.Euler(startRotation), Quaternion.Euler(targetRotation), time);
+           time += Time.deltaTime;
+           yield return null;
+        }
+
+        obj.transform.eulerAngles = targetRotation;
+        associatedObj.selected = setActive;
     }
 }

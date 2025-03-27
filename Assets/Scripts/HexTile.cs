@@ -10,6 +10,7 @@ public class HexTile : MonoBehaviour
 
     //Grid
     [SerializeField] GameObject grid;
+    Color gridInactive = new Color(0.5f, 0.5f, 0.5f, 0.5f);
     Material gridColour;
     Vector3 tileBasicPosition;
     Vector3 tileSelectedPosition;
@@ -52,7 +53,7 @@ public class HexTile : MonoBehaviour
     void Start()
     {
         gridColour = grid.GetComponent<Renderer>().material;
-        gridColour.color = Color.grey;
+        gridColour.color = gridInactive;
 
         tileBasicPosition = grid.transform.position;
         tileSelectedPosition = new Vector3(tileBasicPosition.x, tileBasicPosition.y + 0.4f, tileBasicPosition.z);
@@ -107,9 +108,9 @@ public class HexTile : MonoBehaviour
 
                 CheckIfPlacementIsPossible();
 
-                if (placementPossible && gridColour.color != Color.grey)
+                if (placementPossible && gridColour.color != gridInactive)
                 {
-                    StartCoroutine(LerpColour(gridColour, gridColour.color, Color.grey, speed));
+                    StartCoroutine(LerpColour(gridColour, gridColour.color, gridInactive, speed));
                 }
 
                 if (!placementPossible && gridColour.color != Color.red)
@@ -130,9 +131,9 @@ public class HexTile : MonoBehaviour
                     StartCoroutine(LerpPosition(soil, soil.transform.position, soilBasicPosition, speed));
                 }
 
-                if (gridColour.color != Color.grey)
+                if (gridColour.color != gridInactive)
                 {
-                    StartCoroutine(LerpColour(gridColour, gridColour.color, Color.grey, speed));
+                    StartCoroutine(LerpColour(gridColour, gridColour.color, gridInactive, speed));
                 }
             }
 
@@ -145,14 +146,14 @@ public class HexTile : MonoBehaviour
                     return;
                 }
 
-                if (highlighted && placementPossible)
+                if (highlighted && gameManager.selectedObj != null && placementPossible)
                 {
                     bool paid = CanPay();
 
                     if (paid == false)
                     { return; }
 
-                    if (gameManager.selectedObj.objType == BuildModeObject.ObjectType.Soil)
+                    if (gameManager.selectedObj.objType == BuildModeObject.ObjectType.Soil && gameManager.selectedSoil != null)
                     {
                         soilFill.ChangeSoilType(gameManager.selectedSoil.soilType, this);
                         Vector3 heighten = new();
@@ -209,13 +210,13 @@ public class HexTile : MonoBehaviour
 
     private void CheckIfPlacementIsPossible()
     {
-        if (gameManager.selectedObj.objType == BuildModeObject.ObjectType.Soil &&
+        if (gameManager.selectedObj != null && gameManager.selectedObj.objType == BuildModeObject.ObjectType.Soil &&
             !soilFilled && this.soilFill.thisSoilType == SoilObject.SoilType.Ash)
         {
             placementPossible = true;
         }
 
-        else if (gameManager.selectedObj.soilTypes.Contains(soilFill.thisSoilType) &&
+        else if (gameManager.selectedObj != null && gameManager.selectedObj.soilTypes.Contains(soilFill.thisSoilType) &&
             !coverFilled && soilFill.waterScore - 2 <= gameManager.selectedObj.waterNeed &&
             soilFill.waterScore + 2 >= gameManager.selectedObj.waterNeed)
         {

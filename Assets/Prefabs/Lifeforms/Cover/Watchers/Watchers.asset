@@ -20,7 +20,7 @@ MonoBehaviour:
   prefab: {fileID: 4175852103605154731, guid: d9ccd57e268b5b6428067f70322d2e64, type: 3}
   sprite: {fileID: 21300000, guid: 068e6ac4224dd0f48a6930d0e4edd23c, type: 3}
   cost: 20
-  lifeCoinGeneration: 0.1
+  lifeCoinGeneration: 0.3
   waterNeed: 8
   soilTypes: 02000000010000000300000004000000
   lifeType: 0
