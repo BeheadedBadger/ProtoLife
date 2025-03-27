@@ -22,6 +22,7 @@ MonoBehaviour:
   lifeCoinGeneration: 4
   waterNeed: 8
   soilTypes: 0200000003000000
+  selected: 0
   lifeType: 1
   kingdom: 3
   lifeForm: {fileID: 1030265907563593133, guid: 78ab94fa557424941ac94d042d943ae9,
@@ -31,8 +32,8 @@ MonoBehaviour:
   mobility: 0
   maxHealth: 10
   feedingRate: 5
-  foodSources: 
+  foodSources: 0000000004000000
   lifeSpan: 10
   procreationType: 0
-  procreationTime: 5
+  procreationTime: 4
   procreationRate: 1

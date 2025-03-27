@@ -30,6 +30,12 @@ public class HexTile : MonoBehaviour
     [SerializeField] public GameObject coverContainer;
     public bool coverFilled;
 
+    [SerializeField] public GameObject stationaryContainer;
+    public bool stationaryFilled;
+
+    [SerializeField] public GameObject mobileContainer;
+    public bool mobileFilled;
+
     //Neighbors
     public List<GameObject> neighboringTiles;
     public List<HexTile> neighboringHexTiles;
@@ -191,6 +197,15 @@ public class HexTile : MonoBehaviour
                         lifeform.createLifeForm(this);
                         coverFilled = true;
                     }
+
+                    if (gameManager.selectedObj.objType == BuildModeObject.ObjectType.Stationary)
+                    {
+                        gameManager.LifeCoins -= gameManager.selectedObj.cost;
+                        GameObject stationary = Instantiate(gameManager.selectedObj.prefab, stationaryContainer.transform.transform);
+                        LifeForm lifeform = stationary.GetComponent<LifeForm>();
+                        lifeform.createLifeForm(this);
+                        stationaryFilled = true;
+                    }
                 }
             }
         }
@@ -214,19 +229,33 @@ public class HexTile : MonoBehaviour
             !soilFilled && this.soilFill.thisSoilType == SoilObject.SoilType.Ash)
         {
             placementPossible = true;
+            return;
         }
 
         else if (gameManager.selectedObj != null && gameManager.selectedObj.soilTypes.Contains(soilFill.thisSoilType) &&
-            !coverFilled && soilFill.waterScore - 2 <= gameManager.selectedObj.waterNeed &&
+            soilFill.waterScore - 2 <= gameManager.selectedObj.waterNeed &&
             soilFill.waterScore + 2 >= gameManager.selectedObj.waterNeed)
         {
-            placementPossible = true;
+            if (gameManager.selectedObj.objType == BuildModeObject.ObjectType.Cover && !coverFilled)
+            {
+                placementPossible = true;
+                return;
+            }
+
+            if (gameManager.selectedObj.objType == BuildModeObject.ObjectType.Stationary && !stationaryFilled)
+            {
+                placementPossible = true;
+                return;
+            }
+
+            else
+            {
+                placementPossible = false;
+                return;
+            }
         }
 
-        else 
-        { 
-            placementPossible = false; 
-        }
+        placementPossible = false; 
     }
 
     public bool CheckIfPlacementIsPossible(LifeFormObject lifeform)
@@ -239,7 +268,14 @@ public class HexTile : MonoBehaviour
             {
                 return true;
             }
-            else { return false; }
+            if (lifeform.objType == BuildModeObject.ObjectType.Stationary && !stationaryFilled)
+            {
+                return true;
+            }
+            else 
+            { 
+                return false; 
+            }
         }
 
         else

@@ -44,8 +44,4 @@ public class LifeFormObject : BuildModeObject
             objType = ObjectType.Mobile; 
         }
     }
-
-    //Instantiate Lifeform
-
-    //Destroy Lifeform
 }

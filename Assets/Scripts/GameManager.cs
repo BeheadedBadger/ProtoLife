@@ -28,6 +28,15 @@ public class GameManager : MonoBehaviour
 
     void Update()
     {
+        if (days == 0)
+        { days = 1; }
+
+        if (months == 0)
+        { months = 1; }
+
+        if (years == 0)
+        { years = 1; }
+
         turnsSinceStart += (turnSpeed * Time.deltaTime);
 
         if (LifeCoins < 0)

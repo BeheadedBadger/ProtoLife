@@ -31,6 +31,8 @@ public class UI_Handler : MonoBehaviour
     [SerializeField] Sprite activeDemolishMode;
     [SerializeField] Sprite inactiveDemolishMode;
 
+    Color lightRed = new Color(0.92f, 0.47f, 0.63f);
+
     public void SwitchType(BuildModeObject.ObjectType selection)
     {
         selectedType = selection;
@@ -43,7 +45,7 @@ public class UI_Handler : MonoBehaviour
         buildModePanelScale = buildModePanel.transform.localScale;
     }
 
-    void Update()
+    void FixedUpdate()
     {
         if (!gameManager.BuildMode && !gameManager.DemolishMode && ViewMode.sprite != activeViewMode)
         {
@@ -90,6 +92,15 @@ public class UI_Handler : MonoBehaviour
 
         time.text = $"Day: {gameManager.days}  Month: {gameManager.months}  Year: {gameManager.years}";
         lifeCoins.text = Mathf.RoundToInt(gameManager.LifeCoins).ToString("#,#");
+        if (Mathf.RoundToInt(gameManager.LifeCoins) <= 0)
+        {
+            lifeCoins.text = "0";
+            lifeCoins.color = lightRed;
+        }
+        else if (lifeCoins.color == lightRed && Mathf.RoundToInt(gameManager.LifeCoins) > 0)
+        {
+            lifeCoins.color = Color.white;
+        }
     }
 
     public void loadSelection(BuildModeObject.ObjectType selection) 

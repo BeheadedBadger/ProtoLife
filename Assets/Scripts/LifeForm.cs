@@ -22,9 +22,11 @@ public class LifeForm : MonoBehaviour
     {
         List<int> rotation = new List<int>() { 0, 60, 120, 180, 240, 300 };
         this.gameObject.transform.rotation = Quaternion.Euler(new Vector3(0, rotation[UnityEngine.Random.Range(0, 5)], 0));
-        
-        //if cover
-        StartCoroutine(CoverInitAnimation(this.gameObject, new Vector3(1, 1, 1), new Vector3(0, 0, 0), 0.5f));
+
+        if (lifeFormObject.objType == BuildModeObject.ObjectType.Cover || lifeFormObject.objType == BuildModeObject.ObjectType.Stationary)
+        {
+            StartCoroutine(CoverOrStationaryInitAnimation(this.gameObject, new Vector3(1, 1, 1), new Vector3(0, 0, 0), 0.5f));
+        }
 
         parentHex = parent;
         gameManager = parentHex.gameManager;
@@ -40,7 +42,7 @@ public class LifeForm : MonoBehaviour
     }
 
     // Update is called once per frame
-    void Update()
+    void FixedUpdate()
     {
         if (InitializationCompleted && gameManager.currentDate > previousUpdate)
         {
@@ -78,33 +80,104 @@ public class LifeForm : MonoBehaviour
 
     private void Feed()
     {
-        if (lifeFormObject.lifeType == LifeFormObject.LifeType.Stationary)
+        if (lifeFormObject.lifeType == LifeFormObject.LifeType.Stationary || lifeFormObject.lifeType == LifeFormObject.LifeType.Cover)
         {
             if (lifeFormObject.foodSources.Contains(LifeFormObject.Kingdom.Nitrates))
             {
                 if (parentHex.soilFill.nutrientScore > 0)
                 {
                     parentHex.soilFill.nutrientScore -= 1;
+                    if (health < lifeFormObject.maxHealth)
+                    {
+                        health += 1;
+                    }
+                    return;
                 }
             }
 
-            //else if() //CHECK FOR OTHER FOOD SOURCES
-
             else
             {
-                health -= 1;
+                foreach (LifeFormObject.Kingdom foodSource in lifeFormObject.foodSources)
+                {
+                    if (parentHex.mobileFilled)
+                    {
+                        LifeForm prey = parentHex.mobileContainer.GetComponentInChildren<LifeForm>();
+                        if (prey.lifeFormObject.kingdom == foodSource)
+                        {
+                            prey.DamageLifeform(1);
+                            if (health < lifeFormObject.maxHealth)
+                            {
+                                health += 1;
+                            }
+                            return;
+                        }
+                    }
+                }
+
+                if (lifeFormObject.objType != BuildModeObject.ObjectType.Stationary)
+                {
+                    foreach (LifeFormObject.Kingdom foodSource in lifeFormObject.foodSources)
+                    {
+                        if (parentHex.stationaryFilled)
+                        {
+                            LifeForm prey = parentHex.stationaryContainer.GetComponentInChildren<LifeForm>();
+                            if (prey.lifeFormObject.kingdom == foodSource)
+                            {
+                                prey.DamageLifeform(1);
+                                if (health < lifeFormObject.maxHealth)
+                                {
+                                    health += 1;
+                                }
+                                return;
+                            }
+                        }
+                    }
+                }
+
+                if (lifeFormObject.objType != BuildModeObject.ObjectType.Cover)
+                {
+                    foreach (LifeFormObject.Kingdom foodSource in lifeFormObject.foodSources)
+                    {
+                        if (parentHex.coverFilled)
+                        {
+                            LifeForm prey = parentHex.coverContainer.GetComponentInChildren<LifeForm>();
+                            if (prey.lifeFormObject.kingdom == foodSource)
+                            {
+                                prey.DamageLifeform(1);
+                                if (health < lifeFormObject.maxHealth)
+                                {
+                                    health += 1;
+                                }
+                                return;
+                            }
+                        }
+                    }
+                }
             }
+
+            health -= 1;
         }
+
+        //else if() //MOBILE LIFEFORM, FIND PATH TO FOOD
     }
 
     private void Death()
     {
         parentHex.soilFill.nutrientScore += 1;
-        //If cover
-        parentHex.coverFilled = false;
-        StartCoroutine(CoverDestroyAnimation(this.gameObject, new Vector3(0, 0, 0), new Vector3(1, 1, 1), 0.25f));
-        
-        Destroy(this.gameObject);
+
+        if (lifeFormObject.objType == BuildModeObject.ObjectType.Cover)
+        { parentHex.coverFilled = false; }
+
+        if (lifeFormObject.objType == BuildModeObject.ObjectType.Stationary)
+        { parentHex.stationaryFilled = false; }
+
+        if (lifeFormObject.objType == BuildModeObject.ObjectType.Mobile)
+        { parentHex.mobileFilled = false; }
+
+        if (lifeFormObject.objType == BuildModeObject.ObjectType.Cover || lifeFormObject.objType == BuildModeObject.ObjectType.Stationary)
+        {
+            StartCoroutine(CoverOrStationaryDestroyAnimation(this.gameObject, new Vector3(0, 0, 0), new Vector3(1, 1, 1), 0.25f));
+        }
     }
 
     private void AttemptProcreation()
@@ -138,7 +211,14 @@ public class LifeForm : MonoBehaviour
                         {
                             random.coverFilled = true;
                         }
-                        //Add other fills
+                        else if (lifeFormObject.objType == BuildModeObject.ObjectType.Stationary)
+                        {
+                            random.stationaryFilled = true;
+                        }
+                        else if (lifeFormObject.objType == BuildModeObject.ObjectType.Mobile)
+                        {
+                            random.mobileFilled = true;
+                        }
 
                         possiblePlacement.Remove(random);
                     }
@@ -152,7 +232,7 @@ public class LifeForm : MonoBehaviour
         health -= damage;
     }
 
-    IEnumerator CoverDestroyAnimation(GameObject obj, Vector3 smallerScale, Vector3 largerScale, float duration)
+    IEnumerator CoverOrStationaryDestroyAnimation(GameObject obj, Vector3 smallerScale, Vector3 largerScale, float duration)
     {
         float time = 0;
         while (time / 20 < duration)
@@ -163,9 +243,10 @@ public class LifeForm : MonoBehaviour
         }
 
         obj.transform.localScale = smallerScale;
+        Destroy(this.gameObject);
     }
 
-    IEnumerator CoverInitAnimation(GameObject obj, Vector3 largerScale, Vector3 smallerScale, float duration)
+    IEnumerator CoverOrStationaryInitAnimation(GameObject obj, Vector3 largerScale, Vector3 smallerScale, float duration)
     {
         float time = 0;
         Vector3 overshootRange = new Vector3(largerScale.x * 1.25f, largerScale.y * 1.25f, largerScale.z * 1.25f);
