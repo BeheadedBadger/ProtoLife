@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using UnityEngine;
 using static UnityEngine.RuleTile.TilingRuleOutput;
 
@@ -14,23 +15,46 @@ public class Soil : MonoBehaviour
     public Vector3 soilBasicPosition;
     public Vector3 soilSelectedPosition;
 
-    //Replace with better options later:
-    //Colours
-    List<Color> colours = new List<Color> {
-    new(0.23f, 0.23f, 0.23f, 1), //Ash
-    new(0.77f, 0.76f, 0.54f, 1), //Sand
-    new(0.52f, 0.42f, 0.42f, 1), //Loam
-    };
-
     [SerializeField] List<Material> materials;
+    [SerializeField] GameObject amberPrefab;
+    private GameObject amber;
 
-    public void ChangeSoilType(SoilObject.SoilType soilType, HexTile hex)
+    public void SetSoilType(SoilObject.SoilType soilType, HexTile hex)
     {
         thisSoilType = soilType;
         parentHex = hex;
         soilBasicPosition = hex.soilBasicPosition;
         soilSelectedPosition = hex.soilSelectedPosition;
         soilModel = hex.soil;
+        hex.soilFill = this;
+
+        if (soilType != SoilObject.SoilType.Water)
+        {
+            StartCoroutine(SoilAnimationLerp(soilModel, new Vector3(1, 1, 1), new Vector3(1, 1, 1), 0.25f));
+            int matNumber = (int)soilType;
+            soilModel.transform.GetChild(1).GetComponent<Renderer>().material = materials[matNumber];
+        }
+        else
+        {
+            StartCoroutine(LerpSize(soilModel, new Vector3(1f, 1f, 1f), new Vector3(0, 0, 0), 0.25f));
+        }
+    }
+
+    public void ChangeSoilType(SoilObject.SoilType soilType)
+    {
+        if (soilType != SoilObject.SoilType.Ash && thisSoilType == SoilObject.SoilType.Ash)
+        {
+            amber = Instantiate(amberPrefab, parentHex.transform);
+            parentHex.gameManager.Amber += 1;
+        }
+
+        thisSoilType = soilType;
+        soilBasicPosition = parentHex.soilBasicPosition;
+        soilSelectedPosition = parentHex.soilSelectedPosition;
+        soilModel = parentHex.soil;
+        parentHex.soilFill = this;
+
+        nutrientScore = 10;
         CalculateWaterScore();
 
         if (soilType != SoilObject.SoilType.Water)
@@ -41,11 +65,7 @@ public class Soil : MonoBehaviour
         }
         else
         {
-            //GameObject water = hex.water;
-            //water.gameObject.transform.localScale = new Vector3(0.75f, 0, 0.75f);
-            //water.gameObject.SetActive(true);
-            //StartCoroutine(LerpSize(water, new Vector3(0.75f, 0, 0.75f), new Vector3(1, 1, 1), 0.25f));
-            soilModel.gameObject.SetActive(false);
+            StartCoroutine(LerpSize(soilModel, new Vector3(1f, 1f, 1f), new Vector3(0, 0, 0), 0.25f));
         }
     }
 
@@ -63,7 +83,7 @@ public class Soil : MonoBehaviour
             { 
                 if (neighbour.soilFill.waterScore < this.waterScore - 1 && (this.waterScore - 1) > 1)
                 {
-                    neighbour.soilFill.waterScore = this.waterScore - 1;
+                    neighbour.soilFill.waterScore = (this.waterScore - 1);
                     neighbour.soilFill.CalculateWaterScore();
                 }
             }
@@ -139,6 +159,15 @@ public class Soil : MonoBehaviour
         }
 
         obj.transform.localScale = targetScale;
+        if (amber != null)
+        {
+            Task.Delay(2);
+            Destroy(amber);
+        }
+        if (thisSoilType == SoilObject.SoilType.Water)
+        {
+            soilModel.gameObject.SetActive(false);
+        }
     }
 
     IEnumerator LerpColour(Material obj, Color startValue, Color targetValue, float duration)

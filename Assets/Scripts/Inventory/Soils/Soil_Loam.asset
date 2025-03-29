@@ -22,4 +22,6 @@ MonoBehaviour:
   lifeCoinGeneration: 0
   waterNeed: 0
   soilTypes: 
+  selected: 0
+  unlockCost: 2
   soilType: 2

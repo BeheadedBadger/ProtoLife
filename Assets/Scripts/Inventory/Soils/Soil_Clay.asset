@@ -1,0 +1,27 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 497d49e25b5e792489ecadea3ab70a39, type: 3}
+  m_Name: Soil_Clay
+  m_EditorClassIdentifier: 
+  title: Clay
+  description: 'Strange slippery soil that holds humidity well. '
+  objType: 0
+  unlocked: 1
+  prefab: {fileID: 0}
+  sprite: {fileID: 21300000, guid: 5a561965a79792b4489ec92167b687c7, type: 3}
+  cost: 10
+  lifeCoinGeneration: 0
+  waterNeed: 0
+  soilTypes: 
+  selected: 0
+  unlockCost: 2
+  soilType: 3

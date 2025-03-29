@@ -16,11 +16,13 @@ MonoBehaviour:
   description: Deep layer of hot, corrupt, suffocating ash. Nothing can survive on
     this soil type
   objType: 0
-  unlocked: 0
+  unlocked: 1
   prefab: {fileID: 0}
   sprite: {fileID: 21300000, guid: 9f2556e8affdc0d4cbce225d5e896ab3, type: 3}
   cost: 10
   lifeCoinGeneration: 0
   waterNeed: 0
   soilTypes: 
+  selected: 0
+  unlockCost: 2
   soilType: 0

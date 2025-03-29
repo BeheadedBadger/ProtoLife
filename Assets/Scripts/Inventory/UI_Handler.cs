@@ -8,13 +8,14 @@ using UnityEngine.UIElements;
 public class UI_Handler : MonoBehaviour
 {
     public BuildModeObject.ObjectType selectedType;
-    [SerializeField] GameManager gameManager;
+    [SerializeField] public GameManager gameManager;
     [SerializeField] GameObject buildModePanel;
     Vector3 buildModePanelScale;
     [SerializeField] GameObject buildModeIconPanel;
     [SerializeField] GameObject itemPrefab;
     [SerializeField] TextMeshProUGUI time;
     [SerializeField] TextMeshProUGUI lifeCoins;
+    [SerializeField] TextMeshProUGUI amber;
 
     [SerializeField] TextMeshProUGUI title;
     [SerializeField] TextMeshProUGUI flavourText;
@@ -100,6 +101,16 @@ public class UI_Handler : MonoBehaviour
         else if (lifeCoins.color == lightRed && Mathf.RoundToInt(gameManager.LifeCoins) > 0)
         {
             lifeCoins.color = Color.white;
+        }
+
+        if (gameManager.Amber > 0)
+        {
+            lifeCoins.color = Color.white;
+            amber.text = gameManager.Amber.ToString(); 
+        }
+        else 
+        { 
+            lifeCoins.color = lightRed; 
         }
     }
 

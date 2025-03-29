@@ -1,4 +1,7 @@
 using System;
+using System.Collections.Generic;
+using System.Linq;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class GameManager : MonoBehaviour
@@ -6,12 +9,15 @@ public class GameManager : MonoBehaviour
     public bool BuildMode;
     public bool DemolishMode;
 
-    public float LifeCoins;
+    public float LifeCoins = new();
+    public int Amber = new();
 
     public Inventory inventory;
+    [SerializeField] public List<HexTile> hexTiles;
 
     public BuildModeObject selectedObj;
     public SoilObject selectedSoil;
+    public HexTile selectedHex;
 
     public float turnsSinceStart;
     float turnSpeed = 0.5f;
@@ -23,7 +29,7 @@ public class GameManager : MonoBehaviour
 
     void Start()
     {
-        //Get amount of coins from memory
+        Load();
     }
 
     void Update()
@@ -50,6 +56,8 @@ public class GameManager : MonoBehaviour
             days = currentDate.Day;
             months = currentDate.Month;
             years = currentDate.Year;
+
+            Save();
         }
     }
 
@@ -78,5 +86,65 @@ public class GameManager : MonoBehaviour
     {
         BuildMode = false;
         DemolishMode = false;
+    }
+
+    public void Save()
+    {
+        List<Data.LifeformData> AllLifeformData = new();
+        foreach (BuildModeObject obj in inventory.objects)
+        {
+            Data.LifeformData lifeformData = new(obj.title, obj.unlocked);
+            AllLifeformData.Add(lifeformData);
+        }
+
+        List<Data.TileData> AllTileData = new();
+        foreach (HexTile tile in hexTiles)
+        {
+            List<float> gridPosition = new List<float> { tile.tileBasicPosition.x, tile.tileBasicPosition.y, tile.tileBasicPosition.z };
+            List<float> soilPosition = new List<float> { tile.soilBasicPosition.x, tile.soilBasicPosition.y, tile.soilBasicPosition.z };
+            Data.TileData tileData = new(gridPosition.ToArray(), soilPosition.ToArray(), tile.soilFill.thisSoilType.ToString(), tile.soilFill.nutrientScore, tile.soilFill.waterScore, tile.GetInstanceID());
+            AllTileData.Add(tileData);
+        }
+
+        Data data = new Data(Mathf.RoundToInt(LifeCoins), Amber, days, months, years, AllTileData.ToArray(), AllLifeformData.ToArray());
+        Data.SaveGame(data);
+    }
+
+    public void Load()
+    {
+        Data data = Data.LoadGame();
+
+        if (data != null)
+        {
+            LifeCoins = data.LifeCoins;
+            Amber = data.Amber;
+            currentDate = new DateTime(data.Year, data.Month, data.Day);
+
+            foreach (BuildModeObject obj in inventory.objects)
+            {
+                Data.LifeformData lifedata = data.Lifeforms.Where(x => x.Name == obj.title).FirstOrDefault();
+                obj.unlocked = lifedata.Unlocked;
+            }
+
+            foreach (HexTile tile in hexTiles)
+            {
+                Data.TileData tiledata = data.Tiles.Where(x => x.ID == tile.GetInstanceID()).FirstOrDefault();
+                tile.grid.transform.position = new Vector3(tiledata.PositionGrid[0], tiledata.PositionGrid[1], tiledata.PositionGrid[2]);
+                tile.soilFill.transform.position = new Vector3(tiledata.PositionSoil[0], tiledata.PositionSoil[1], tiledata.PositionSoil[2]);
+                tile.soilFill.nutrientScore = tiledata.NutrientScore;
+                
+                tile.FindNeighbors(tile.grid.transform.position);
+
+                SoilObject.SoilType type = (SoilObject.SoilType)Enum.Parse(typeof(SoilObject.SoilType), tiledata.SoilType);
+                tile.soilFill.SetSoilType(type, tile);
+                if (type != SoilObject.SoilType.Ash)
+                { tile.soilFilled = true; }
+            }
+        }
+    }
+
+    void OnApplicationQuit()
+    {
+        Save();
     }
 }

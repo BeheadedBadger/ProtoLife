@@ -67,6 +67,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   gameManager: {fileID: 0}
   grid: {fileID: 6994300592714883372}
+  tileBasicPosition: {x: 0, y: 0, z: 0}
+  tileSelectedPosition: {x: 0, y: 0, z: 0}
   soilFill: {fileID: 2948280703049469954}
   soilBasicPosition: {x: 0, y: 0, z: 0}
   soilSelectedPosition: {x: 0, y: 0, z: 0}
@@ -407,7 +409,7 @@ MonoBehaviour:
   thisSoilType: 0
   waterScore: 0
   nutrientScore: 0
-  parentHex: {fileID: 0}
+  parentHex: {fileID: 3078117989083936174}
   soilBasicPosition: {x: 0, y: 0, z: 0}
   soilSelectedPosition: {x: 0, y: 0, z: 0}
   materials:
@@ -417,6 +419,8 @@ MonoBehaviour:
   - {fileID: 2100000, guid: 7e3e97c15f967e048880a4f1cee8109b, type: 2}
   - {fileID: 2100000, guid: f9e74ed4b8df2f749a43de12b0889468, type: 2}
   - {fileID: 2100000, guid: 11672a7d5b0ac354382e3311f1a20f90, type: 2}
+  amberPrefab: {fileID: 7861473835609577268, guid: 39973b5684a6b3745a26a7aef3793ed3,
+    type: 3}
 --- !u!4 &1144211507117992110 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: 4b596b81d8155294d8afd101362c4628,
@@ -545,6 +549,7 @@ MonoBehaviour:
   - {fileID: 2100000, guid: 7e3e97c15f967e048880a4f1cee8109b, type: 2}
   - {fileID: 2100000, guid: f9e74ed4b8df2f749a43de12b0889468, type: 2}
   - {fileID: 2100000, guid: 11672a7d5b0ac354382e3311f1a20f90, type: 2}
+  amberPrefab: {fileID: 0}
 --- !u!4 &1072324882723002422 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: 5c5f112d1cd9db04eb7611c01553e678,

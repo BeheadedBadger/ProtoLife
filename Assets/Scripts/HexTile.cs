@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.EventSystems;
 
@@ -9,11 +10,11 @@ public class HexTile : MonoBehaviour
     [SerializeField] public GameManager gameManager;
 
     //Grid
-    [SerializeField] GameObject grid;
+    [SerializeField] public GameObject grid;
     Color gridInactive = new Color(0.5f, 0.5f, 0.5f, 0.5f);
     Material gridColour;
-    Vector3 tileBasicPosition;
-    Vector3 tileSelectedPosition;
+    public Vector3 tileBasicPosition;
+    public Vector3 tileSelectedPosition;
     bool highlighted;
     bool placementPossible;
 
@@ -61,26 +62,30 @@ public class HexTile : MonoBehaviour
         gridColour = grid.GetComponent<Renderer>().material;
         gridColour.color = gridInactive;
 
-        tileBasicPosition = grid.transform.position;
-        tileSelectedPosition = new Vector3(tileBasicPosition.x, tileBasicPosition.y + 0.4f, tileBasicPosition.z);
-
-        soilBasicPosition = soil.transform.position;
-        soilSelectedPosition = new Vector3(soilBasicPosition.x, soilBasicPosition.y - 0.2f, soilBasicPosition.z);
-        if (!soilFilled)
-        {
-            soilFill.ChangeSoilType(SoilObject.SoilType.Ash, this);
-
-        }
-
-        FindNeighbors(tileBasicPosition);
+        SetPositions(grid.transform.position, soil.transform.position);
     }
 
-    private void FindNeighbors(Vector3 tileBasicPosition)
+    public void SetPositions(Vector3 basicPosition, Vector3 soilPosition)
     {
+        tileBasicPosition = basicPosition;
+        tileSelectedPosition = new Vector3(tileBasicPosition.x, tileBasicPosition.y + 0.4f, tileBasicPosition.z);
+
+        soilBasicPosition = soilPosition;
+        soilSelectedPosition = new Vector3(soilBasicPosition.x, soilBasicPosition.y - 0.2f, soilBasicPosition.z);
+
+        FindNeighbors(basicPosition);
+    }
+
+    public void FindNeighbors(Vector3 tileBasicPosition)
+    {
+        neighboringHexTiles = new();
+        neighboringTiles = new();
+
         RaycastHit[] neighbourRays = Physics.SphereCastAll(tileBasicPosition, 1, new Vector3(0, 0.1f, 0));
         foreach (RaycastHit neighbourRay in neighbourRays)
         {
-            if (neighbourRay.transform.position != tileBasicPosition)
+            neighbourRays = neighbourRays.Distinct().ToArray();
+            if (neighbourRay.transform.position != this.transform.position)
             {
                 neighboringTiles.Add(neighbourRay.transform.gameObject);
                 neighboringHexTiles.Add(neighbourRay.transform.gameObject.GetComponent<HexTile>());
@@ -161,7 +166,7 @@ public class HexTile : MonoBehaviour
 
                     if (gameManager.selectedObj.objType == BuildModeObject.ObjectType.Soil && gameManager.selectedSoil != null)
                     {
-                        soilFill.ChangeSoilType(gameManager.selectedSoil.soilType, this);
+                        soilFill.ChangeSoilType(gameManager.selectedSoil.soilType);
                         Vector3 heighten = new();
                         if (gameManager.selectedSoil.soilType == SoilObject.SoilType.Loam)
                         {

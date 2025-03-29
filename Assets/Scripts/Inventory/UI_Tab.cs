@@ -12,6 +12,8 @@ public class UI_Tab : MonoBehaviour
 
     public void OnClick()
     {
+        handler.gameManager.selectedObj = null;
+        handler.gameManager.selectedSoil = null;
         handler.SwitchType(ObjectType);
     }
 

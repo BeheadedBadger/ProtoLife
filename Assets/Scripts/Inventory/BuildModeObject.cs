@@ -18,4 +18,5 @@ public abstract class BuildModeObject : ScriptableObject
     public List<SoilObject.SoilType> soilTypes;
 
     public bool selected;
+    public int unlockCost;
 }

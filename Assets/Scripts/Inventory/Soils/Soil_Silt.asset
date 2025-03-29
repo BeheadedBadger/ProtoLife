@@ -1,0 +1,27 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 497d49e25b5e792489ecadea3ab70a39, type: 3}
+  m_Name: Soil_Silt
+  m_EditorClassIdentifier: 
+  title: Silt
+  description: It's a lot like sand, but even smaller and a bit more greyish in colour.
+  objType: 0
+  unlocked: 1
+  prefab: {fileID: 0}
+  sprite: {fileID: 21300000, guid: ea2a32841c8a0a24da1f9f9451e23405, type: 3}
+  cost: 10
+  lifeCoinGeneration: 0
+  waterNeed: 0
+  soilTypes: 
+  selected: 0
+  unlockCost: 2
+  soilType: 4

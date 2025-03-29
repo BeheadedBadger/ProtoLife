@@ -16,6 +16,7 @@ public class ItemSlot : MonoBehaviour
     [SerializeField] TextMeshProUGUI generates;
     [SerializeField] Image icon;
     [SerializeField] Sprite lockedIcon;
+    [SerializeField] GameObject amber;
     [SerializeField] Button button;
 
     //SoilTypes
@@ -32,7 +33,7 @@ public class ItemSlot : MonoBehaviour
     Vector3 activeRotation = new(0, 0, -10);
     Vector3 inactiveRotation = new(0, 0, 0);
 
-    void Update()
+    void FixedUpdate()
     {
         if (!infoSet)
         {
@@ -56,26 +57,38 @@ public class ItemSlot : MonoBehaviour
     public void SetToUnselected()
     {
         StartCoroutine(LerpRotation(this.gameObject, activeRotation, inactiveRotation, 0.2f, false));
+        associatedObj.selected = false;
         //gameObject.transform.eulerAngles = new Vector3(0, 0, 0);
     }
 
     public void SetToSelected()
     {
         StartCoroutine(LerpRotation(this.gameObject, inactiveRotation, activeRotation, 0.2f, true));
+        associatedObj.selected = true;
         //gameObject.transform.eulerAngles = new Vector3(0, 0, -5);
     }
 
     public void OnUnlock()
     {
+        associatedObj.unlocked = true;
         SetInfo();
     }
 
     public void OnClick()
     {
-        gameManager.selectedObj = associatedObj;
-        if (associatedObj.objType == BuildModeObject.ObjectType.Soil)
+        if (!associatedObj.unlocked && gameManager.Amber >= associatedObj.unlockCost )
         {
-            gameManager.selectSoil();
+            gameManager.Amber -= associatedObj.unlockCost;
+            OnUnlock();
+        }
+
+        if (associatedObj.unlocked)
+        {
+            gameManager.selectedObj = associatedObj;
+            if (associatedObj.objType == BuildModeObject.ObjectType.Soil)
+            {
+                gameManager.selectSoil();
+            }
         }
     }
 
@@ -99,6 +112,7 @@ public class ItemSlot : MonoBehaviour
         button.enabled = true;
         cost.text = associatedObj.cost.ToString();
         icon.sprite = associatedObj.sprite;
+        amber.SetActive(false);
 
         if (associatedObj.objType != BuildModeObject.ObjectType.Soil)
         {
@@ -139,10 +153,11 @@ public class ItemSlot : MonoBehaviour
     private void SetLocked()
     {
         cost.text = "";
-        generates.text = "";
+        generates.text = associatedObj.unlockCost.ToString();
         icon.sprite = lockedIcon;
-        button.enabled = false;
+        amber.SetActive(true);
         noWaterNeed();
+        noSoilTypes();
     }
 
     private void noWaterNeed()
@@ -153,8 +168,23 @@ public class ItemSlot : MonoBehaviour
         }
     }
 
+    private void noSoilTypes()
+    {
+        Sand.color = new Color(0, 0, 0, 0);
+        Loam.color = new Color(0, 0, 0, 0);
+        Clay.color = new Color(0, 0, 0, 0);
+        Silt.color = new Color(0, 0, 0, 0);
+        Water.color = new Color(0, 0, 0, 0);
+    }
+
     private void SetSoilTypes()
     {
+        Sand.color = new Color(1, 1, 1, 1);
+        Loam.color = new Color(1, 1, 1, 1);
+        Clay.color = new Color(1, 1, 1, 1);
+        Silt.color = new Color(1, 1, 1, 1);
+        Water.color = new Color(1, 1, 1, 1);
+
         if (!associatedObj.soilTypes.Contains(SoilObject.SoilType.Sand))
         {
             Sand.sprite = disabled;
@@ -214,17 +244,11 @@ public class ItemSlot : MonoBehaviour
         float time = 0;
         while (time < duration)
         {
-            /*Vector3 currentRotation = new Vector3(Mathf.LerpAngle(startRotation.x, targetRotation.y, Time.deltaTime),
-            Mathf.LerpAngle(startRotation.y, targetRotation.y, Time.deltaTime),
-            Mathf.LerpAngle(startRotation.z, targetRotation.z, Time.deltaTime));
-
-            obj.transform.eulerAngles = Lerp currentRotation;*/
            obj.transform.rotation = Quaternion.Lerp(Quaternion.Euler(startRotation), Quaternion.Euler(targetRotation), time);
            time += Time.deltaTime;
            yield return null;
         }
 
-        obj.transform.eulerAngles = targetRotation;
-        associatedObj.selected = setActive;
+        obj.transform.rotation = Quaternion.Euler(targetRotation);
     }
 }

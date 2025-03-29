@@ -13,7 +13,8 @@ MonoBehaviour:
   m_Name: Floppies
   m_EditorClassIdentifier: 
   title: Floppies
-  description: 
+  description: A yellow lichen with a short lifespan that thrives in dry environments
+    and spreads fast.
   objType: 1
   unlocked: 1
   prefab: {fileID: 3552898181022442474, guid: 0d4dedb54df061244944701b8a7ea0d5, type: 3}
@@ -22,6 +23,8 @@ MonoBehaviour:
   lifeCoinGeneration: 0.3
   waterNeed: 3
   soilTypes: 010000000200000004000000
+  selected: 0
+  unlockCost: 2
   lifeType: 0
   kingdom: 0
   lifeForm: {fileID: 3552898181022442474, guid: 0d4dedb54df061244944701b8a7ea0d5,

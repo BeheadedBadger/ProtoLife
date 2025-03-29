@@ -1,0 +1,42 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f82f5a222ccd0494396f8eb81eab9806, type: 3}
+  m_Name: PeeperPod
+  m_EditorClassIdentifier: 
+  title: Peeper Pod
+  description: Always watching.. But it doesn't do much else. Peeper pods grow well
+    in dry environments, but do require soil that is rich in nitrates. They can parasitize
+    other fungi if no nitrates are available.
+  objType: 2
+  unlocked: 1
+  prefab: {fileID: 5323785143128242283, guid: 915aca0d5795a5a4bb0a8ea40c4ca3a9, type: 3}
+  sprite: {fileID: 21300000, guid: da1c0f1e6b1ce074e8aebecd3be458d0, type: 3}
+  cost: 50
+  lifeCoinGeneration: 5
+  waterNeed: 2
+  soilTypes: 010000000200000004000000
+  selected: 0
+  unlockCost: 10
+  lifeType: 1
+  kingdom: 0
+  lifeForm: {fileID: 5323785143128242283, guid: 915aca0d5795a5a4bb0a8ea40c4ca3a9,
+    type: 3}
+  fossil: {fileID: 0}
+  startingForm: {fileID: 0}
+  mobility: 0
+  maxHealth: 20
+  feedingRate: 4
+  foodSources: 0400000000000000
+  lifeSpan: 10
+  procreationType: 0
+  procreationTime: 3
+  procreationRate: 1

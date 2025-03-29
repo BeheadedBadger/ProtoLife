@@ -23,6 +23,7 @@ MonoBehaviour:
   waterNeed: 8
   soilTypes: 0200000003000000
   selected: 0
+  unlockCost: 5
   lifeType: 1
   kingdom: 3
   lifeForm: {fileID: 1030265907563593133, guid: 78ab94fa557424941ac94d042d943ae9,
