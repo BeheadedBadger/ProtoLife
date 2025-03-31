@@ -22,7 +22,7 @@ MonoBehaviour:
   lifeCoinGeneration: 1
   waterNeed: 5
   soilTypes: 01000000020000000300000004000000
-  selected: 1
+  selected: 0
   unlockCost: 3
   lifeType: 0
   kingdom: 0
@@ -31,7 +31,7 @@ MonoBehaviour:
   fossil: {fileID: 0}
   startingForm: {fileID: 0}
   mobility: 0
-  maxHealth: 3
+  maxHealth: 1
   feedingRate: 6
   foodSources: 04000000
   lifeSpan: 10

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 using UnityEngine.EventSystems;
+using UnityEngine.TestTools;
 
 public class HexTile : MonoBehaviour
 {
@@ -29,12 +30,15 @@ public class HexTile : MonoBehaviour
     //[SerializeField] public GameObject water;
 
     [SerializeField] public GameObject coverContainer;
+    public LifeForm cover;
     public bool coverFilled;
 
     [SerializeField] public GameObject stationaryContainer;
+    public LifeForm stationary;
     public bool stationaryFilled;
 
     [SerializeField] public GameObject mobileContainer;
+    public LifeForm mobile;
     public bool mobileFilled;
 
     //Neighbors
@@ -159,13 +163,15 @@ public class HexTile : MonoBehaviour
 
                 if (highlighted && gameManager.selectedObj != null && placementPossible)
                 {
-                    bool paid = CanPay();
+                    bool canPay = CanPay();
 
-                    if (paid == false)
+                    if (canPay == false)
                     { return; }
 
                     if (gameManager.selectedObj.objType == BuildModeObject.ObjectType.Soil && gameManager.selectedSoil != null)
                     {
+                        gameManager.LifeCoins -= gameManager.selectedObj.cost;
+
                         soilFill.ChangeSoilType(gameManager.selectedSoil.soilType);
                         Vector3 heighten = new();
                         if (gameManager.selectedSoil.soilType == SoilObject.SoilType.Loam)
@@ -197,19 +203,28 @@ public class HexTile : MonoBehaviour
                     if (gameManager.selectedObj.objType == BuildModeObject.ObjectType.Cover)
                     {
                         gameManager.LifeCoins -= gameManager.selectedObj.cost;
-                        GameObject cover = Instantiate(gameManager.selectedObj.prefab, coverContainer.transform.transform);
-                        LifeForm lifeform = cover.GetComponent<LifeForm>();
-                        lifeform.createLifeForm(this);
+                        GameObject coverGO = Instantiate(gameManager.selectedObj.prefab, coverContainer.transform.transform);
+                        cover = coverGO.GetComponent<LifeForm>();
+                        cover.createLifeForm(this);
                         coverFilled = true;
                     }
 
                     if (gameManager.selectedObj.objType == BuildModeObject.ObjectType.Stationary)
                     {
                         gameManager.LifeCoins -= gameManager.selectedObj.cost;
-                        GameObject stationary = Instantiate(gameManager.selectedObj.prefab, stationaryContainer.transform.transform);
-                        LifeForm lifeform = stationary.GetComponent<LifeForm>();
-                        lifeform.createLifeForm(this);
+                        GameObject stationaryGO = Instantiate(gameManager.selectedObj.prefab, stationaryContainer.transform.transform);
+                        stationary = stationaryGO.GetComponent<LifeForm>();
+                        stationary.createLifeForm(this);
                         stationaryFilled = true;
+                    }
+
+                    if (gameManager.selectedObj.objType == BuildModeObject.ObjectType.Mobile)
+                    {
+                        gameManager.LifeCoins -= gameManager.selectedObj.cost;
+                        GameObject mobileGO = Instantiate(gameManager.selectedObj.prefab, mobileContainer.transform.transform);
+                        mobile = mobileGO.GetComponent<LifeForm>();
+                        mobile.createLifeForm(this);
+                        mobileFilled = true;
                     }
                 }
             }
@@ -224,7 +239,6 @@ public class HexTile : MonoBehaviour
             return false;
         }
 
-        gameManager.LifeCoins = (gameManager.LifeCoins - gameManager.selectedObj.cost);
         return true;
     }
 
@@ -248,6 +262,12 @@ public class HexTile : MonoBehaviour
             }
 
             if (gameManager.selectedObj.objType == BuildModeObject.ObjectType.Stationary && !stationaryFilled)
+            {
+                placementPossible = true;
+                return;
+            }
+
+            if (gameManager.selectedObj.objType == BuildModeObject.ObjectType.Mobile && !mobileFilled)
             {
                 placementPossible = true;
                 return;
@@ -277,6 +297,11 @@ public class HexTile : MonoBehaviour
             {
                 return true;
             }
+            if (lifeform.objType == BuildModeObject.ObjectType.Mobile && !mobileFilled)
+            {
+                return true;
+            }
+
             else 
             { 
                 return false; 

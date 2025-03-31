@@ -100,10 +100,13 @@ public class GameManager : MonoBehaviour
         List<Data.TileData> AllTileData = new();
         foreach (HexTile tile in hexTiles)
         {
-            List<float> gridPosition = new List<float> { tile.tileBasicPosition.x, tile.tileBasicPosition.y, tile.tileBasicPosition.z };
-            List<float> soilPosition = new List<float> { tile.soilBasicPosition.x, tile.soilBasicPosition.y, tile.soilBasicPosition.z };
-            Data.TileData tileData = new(gridPosition.ToArray(), soilPosition.ToArray(), tile.soilFill.thisSoilType.ToString(), tile.soilFill.nutrientScore, tile.soilFill.waterScore, tile.GetInstanceID());
-            AllTileData.Add(tileData);
+            if (tile != null)
+            {
+                List<float> gridPosition = new List<float> { tile.tileBasicPosition.x, tile.tileBasicPosition.y, tile.tileBasicPosition.z };
+                List<float> soilPosition = new List<float> { tile.soilBasicPosition.x, tile.soilBasicPosition.y, tile.soilBasicPosition.z };
+                Data.TileData tileData = new(gridPosition.ToArray(), soilPosition.ToArray(), tile.soilFill.thisSoilType.ToString(), tile.soilFill.nutrientScore, tile.soilFill.waterScore, tile.GetInstanceID());
+                AllTileData.Add(tileData);
+            }
         }
 
         Data data = new Data(Mathf.RoundToInt(LifeCoins), Amber, days, months, years, AllTileData.ToArray(), AllLifeformData.ToArray());
@@ -128,17 +131,21 @@ public class GameManager : MonoBehaviour
 
             foreach (HexTile tile in hexTiles)
             {
-                Data.TileData tiledata = data.Tiles.Where(x => x.ID == tile.GetInstanceID()).FirstOrDefault();
-                tile.grid.transform.position = new Vector3(tiledata.PositionGrid[0], tiledata.PositionGrid[1], tiledata.PositionGrid[2]);
-                tile.soilFill.transform.position = new Vector3(tiledata.PositionSoil[0], tiledata.PositionSoil[1], tiledata.PositionSoil[2]);
-                tile.soilFill.nutrientScore = tiledata.NutrientScore;
-                
-                tile.FindNeighbors(tile.grid.transform.position);
+                if (tile != null)
+                {
+                    Data.TileData tiledata = data.Tiles.Where(x => x.ID == tile.GetInstanceID()).FirstOrDefault();
+                    tile.grid.transform.position = new Vector3(tiledata.PositionGrid[0], tiledata.PositionGrid[1], tiledata.PositionGrid[2]);
+                    tile.soilFill.transform.position = new Vector3(tiledata.PositionSoil[0], tiledata.PositionSoil[1], tiledata.PositionSoil[2]);
+                    tile.soilFill.nutrientScore = tiledata.NutrientScore;
+                    tile.soilFill.waterScore = tiledata.HumidityScore;
 
-                SoilObject.SoilType type = (SoilObject.SoilType)Enum.Parse(typeof(SoilObject.SoilType), tiledata.SoilType);
-                tile.soilFill.SetSoilType(type, tile);
-                if (type != SoilObject.SoilType.Ash)
-                { tile.soilFilled = true; }
+                    tile.FindNeighbors(tile.grid.transform.position);
+
+                    SoilObject.SoilType type = (SoilObject.SoilType)Enum.Parse(typeof(SoilObject.SoilType), tiledata.SoilType);
+                    tile.soilFill.SetSoilType(type, tile);
+                    if (type != SoilObject.SoilType.Ash)
+                    { tile.soilFilled = true; }
+                }
             }
         }
     }

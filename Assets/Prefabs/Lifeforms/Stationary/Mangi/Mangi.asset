@@ -31,7 +31,7 @@ MonoBehaviour:
   fossil: {fileID: 0}
   startingForm: {fileID: 0}
   mobility: 0
-  maxHealth: 10
+  maxHealth: 2
   feedingRate: 5
   foodSources: 0000000004000000
   lifeSpan: 10

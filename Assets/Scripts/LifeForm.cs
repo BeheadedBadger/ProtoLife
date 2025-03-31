@@ -1,6 +1,9 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.IO;
+using Unity.VisualScripting;
+using UnityEditor.Tilemaps;
 using UnityEngine;
 
 public class LifeForm : MonoBehaviour
@@ -14,9 +17,14 @@ public class LifeForm : MonoBehaviour
     DateTime feedingTime;
     DateTime deathTime;
 
-    bool InitializationCompleted = false;
+    bool InitializationCompleted;
     DateTime previousUpdate;
     int health;
+
+    private void Awake()
+    {
+        InitializationCompleted = false;
+    }
 
     public void createLifeForm(HexTile parent)
     {
@@ -99,9 +107,9 @@ public class LifeForm : MonoBehaviour
             {
                 foreach (LifeFormObject.Kingdom foodSource in lifeFormObject.foodSources)
                 {
-                    if (parentHex.mobileFilled)
+                    if (parentHex.mobileFilled && parentHex.mobile != null)
                     {
-                        LifeForm prey = parentHex.mobileContainer.GetComponentInChildren<LifeForm>();
+                        LifeForm prey = parentHex.mobile;
                         if (prey.lifeFormObject.kingdom == foodSource)
                         {
                             prey.DamageLifeform(1);
@@ -120,14 +128,10 @@ public class LifeForm : MonoBehaviour
                     {
                         if (parentHex.stationaryFilled)
                         {
-                            LifeForm prey = parentHex.stationaryContainer.GetComponentInChildren<LifeForm>();
+                            LifeForm prey = parentHex.stationary; 
                             if (prey.lifeFormObject.kingdom == foodSource)
                             {
-                                prey.DamageLifeform(1);
-                                if (health < lifeFormObject.maxHealth)
-                                {
-                                    health += 1;
-                                }
+                                FeedOn(prey);
                                 return;
                             }
                         }
@@ -138,16 +142,12 @@ public class LifeForm : MonoBehaviour
                 {
                     foreach (LifeFormObject.Kingdom foodSource in lifeFormObject.foodSources)
                     {
-                        if (parentHex.coverFilled)
+                        if (parentHex.coverFilled && parentHex.cover != null)
                         {
-                            LifeForm prey = parentHex.coverContainer.GetComponentInChildren<LifeForm>();
+                            LifeForm prey = parentHex.cover;
                             if (prey.lifeFormObject.kingdom == foodSource)
                             {
-                                prey.DamageLifeform(1);
-                                if (health < lifeFormObject.maxHealth)
-                                {
-                                    health += 1;
-                                }
+                                FeedOn(prey);
                                 return;
                             }
                         }
@@ -158,7 +158,184 @@ public class LifeForm : MonoBehaviour
             health -= 1;
         }
 
-        //else if() //MOBILE LIFEFORM, FIND PATH TO FOOD
+        else if (lifeFormObject.lifeType == LifeFormObject.LifeType.Mobile)
+        {
+            foreach (LifeFormObject.Kingdom foodSource in lifeFormObject.foodSources)
+            {
+                //Check for food in own tile
+                if (parentHex.coverFilled && parentHex.cover != null)
+                {
+                    LifeForm prey = parentHex.cover;
+                    if (prey.lifeFormObject.kingdom == foodSource)
+                    {
+                        FeedOn(prey);
+                        return;
+                    }
+                }
+
+                if (parentHex.stationaryFilled && parentHex.stationary != null)
+                { 
+                    LifeForm prey = parentHex.stationary;
+                    if (prey.lifeFormObject.kingdom == foodSource)
+                    {
+                        FeedOn(prey);
+                        return;
+                    }
+
+                }
+            }
+
+            foreach (LifeFormObject.Kingdom foodSource in lifeFormObject.foodSources)
+            {
+                //Check for food in neighbour tiles if no food has been found in own tile
+                foreach (HexTile neighbour in parentHex.neighboringHexTiles)
+                {
+                    if (neighbour.coverFilled && neighbour.cover != null)
+                    {
+                        LifeForm prey = neighbour.cover;
+                        if (prey.lifeFormObject.kingdom == foodSource)
+                        {
+                            FeedOn(prey);
+                            return;
+                        }
+                    }
+
+                    if (neighbour.stationaryFilled)
+                    {
+                        LifeForm prey = neighbour.stationary;
+                        if (prey.lifeFormObject.kingdom == foodSource)
+                        {
+                            FeedOn(prey);
+                            return;
+                        }
+                    }
+
+                    if (neighbour.mobileFilled)
+                    {
+                        LifeForm prey = neighbour.mobile;
+                        if (prey.lifeFormObject.kingdom == foodSource)
+                        {
+                            FeedOn(prey);
+                            return;
+                        }
+                    }
+                }
+            }
+
+            foreach (LifeFormObject.Kingdom foodSource in lifeFormObject.foodSources)
+            {
+                //Check even further away and move to other tile if no food was found yet
+                List<HexTile> path = new();
+                foreach (HexTile neighbour in parentHex.neighboringHexTiles)
+                {
+                    foreach (HexTile secondaryNeighbour in neighbour.neighboringHexTiles)
+                    {
+                        if (secondaryNeighbour.coverFilled && secondaryNeighbour.cover != null)
+                        {
+                            LifeForm prey = secondaryNeighbour.cover;
+                            if (prey.lifeFormObject.kingdom == foodSource)
+                            {
+                                path.Add(neighbour);
+                                MoveTo(path, "feed");
+                                return;
+                            }
+                        }
+
+                        if (secondaryNeighbour.stationaryFilled)
+                        {
+                            LifeForm prey = secondaryNeighbour.stationary;
+                            if (prey.lifeFormObject.kingdom == foodSource)
+                            {
+                                path.Add(neighbour);
+                                MoveTo(path, "feed");
+                                return;
+                            }
+                        }
+
+                        if (secondaryNeighbour.mobileFilled)
+                        {
+                            LifeForm prey = secondaryNeighbour.mobile; 
+                            if (prey.lifeFormObject.kingdom == foodSource)
+                            {
+                                path.Add(neighbour);
+                                MoveTo(path, "feed");
+                                return;
+                            }
+                        }
+                    }
+                }
+
+                //Check even further away and move to other tiles if no food was found yet
+                foreach (HexTile neighbour in parentHex.neighboringHexTiles)
+                {
+                    foreach (HexTile secondaryNeighbour in neighbour.neighboringHexTiles)
+                    {
+                        foreach (HexTile trinaryNeighbour in secondaryNeighbour.neighboringHexTiles)
+                        {
+                            if (trinaryNeighbour.coverFilled)
+                            {
+                                LifeForm prey = trinaryNeighbour.cover;
+                                if (prey.lifeFormObject.kingdom == foodSource)
+                                {
+                                    path.Add(neighbour);
+                                    path.Add(secondaryNeighbour);
+                                    MoveTo(path, "feed");
+                                    return;
+                                }
+                            }
+
+                            if (trinaryNeighbour.stationaryFilled)
+                            {
+                                LifeForm prey = trinaryNeighbour.stationary;
+                                if (prey.lifeFormObject.kingdom == foodSource)
+                                {
+                                    path.Add(neighbour);
+                                    path.Add(secondaryNeighbour);
+                                    MoveTo(path, "feed");
+                                    return;
+                                }
+                            }
+
+                            if (trinaryNeighbour.mobileFilled)
+                            {
+                                LifeForm prey = trinaryNeighbour.mobile;
+                                if (prey.lifeFormObject.kingdom == foodSource)
+                                {
+                                    path.Add(neighbour);
+                                    path.Add(secondaryNeighbour);
+                                    MoveTo(path, "feed"); ;
+                                    return;
+                                }
+                            }
+                        }
+                    }
+                }
+
+                //Move in a random direction and try again
+                List<HexTile> options = new();
+                foreach (HexTile hexTile in parentHex.neighboringHexTiles)
+                {
+                    if (hexTile.mobileFilled == false)
+                    {
+                        options.Add(hexTile);
+                    }
+                }
+                if (options.Count >= 1)
+                {
+                    path = new() { options[UnityEngine.Random.Range(0, options.Count)] };
+                    MoveTo(path, "procreation");
+                }
+            }
+        }
+    }
+
+    private void FeedOn(LifeForm prey)
+    {
+        prey.DamageLifeform(1);
+        if (health < lifeFormObject.maxHealth)
+        {
+            health += 1;
+        }
     }
 
     private void Death()
@@ -166,13 +343,23 @@ public class LifeForm : MonoBehaviour
         parentHex.soilFill.nutrientScore += 1;
 
         if (lifeFormObject.objType == BuildModeObject.ObjectType.Cover)
-        { parentHex.coverFilled = false; }
+        { 
+            parentHex.coverFilled = false;
+            parentHex.cover = null;
+        }
 
         if (lifeFormObject.objType == BuildModeObject.ObjectType.Stationary)
-        { parentHex.stationaryFilled = false; }
+        { 
+            parentHex.stationaryFilled = false;
+            parentHex.stationary = null;
+        }
 
         if (lifeFormObject.objType == BuildModeObject.ObjectType.Mobile)
-        { parentHex.mobileFilled = false; }
+        { 
+            parentHex.mobileFilled = false;
+            parentHex.mobile = null;
+            Destroy(this.gameObject);
+        }
 
         if (lifeFormObject.objType == BuildModeObject.ObjectType.Cover || lifeFormObject.objType == BuildModeObject.ObjectType.Stationary)
         {
@@ -182,54 +369,197 @@ public class LifeForm : MonoBehaviour
 
     private void AttemptProcreation()
     {
+        //Asexual
         if (lifeFormObject.procreationType == LifeFormObject.ProcreationType.Asexual)
         {
-            List<HexTile> possiblePlacement = new();
+            Procreate();
+        }
 
-            foreach (GameObject neighbor in parentHex.neighboringTiles)
+        //Sexual and immobile
+        if (lifeFormObject.procreationType == LifeFormObject.ProcreationType.Sexual && (lifeFormObject.objType == LifeFormObject.ObjectType.Stationary || lifeFormObject.objType == BuildModeObject.ObjectType.Cover))
+        {
+            foreach (HexTile neighbour in parentHex.neighboringHexTiles)
             {
-                HexTile tile = neighbor.GetComponent<HexTile>();
-                bool canPlace = tile.CheckIfPlacementIsPossible(lifeFormObject);
-                if (canPlace) 
-                { 
-                    possiblePlacement.Add(tile); 
-                }
-            }
-
-            if (possiblePlacement.Count > 0)
-            {
-                for (int placed = 0; placed < lifeFormObject.procreationRate; placed++)
+                if (neighbour.mobileFilled)
                 {
-                    if (possiblePlacement.Count > 0)
+                    LifeForm neighbourLifeform = neighbour.mobile;
+                    if (neighbourLifeform.lifeFormObject.name == lifeFormObject.name)
                     {
-                        HexTile random = possiblePlacement[UnityEngine.Random.Range(0, possiblePlacement.Count - 1)];
-                        GameObject prefab = Instantiate(lifeFormObject.prefab, random.coverContainer.transform);
-                        prefab.transform.localScale = new Vector3(0, 0, 0);
-                        prefab.GetComponent<LifeForm>().createLifeForm(random);
-
-                        if (lifeFormObject.objType == BuildModeObject.ObjectType.Cover)
-                        {
-                            random.coverFilled = true;
-                        }
-                        else if (lifeFormObject.objType == BuildModeObject.ObjectType.Stationary)
-                        {
-                            random.stationaryFilled = true;
-                        }
-                        else if (lifeFormObject.objType == BuildModeObject.ObjectType.Mobile)
-                        {
-                            random.mobileFilled = true;
-                        }
-
-                        possiblePlacement.Remove(random);
+                        Procreate();
                     }
                 }
             }
+        }
+        
+        //Sexual and mobile
+        if (lifeFormObject.procreationType == LifeFormObject.ProcreationType.Sexual && lifeFormObject.objType == LifeFormObject.ObjectType.Mobile)
+        {
+            List<HexTile> path = new();
+
+            foreach(HexTile neighbour in parentHex.neighboringHexTiles) 
+            {
+                if (neighbour.mobileFilled && neighbour.mobile != null)
+                {
+                    LifeForm neighbourLifeform = neighbour.mobile;
+                    if (neighbourLifeform.lifeFormObject.name == lifeFormObject.name)
+                    {
+                        Procreate();
+                        return;
+                    }
+                }
+            }
+
+            //Try one tile further away if no potential mates can be found
+            foreach (HexTile neighbour in parentHex.neighboringHexTiles)
+            {
+                foreach (HexTile secondaryNeighbour in neighbour.neighboringHexTiles)
+                {
+                    if (secondaryNeighbour.mobileFilled && secondaryNeighbour.mobile != null)
+                    {
+                        LifeForm neighbourLifeform = secondaryNeighbour.mobile;
+                        if (neighbourLifeform.lifeFormObject.name == lifeFormObject.name && neighbour.mobileFilled == false)
+                        {
+                            path.Add(neighbour);
+                            MoveTo(path, "procreation");
+                            return;
+                        }
+                    }
+                }
+            }
+
+            //Try one tile even further away if none can be found even still
+            foreach (HexTile neighbour in parentHex.neighboringHexTiles)
+            {
+                if (neighbour.mobileFilled == false)
+                {
+                    foreach (HexTile secondaryNeighbour in neighbour.neighboringHexTiles)
+                    {
+                        if (secondaryNeighbour.mobileFilled == false)
+                        {
+                            foreach (HexTile tritaryNeighbour in secondaryNeighbour.neighboringHexTiles)
+                            {
+                                if (tritaryNeighbour.mobileFilled)
+                                {
+                                    LifeForm neighbourLifeform = tritaryNeighbour.mobile;
+                                    if (neighbourLifeform.lifeFormObject.title == lifeFormObject.title)
+                                    {
+                                        path.Add(neighbour);
+                                        path.Add(secondaryNeighbour);
+                                        MoveTo(path, "procreation");
+                                        return;
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+
+            //Move in a random direction and try again
+            List<HexTile> options = new();
+            foreach (HexTile hexTile in parentHex.neighboringHexTiles)
+            {
+                if (hexTile.mobileFilled == false && hexTile.CheckIfPlacementIsPossible(this.lifeFormObject))
+                {
+                    options.Add(hexTile);
+                }
+            }
+            if (options.Count >= 1)
+            {
+                path = new() { options[UnityEngine.Random.Range(0, options.Count)] };
+                MoveTo(path, "procreation");
+            }
+        }
+    }
+
+    private void Procreate()
+    {
+        List<HexTile> possiblePlacement = new();
+
+        foreach (HexTile neighbor in parentHex.neighboringHexTiles)
+        {
+            bool canPlace = neighbor.CheckIfPlacementIsPossible(lifeFormObject);
+            if (canPlace)
+            {
+                possiblePlacement.Add(neighbor);
+            }
+        }
+
+        if (possiblePlacement.Count > 0)
+        {
+            for (int placed = 0; placed < lifeFormObject.procreationRate; placed++)
+            {
+                if (possiblePlacement.Count > 0)
+                {
+                    HexTile random = possiblePlacement[UnityEngine.Random.Range(0, possiblePlacement.Count - 1)];
+                    LifeForm prefab;
+
+                    if (lifeFormObject.objType == BuildModeObject.ObjectType.Cover)
+                    {
+                        var instantiated = Instantiate(lifeFormObject.prefab, random.coverContainer.transform);
+                        prefab = instantiated.GetComponent<LifeForm>();
+                        random.cover = prefab;
+                        random.coverFilled = true;
+                        prefab.createLifeForm(random);
+                    }
+                    else if (lifeFormObject.objType == BuildModeObject.ObjectType.Stationary)
+                    {
+                        var instantiated = Instantiate(lifeFormObject.prefab, random.stationaryContainer.transform);
+                        prefab = instantiated.GetComponent<LifeForm>();
+                        random.stationary = prefab;
+                        random.stationaryFilled = true;
+                        prefab.createLifeForm(random);
+                    }
+                    else if (lifeFormObject.objType == BuildModeObject.ObjectType.Mobile)
+                    {
+                        var instantiated = Instantiate(lifeFormObject.prefab, random.mobileContainer.transform);
+                        prefab = instantiated.GetComponent<LifeForm>();
+                        random.mobile = prefab;
+                        random.mobileFilled = true;
+                        prefab.createLifeForm(random);
+                    }
+
+                    possiblePlacement.Remove(random);
+                }
+            }
+        }
+    }
+
+    private void MoveTo(List<HexTile> tiles, string Goal)
+    {
+        if (tiles.Count == 1)
+        {
+            this.parentHex.mobileFilled = false;
+            this.gameObject.transform.SetParent(tiles[0].mobileContainer.transform, false);
+            tiles[0].mobileFilled = true;
+            this.parentHex = tiles[0];
+        }
+        //Add some sort of delay
+        if (tiles.Count == 2)
+        {
+            this.parentHex.mobileFilled = false;
+            this.gameObject.transform.SetParent(tiles[1].mobileContainer.transform, false);
+            tiles[1].mobileFilled = true;
+            this.parentHex = tiles[1];
+        }
+        if (Goal == "procreation")
+        {
+            AttemptProcreation();
+        }
+        if (Goal == "feed")
+        {
+            Feed();
         }
     }
 
     public void DamageLifeform(int damage)
     {
         health -= damage;
+    }
+
+    public void Poop(int nitrateScore) 
+    {
+        parentHex.soilFill.nutrientScore += nitrateScore;
     }
 
     IEnumerator CoverOrStationaryDestroyAnimation(GameObject obj, Vector3 smallerScale, Vector3 largerScale, float duration)
