@@ -720,6 +720,8 @@ MonoBehaviour:
   parentHex: {fileID: 0}
   lifeFormObject: {fileID: 11400000, guid: 629448ded28e79c42bcd2002a44c5304, type: 2}
   gameManager: {fileID: 0}
+  health: 0
+  age: 0
 --- !u!1 &7449101718658400248
 GameObject:
   m_ObjectHideFlags: 0

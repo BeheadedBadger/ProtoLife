@@ -39,7 +39,11 @@ public class LifeForm : MonoBehaviour
 
         parentHex = parent;
         gameManager = parentHex.gameManager;
-        health = lifeFormObject.maxHealth;
+
+        if (health == 0)
+        {
+            health = lifeFormObject.maxHealth;
+        }
 
         procreationTime = gameManager.currentDate.AddDays(lifeFormObject.procreationTime);
         coinGenerationTime = gameManager.currentDate.AddDays(lifeFormObject.lifeCoinGeneration);

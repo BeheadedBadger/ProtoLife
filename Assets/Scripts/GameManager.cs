@@ -176,13 +176,12 @@ public class GameManager : MonoBehaviour
                         {
                             if (tiledata.Cover == obj.title)
                             {
-                                LifeForm lifeform = obj.prefab.GetComponent<LifeForm>();
+                                GameObject instantiated = Instantiate(obj.prefab, tile.coverContainer.transform); 
+                                LifeForm lifeform = instantiated.GetComponent<LifeForm>();
                                 lifeform.age = tiledata.coverAge;
                                 lifeform.health = tiledata.coverHealth;
 
-                                Instantiate(obj.prefab, tile.coverContainer.transform);
                                 lifeform.createLifeForm(tile);
-
                                 tile.coverFilled = true;
                                 tile.cover = lifeform;
                             }
@@ -195,13 +194,12 @@ public class GameManager : MonoBehaviour
                         {
                             if (tiledata.Stationary == obj.title)
                             {
-                                LifeForm lifeform = obj.prefab.GetComponent<LifeForm>();
+                                GameObject instantiated = Instantiate(obj.prefab, tile.stationaryContainer.transform);
+                                LifeForm lifeform = instantiated.GetComponent<LifeForm>();
                                 lifeform.age = tiledata.stationaryAge;
                                 lifeform.health = tiledata.stationaryHealth;
 
-                                Instantiate(obj.prefab, tile.stationaryContainer.transform);
                                 lifeform.createLifeForm(tile);
-
                                 tile.stationaryFilled = true;
                                 tile.stationary = lifeform;
                             }
@@ -214,13 +212,12 @@ public class GameManager : MonoBehaviour
                         {
                             if (tiledata.Mobile == obj.title)
                             {
-                                LifeForm lifeform = obj.prefab.GetComponent<LifeForm>();
+                                GameObject instantiated = Instantiate(obj.prefab, tile.mobileContainer.transform);
+                                LifeForm lifeform = instantiated.GetComponent<LifeForm>();
                                 lifeform.age = tiledata.mobileAge;
                                 lifeform.health = tiledata.mobileHealth;
 
-                                Instantiate(obj.prefab, tile.mobileContainer.transform);
                                 lifeform.createLifeForm(tile);
-
                                 tile.mobileFilled = true;
                                 tile.mobile = lifeform;
                             }

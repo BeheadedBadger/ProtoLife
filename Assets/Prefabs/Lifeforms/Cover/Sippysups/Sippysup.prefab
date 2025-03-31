@@ -131,5 +131,5 @@ MonoBehaviour:
   parentHex: {fileID: 0}
   lifeFormObject: {fileID: 11400000, guid: 2503e7e55f192d443ac1a939ce1f8a36, type: 2}
   gameManager: {fileID: 0}
-  health: 1
-  age: 1
+  health: 0
+  age: 0
