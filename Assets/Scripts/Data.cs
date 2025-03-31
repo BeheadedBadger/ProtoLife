@@ -25,6 +25,19 @@ public class Data
         public int HumidityScore;
         public int ID;
 
+        //Lifeforms
+        public string Cover;
+        public int coverAge;
+        public int coverHealth;
+
+        public string Stationary;
+        public int stationaryAge;
+        public int stationaryHealth;
+
+        public string Mobile;
+        public int mobileAge;
+        public int mobileHealth;
+
         public TileData(float[] positionGrid, float[] positionSoil, string soilType, int nutrientScore, int humidityScore, int id)
         {
             ID = id;

@@ -9,7 +9,7 @@ using UnityEngine;
 public class LifeForm : MonoBehaviour
 {
     [SerializeField] public HexTile parentHex;
-    [SerializeField] LifeFormObject lifeFormObject;
+    [SerializeField] public LifeFormObject lifeFormObject;
     [SerializeField] public GameManager gameManager;
 
     DateTime procreationTime;
@@ -19,7 +19,8 @@ public class LifeForm : MonoBehaviour
 
     bool InitializationCompleted;
     DateTime previousUpdate;
-    int health;
+    public int health;
+    public int age;
 
     private void Awake()
     {
@@ -31,9 +32,9 @@ public class LifeForm : MonoBehaviour
         List<int> rotation = new List<int>() { 0, 60, 120, 180, 240, 300 };
         this.gameObject.transform.rotation = Quaternion.Euler(new Vector3(0, rotation[UnityEngine.Random.Range(0, 5)], 0));
 
-        if (lifeFormObject.objType == BuildModeObject.ObjectType.Cover || lifeFormObject.objType == BuildModeObject.ObjectType.Stationary)
+        if ((lifeFormObject.objType == BuildModeObject.ObjectType.Cover || lifeFormObject.objType == BuildModeObject.ObjectType.Stationary) && this.gameObject.activeInHierarchy)
         {
-            StartCoroutine(CoverOrStationaryInitAnimation(this.gameObject, new Vector3(1, 1, 1), new Vector3(0, 0, 0), 0.5f));
+            StartCoroutine(CoverOrStationaryInitAnimation(this.gameObject, new Vector3(1, 1, 1), new Vector3(0, 0, 0), 0.5f));    
         }
 
         parentHex = parent;
@@ -42,7 +43,16 @@ public class LifeForm : MonoBehaviour
 
         procreationTime = gameManager.currentDate.AddDays(lifeFormObject.procreationTime);
         coinGenerationTime = gameManager.currentDate.AddDays(lifeFormObject.lifeCoinGeneration);
-        deathTime = gameManager.currentDate.AddDays(lifeFormObject.lifeSpan);
+
+        if (age > 0)
+        { 
+            deathTime = gameManager.currentDate.AddDays(lifeFormObject.lifeSpan - age);
+        }
+        else 
+        {
+            deathTime = gameManager.currentDate.AddDays(lifeFormObject.lifeSpan);
+        }
+
         feedingTime = gameManager.currentDate.AddDays(lifeFormObject.feedingRate);
         previousUpdate = gameManager.currentDate;
 
@@ -61,6 +71,8 @@ public class LifeForm : MonoBehaviour
 
     private void CheckTimeBasedEvents()
     {
+        age++;
+
         if (procreationTime < gameManager.currentDate)
         {
             AttemptProcreation();

@@ -105,9 +105,33 @@ public class GameManager : MonoBehaviour
                 List<float> gridPosition = new List<float> { tile.tileBasicPosition.x, tile.tileBasicPosition.y, tile.tileBasicPosition.z };
                 List<float> soilPosition = new List<float> { tile.soilBasicPosition.x, tile.soilBasicPosition.y, tile.soilBasicPosition.z };
                 Data.TileData tileData = new(gridPosition.ToArray(), soilPosition.ToArray(), tile.soilFill.thisSoilType.ToString(), tile.soilFill.nutrientScore, tile.soilFill.waterScore, tile.GetInstanceID());
+
+                if (tile.cover != null && tile.coverFilled)
+                {
+                    tileData.Cover = tile.cover.lifeFormObject.title;
+                    tileData.coverAge = tile.cover.age;
+                    tileData.coverHealth = tile.cover.health;
+                }
+
+                if (tile.stationary != null && tile.stationaryFilled)
+                {
+                    tileData.Stationary = tile.stationary.lifeFormObject.title;
+                    tileData.stationaryAge = tile.stationary.age;
+                    tileData.stationaryHealth = tile.stationary.health;
+                }
+
+                if (tile.mobile != null && tile.mobileFilled)
+                {
+                    tileData.Mobile = tile.mobile.lifeFormObject.title;
+                    tileData.mobileAge = tile.mobile.age;
+                    tileData.mobileHealth = tile.mobile.health;
+                }
+
                 AllTileData.Add(tileData);
             }
         }
+
+        //Save lifeforms
 
         Data data = new Data(Mathf.RoundToInt(LifeCoins), Amber, days, months, years, AllTileData.ToArray(), AllLifeformData.ToArray());
         Data.SaveGame(data);
@@ -145,6 +169,63 @@ public class GameManager : MonoBehaviour
                     tile.soilFill.SetSoilType(type, tile);
                     if (type != SoilObject.SoilType.Ash)
                     { tile.soilFilled = true; }
+
+                    if (tiledata.Cover != null)
+                    {
+                        foreach (BuildModeObject obj in inventory.objects)
+                        {
+                            if (tiledata.Cover == obj.title)
+                            {
+                                LifeForm lifeform = obj.prefab.GetComponent<LifeForm>();
+                                lifeform.age = tiledata.coverAge;
+                                lifeform.health = tiledata.coverHealth;
+
+                                Instantiate(obj.prefab, tile.coverContainer.transform);
+                                lifeform.createLifeForm(tile);
+
+                                tile.coverFilled = true;
+                                tile.cover = lifeform;
+                            }
+                        }
+                    }
+
+                    if (tiledata.Stationary != null)
+                    {
+                        foreach (BuildModeObject obj in inventory.objects)
+                        {
+                            if (tiledata.Stationary == obj.title)
+                            {
+                                LifeForm lifeform = obj.prefab.GetComponent<LifeForm>();
+                                lifeform.age = tiledata.stationaryAge;
+                                lifeform.health = tiledata.stationaryHealth;
+
+                                Instantiate(obj.prefab, tile.stationaryContainer.transform);
+                                lifeform.createLifeForm(tile);
+
+                                tile.stationaryFilled = true;
+                                tile.stationary = lifeform;
+                            }
+                        }
+                    }
+
+                    if (tiledata.Mobile != null)
+                    {
+                        foreach (BuildModeObject obj in inventory.objects)
+                        {
+                            if (tiledata.Mobile == obj.title)
+                            {
+                                LifeForm lifeform = obj.prefab.GetComponent<LifeForm>();
+                                lifeform.age = tiledata.mobileAge;
+                                lifeform.health = tiledata.mobileHealth;
+
+                                Instantiate(obj.prefab, tile.mobileContainer.transform);
+                                lifeform.createLifeForm(tile);
+
+                                tile.mobileFilled = true;
+                                tile.mobile = lifeform;
+                            }
+                        }
+                    }
                 }
             }
         }
