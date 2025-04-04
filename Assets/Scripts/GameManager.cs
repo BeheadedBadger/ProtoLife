@@ -168,8 +168,8 @@ public class GameManager : MonoBehaviour
                     tile.soilFill.waterScore = tiledata.HumidityScore;
 
                     tile.soilFill.SetSoilType(type, tile);
-                    tile.soilFill.soilBasicPosition = tile.soilBasicPosition;
-                    tile.soilFill.soilSelectedPosition = tile.soilSelectedPosition;
+                    tile.SetHeight(type);
+
                     tile.FindNeighbors(tile.grid.transform.position);
 
                     if (tiledata.Cover != null)

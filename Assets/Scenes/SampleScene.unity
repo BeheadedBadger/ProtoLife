@@ -3130,7 +3130,7 @@ MonoBehaviour:
   - {fileID: 1774663748}
   - {fileID: 1589871181}
   - {fileID: 4216792}
-  - {fileID: 1139026936}
+  - {fileID: 0}
   - {fileID: 387923665}
   - {fileID: 1429835148}
   - {fileID: 1017305609}
@@ -4371,6 +4371,7 @@ MonoBehaviour:
   selectedSoil: {fileID: 0}
   selectedHex: {fileID: 0}
   turnsSinceStart: 0
+  hours: 0
   days: 0
   months: 0
   years: 0
@@ -23364,18 +23365,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 47d845dc4d303404a8a4774d39199011, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!114 &1139026936 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 6806515276736726230, guid: 163b3a185c8fea540b71bf6615e83015,
-    type: 3}
-  m_PrefabInstance: {fileID: 8413345964531299840}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 47d845dc4d303404a8a4774d39199011, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!114 &1139559533 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 6806515276360126734, guid: 163b3a185c8fea540b71bf6615e83015,
@@ -35057,6 +35046,11 @@ PrefabInstance:
         type: 3}
       propertyPath: orthographic size
       value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 7749738502928383156, guid: 5e35c22780aeea54f9a49c6c23fa5c8e,
+        type: 3}
+      propertyPath: m_AllowDynamicResolution
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 7749738503204637229, guid: 5e35c22780aeea54f9a49c6c23fa5c8e,
         type: 3}

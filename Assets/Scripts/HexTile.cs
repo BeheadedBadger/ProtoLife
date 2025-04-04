@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -75,7 +76,6 @@ public class HexTile : MonoBehaviour
         soilBasicPosition = soilPosition;
         soilSelectedPosition = new Vector3(soilBasicPosition.x, soilBasicPosition.y - 0.2f, soilBasicPosition.z);
 
-        SetHeight(soilFill.thisSoilType);
         FindNeighbors(basicPosition);
     }
 
@@ -206,7 +206,52 @@ public class HexTile : MonoBehaviour
             }
         }
 
+        SoilCheck();
         LifeFormCheck();
+    }
+
+    private void SoilCheck()
+    {
+        if (soilFill.thisSoilType == SoilObject.SoilType.Loam && soilBasicPosition.y != -0f
+            || soilFill.thisSoilType == SoilObject.SoilType.Loam && tileBasicPosition.y != 0.75f)
+        {
+            soilBasicPosition.y = -0f;
+            soilSelectedPosition = new Vector3(soilBasicPosition.x, soilBasicPosition.y - 0.2f, soilBasicPosition.z);
+
+            tileBasicPosition.y = 0.75f;
+            tileSelectedPosition = new Vector3(tileBasicPosition.x, tileBasicPosition.y + 0.4f, tileBasicPosition.z);
+            grid.transform.position = tileBasicPosition;
+        }
+        if (soilFill.thisSoilType == SoilObject.SoilType.Clay && soilBasicPosition.y != -0.25f
+            || soilFill.thisSoilType == SoilObject.SoilType.Clay && tileBasicPosition.y != 0.5f)
+        {
+            soilBasicPosition.y = -0.25f;
+            soilSelectedPosition = new Vector3(soilBasicPosition.x, soilBasicPosition.y - 0.2f, soilBasicPosition.z);
+
+            tileBasicPosition.y = 0.5f;
+            tileSelectedPosition = new Vector3(tileBasicPosition.x, tileBasicPosition.y + 0.4f, tileBasicPosition.z);
+            grid.transform.position = tileBasicPosition;
+        }
+        if (soilFill.thisSoilType == SoilObject.SoilType.Sand && soilBasicPosition.y != -0.5f
+            || soilFill.thisSoilType == SoilObject.SoilType.Sand && tileBasicPosition.y != 0.25f)
+        {
+            soilBasicPosition.y = -0.5f;
+            soilSelectedPosition = new Vector3(soilBasicPosition.x, soilBasicPosition.y - 0.2f, soilBasicPosition.z);
+
+            tileBasicPosition.y = 0.25f;
+            tileSelectedPosition = new Vector3(tileBasicPosition.x, tileBasicPosition.y + 0.4f, tileBasicPosition.z);
+            grid.transform.position = tileBasicPosition;
+        }
+        if (soilFill.thisSoilType == SoilObject.SoilType.Silt && soilBasicPosition.y != -0.75f 
+            || soilFill.thisSoilType == SoilObject.SoilType.Silt && tileBasicPosition.y != 0f)
+        {
+            soilBasicPosition.y = -0.75f;
+            soilSelectedPosition = new Vector3(soilBasicPosition.x, soilBasicPosition.y - 0.2f, soilBasicPosition.z);
+
+            tileBasicPosition.y = 0f;
+            tileSelectedPosition = new Vector3(tileBasicPosition.x, tileBasicPosition.y + 0.4f, tileBasicPosition.z);
+            grid.transform.position = tileBasicPosition;
+        }
     }
 
     public void SetHeight(SoilObject.SoilType soilType)

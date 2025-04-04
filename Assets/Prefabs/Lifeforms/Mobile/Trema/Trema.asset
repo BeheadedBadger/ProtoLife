@@ -12,8 +12,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f82f5a222ccd0494396f8eb81eab9806, type: 3}
   m_Name: Trema
   m_EditorClassIdentifier: 
-  title: 
-  description: 
+  title: Trema
+  description: A fragile, but prolific animal. Barely weighs anything!
   objType: 3
   unlocked: 1
   prefab: {fileID: 6620169047557142508, guid: f5872dd99c582fa4aabe1255f4d7b414, type: 3}
@@ -22,7 +22,7 @@ MonoBehaviour:
   lifeCoinGeneration: 5
   waterNeed: 4
   soilTypes: 0100000005000000040000000200000003000000
-  selected: 1
+  selected: 0
   unlockCost: 130
   lifeType: 2
   kingdom: 1
