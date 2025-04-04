@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 using UnityEngine.EventSystems;
-using UnityEngine.TestTools;
 
 public class HexTile : MonoBehaviour
 {
@@ -27,7 +26,6 @@ public class HexTile : MonoBehaviour
     public Vector3 soilSelectedPosition;
     public bool soilFilled;
     [SerializeField] public GameObject soil;
-    //[SerializeField] public GameObject water;
 
     [SerializeField] public GameObject coverContainer;
     public LifeForm cover;
@@ -77,6 +75,7 @@ public class HexTile : MonoBehaviour
         soilBasicPosition = soilPosition;
         soilSelectedPosition = new Vector3(soilBasicPosition.x, soilBasicPosition.y - 0.2f, soilBasicPosition.z);
 
+        SetHeight(soilFill.thisSoilType);
         FindNeighbors(basicPosition);
     }
 
@@ -172,30 +171,7 @@ public class HexTile : MonoBehaviour
                     {
                         gameManager.LifeCoins -= gameManager.selectedObj.cost;
 
-                        soilFill.ChangeSoilType(gameManager.selectedSoil.soilType);
-                        Vector3 heighten = new();
-                        if (gameManager.selectedSoil.soilType == SoilObject.SoilType.Loam)
-                        {
-                            heighten = new Vector3(0, 1f, 0);
-                        }
-                        if (gameManager.selectedSoil.soilType == SoilObject.SoilType.Clay)
-                        {
-                            heighten = new Vector3(0, 0.75f, 0);
-                        }
-                        if (gameManager.selectedSoil.soilType == SoilObject.SoilType.Sand)
-                        {
-                            heighten = new Vector3(0, 0.5f, 0);
-                        }
-                        if (gameManager.selectedSoil.soilType == SoilObject.SoilType.Silt)
-                        {
-                            heighten = new Vector3(0, 0.25f, 0);
-                        }
-
-                        tileBasicPosition += heighten;
-                        tileSelectedPosition += heighten;
-                        soilBasicPosition += heighten;
-                        soilSelectedPosition += heighten;
-
+                        SetHeight(gameManager.selectedSoil.soilType);
                         grid.SetActive(false);
                         soilFilled = true;
                     }
@@ -229,6 +205,93 @@ public class HexTile : MonoBehaviour
                 }
             }
         }
+
+        LifeFormCheck();
+    }
+
+    public void SetHeight(SoilObject.SoilType soilType)
+    {
+        tileBasicPosition = grid.transform.position;
+        soilBasicPosition = soil.transform.position;
+
+        Vector3 heighten = new();
+        if (soilType == SoilObject.SoilType.Loam)
+        {
+            heighten = new Vector3(0, 1f, 0);
+        }
+        if (soilType == SoilObject.SoilType.Clay)
+        {
+            heighten = new Vector3(0, 0.75f, 0);
+        }
+        if (soilType == SoilObject.SoilType.Sand)
+        {
+            heighten = new Vector3(0, 0.5f, 0);
+        }
+        if (soilType == SoilObject.SoilType.Silt)
+        {
+            heighten = new Vector3(0, 0.25f, 0);
+        }
+        
+        tileBasicPosition += heighten;
+        tileSelectedPosition += heighten;
+        soilBasicPosition += heighten;
+        soilSelectedPosition += heighten;
+
+        soilFill.ChangeSoilType(soilType);
+        StartCoroutine(LerpPosition(soil, soil.transform.position, soilBasicPosition, speed));
+    }
+
+    private void LifeFormCheck()
+    {
+        if (coverContainer.transform.childCount > 0)
+        {
+            coverFilled = true;
+
+            if (coverContainer.transform.childCount > 1)
+            {
+                for (int i = 0; i < coverContainer.transform.childCount; i++)
+                {
+                    if (i != 0)
+                    {
+                        GameObject.Destroy(coverContainer.transform.GetChild(i).gameObject);
+                    }
+                }
+            }
+        }
+        else { coverFilled = false; }
+
+        if (stationaryContainer.transform.childCount > 0)
+        {
+            if (stationaryContainer.transform.childCount > 1)
+            {
+                stationaryFilled = true;
+                for (int i = 0; i < stationaryContainer.transform.childCount; i++)
+                {
+                    if (i != 0)
+                    {
+                        GameObject.Destroy(stationaryContainer.transform.GetChild(i).gameObject);
+                    }
+                }
+            }
+        }
+        else { stationaryFilled = false; }
+
+        if (mobileContainer.transform.childCount > 0)
+        {
+            mobileFilled = true;
+
+            if (mobileContainer.transform.childCount > 1)
+            {
+                for (int i = 0; i < mobileContainer.transform.childCount; i++)
+                {
+                    if (i != 0)
+                    {
+                        GameObject.Destroy(mobileContainer.transform.GetChild(i).gameObject);
+                    }
+                }
+            }
+        }
+        else { mobileFilled = false; }
     }
 
     private bool CanPay()
@@ -314,6 +377,24 @@ public class HexTile : MonoBehaviour
         }
     }
 
+    public void OnDeath(LifeFormObject.LifeType type)
+    {
+        if (type == LifeFormObject.LifeType.Cover)
+        {
+            foreach (Transform child in coverContainer.transform)
+            {
+                GameObject.Destroy(child.gameObject);
+            }
+        }
+
+        if (type == LifeFormObject.LifeType.Stationary)
+        {
+            foreach (Transform child in coverContainer.transform)
+            {
+                GameObject.Destroy(child.gameObject);
+            }
+        }
+    }
 
 //Animations
 IEnumerator LerpSize(GameObject obj, Vector3 startScale, Vector3 targetScale, float duration)

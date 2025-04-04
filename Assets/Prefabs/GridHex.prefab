@@ -75,10 +75,13 @@ MonoBehaviour:
   soilFilled: 0
   soil: {fileID: 336326181066306068}
   coverContainer: {fileID: 4846589910969721329}
+  cover: {fileID: 0}
   coverFilled: 0
   stationaryContainer: {fileID: 5072708827340359394}
+  stationary: {fileID: 0}
   stationaryFilled: 0
   mobileContainer: {fileID: 4114826285383436266}
+  mobile: {fileID: 0}
   mobileFilled: 0
   neighboringTiles: []
   neighboringHexTiles: []
@@ -350,15 +353,30 @@ PrefabInstance:
       propertyPath: m_Name
       value: Soil
       objectReference: {fileID: 0}
+    - target: {fileID: -34338788912685736, guid: 4b596b81d8155294d8afd101362c4628,
+        type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 919132149155446097, guid: 4b596b81d8155294d8afd101362c4628,
         type: 3}
       propertyPath: m_Name
       value: SoilTile
       objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: 4b596b81d8155294d8afd101362c4628,
+        type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 2701129470154255740, guid: 4b596b81d8155294d8afd101362c4628,
         type: 3}
       propertyPath: m_Name
       value: Base
+      objectReference: {fileID: 0}
+    - target: {fileID: 2701129470154255740, guid: 4b596b81d8155294d8afd101362c4628,
+        type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4738988968223438055, guid: 4b596b81d8155294d8afd101362c4628,
         type: 3}
@@ -628,6 +646,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: GridTile
       objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: 8b160b758fce7d64fbb6d6608ec3d28f,
+        type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 1151388028547126963, guid: 8b160b758fce7d64fbb6d6608ec3d28f,
         type: 3}
       propertyPath: m_LocalPosition.y
@@ -637,6 +660,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: grid
+      objectReference: {fileID: 0}
+    - target: {fileID: 8164078558771037576, guid: 8b160b758fce7d64fbb6d6608ec3d28f,
+        type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 8b160b758fce7d64fbb6d6608ec3d28f, type: 3}

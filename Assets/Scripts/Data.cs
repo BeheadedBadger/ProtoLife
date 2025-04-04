@@ -18,8 +18,6 @@ public class Data
     [Serializable]
     public class TileData
     {
-        public float[] PositionGrid;
-        public float[] PositionSoil;
         public string SoilType;
         public int NutrientScore;
         public int HumidityScore;
@@ -38,11 +36,9 @@ public class Data
         public int mobileAge;
         public int mobileHealth;
 
-        public TileData(float[] positionGrid, float[] positionSoil, string soilType, int nutrientScore, int humidityScore, int id)
+        public TileData(string soilType, int nutrientScore, int humidityScore, int id)
         {
             ID = id;
-            PositionGrid = positionGrid;
-            PositionSoil = positionSoil;
             SoilType = soilType;
             NutrientScore = nutrientScore;
             HumidityScore = humidityScore;

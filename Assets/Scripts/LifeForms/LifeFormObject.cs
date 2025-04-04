@@ -11,10 +11,10 @@ public class LifeFormObject : BuildModeObject
     public Kingdom kingdom;
 
     public GameObject lifeForm;
-    public GameObject fossil; //Can be collected and used to unlock this lifeform
     public GameObject startingForm; //Egg, spore, seed, etc.
 
-    public float mobility;
+    public int mobility;
+    public int damage;
     public int maxHealth;
 
     //Requirements

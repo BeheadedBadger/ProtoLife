@@ -1,9 +1,6 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.IO;
-using Unity.VisualScripting;
-using UnityEditor.Tilemaps;
 using UnityEngine;
 
 public class LifeForm : MonoBehaviour
@@ -21,6 +18,11 @@ public class LifeForm : MonoBehaviour
     DateTime previousUpdate;
     public int health;
     public int age;
+
+    public int feedingDesperation;
+    public int procreationDesperation;
+
+    //Appeal of target, feeding = feedingDesperation + speciesScore (same species is - other species is +) - risk (target.health - this.damage is + / this.health - target.damage is +))
 
     private void Awake()
     {
@@ -49,8 +51,13 @@ public class LifeForm : MonoBehaviour
         coinGenerationTime = gameManager.currentDate.AddDays(lifeFormObject.lifeCoinGeneration);
 
         if (age > 0)
-        { 
-            deathTime = gameManager.currentDate.AddDays(lifeFormObject.lifeSpan - age);
+        {
+            int lifespanRemaining = lifeFormObject.lifeSpan - age;
+            if (lifespanRemaining > 0)
+            {
+                deathTime = gameManager.currentDate.AddDays(lifespanRemaining);
+            }
+            else Death();
         }
         else 
         {
@@ -126,14 +133,19 @@ public class LifeForm : MonoBehaviour
                     if (parentHex.mobileFilled && parentHex.mobile != null)
                     {
                         LifeForm prey = parentHex.mobile;
+
                         if (prey.lifeFormObject.kingdom == foodSource)
                         {
-                            prey.DamageLifeform(1);
-                            if (health < lifeFormObject.maxHealth)
+                            int appeal = PreyAppeal(prey);
+                            if (appeal > 0)
                             {
-                                health += 1;
+                                prey.DamageLifeform(lifeFormObject.damage);
+                                if (health < lifeFormObject.maxHealth)
+                                {
+                                    health += 1;
+                                }
+                                return;
                             }
-                            return;
                         }
                     }
                 }
@@ -147,8 +159,12 @@ public class LifeForm : MonoBehaviour
                             LifeForm prey = parentHex.stationary; 
                             if (prey.lifeFormObject.kingdom == foodSource)
                             {
-                                FeedOn(prey);
-                                return;
+                                int appeal = PreyAppeal(prey);
+                                if (appeal > 0)
+                                {
+                                    FeedOn(prey);
+                                    return;
+                                }
                             }
                         }
                     }
@@ -163,8 +179,12 @@ public class LifeForm : MonoBehaviour
                             LifeForm prey = parentHex.cover;
                             if (prey.lifeFormObject.kingdom == foodSource)
                             {
-                                FeedOn(prey);
-                                return;
+                                int appeal = PreyAppeal(prey);
+                                if (appeal > 0)
+                                {
+                                    FeedOn(prey);
+                                    return;
+                                }
                             }
                         }
                     }
@@ -172,6 +192,7 @@ public class LifeForm : MonoBehaviour
             }
 
             health -= 1;
+            feedingDesperation += 1;
         }
 
         else if (lifeFormObject.lifeType == LifeFormObject.LifeType.Mobile)
@@ -184,8 +205,12 @@ public class LifeForm : MonoBehaviour
                     LifeForm prey = parentHex.cover;
                     if (prey.lifeFormObject.kingdom == foodSource)
                     {
-                        FeedOn(prey);
-                        return;
+                        int appeal = PreyAppeal(prey);
+                        if (appeal > 0)
+                        {
+                            FeedOn(prey);
+                            return;
+                        }
                     }
                 }
 
@@ -194,10 +219,13 @@ public class LifeForm : MonoBehaviour
                     LifeForm prey = parentHex.stationary;
                     if (prey.lifeFormObject.kingdom == foodSource)
                     {
-                        FeedOn(prey);
-                        return;
+                        int appeal = PreyAppeal(prey);
+                        if (appeal > 0)
+                        {
+                            FeedOn(prey);
+                            return;
+                        }
                     }
-
                 }
             }
 
@@ -211,8 +239,12 @@ public class LifeForm : MonoBehaviour
                         LifeForm prey = neighbour.cover;
                         if (prey.lifeFormObject.kingdom == foodSource)
                         {
-                            FeedOn(prey);
-                            return;
+                            int appeal = PreyAppeal(prey);
+                            if (appeal > 0)
+                            {
+                                FeedOn(prey);
+                                return;
+                            }
                         }
                     }
 
@@ -221,18 +253,26 @@ public class LifeForm : MonoBehaviour
                         LifeForm prey = neighbour.stationary;
                         if (prey.lifeFormObject.kingdom == foodSource)
                         {
-                            FeedOn(prey);
-                            return;
+                            int appeal = PreyAppeal(prey);
+                            if (appeal > 0)
+                            {
+                                FeedOn(prey);
+                                return;
+                            }
                         }
                     }
 
-                    if (neighbour.mobileFilled)
+                    if (neighbour.mobileFilled && neighbour.mobile != null)
                     {
                         LifeForm prey = neighbour.mobile;
                         if (prey.lifeFormObject.kingdom == foodSource)
                         {
-                            FeedOn(prey);
-                            return;
+                            int appeal = PreyAppeal(prey);
+                            if (appeal > 0)
+                            {
+                                FeedOn(prey);
+                                return;
+                            }
                         }
                     }
                 }
@@ -251,31 +291,43 @@ public class LifeForm : MonoBehaviour
                             LifeForm prey = secondaryNeighbour.cover;
                             if (prey.lifeFormObject.kingdom == foodSource)
                             {
-                                path.Add(neighbour);
-                                MoveTo(path, "feed");
-                                return;
+                                int appeal = PreyAppeal(prey);
+                                if (appeal > 0)
+                                {
+                                    path.Add(neighbour);
+                                    MoveTo(path, "feed");
+                                    return;
+                                }
                             }
                         }
 
-                        if (secondaryNeighbour.stationaryFilled)
+                        if (secondaryNeighbour.stationaryFilled && secondaryNeighbour.stationary != null)
                         {
                             LifeForm prey = secondaryNeighbour.stationary;
                             if (prey.lifeFormObject.kingdom == foodSource)
                             {
-                                path.Add(neighbour);
-                                MoveTo(path, "feed");
-                                return;
+                                int appeal = PreyAppeal(prey);
+                                if (appeal > 0)
+                                {
+                                    path.Add(neighbour);
+                                    MoveTo(path, "feed");
+                                    return;
+                                }
                             }
                         }
 
-                        if (secondaryNeighbour.mobileFilled)
+                        if (secondaryNeighbour.mobileFilled && secondaryNeighbour.mobile != null)
                         {
                             LifeForm prey = secondaryNeighbour.mobile; 
-                            if (prey.lifeFormObject.kingdom == foodSource)
+                            if (prey.lifeFormObject.kingdom == foodSource) 
                             {
-                                path.Add(neighbour);
-                                MoveTo(path, "feed");
-                                return;
+                                int appeal = PreyAppeal(prey);
+                                if (appeal > 0)
+                                {
+                                    path.Add(neighbour);
+                                    MoveTo(path, "feed");
+                                    return;
+                                }
                             }
                         }
                     }
@@ -293,10 +345,14 @@ public class LifeForm : MonoBehaviour
                                 LifeForm prey = trinaryNeighbour.cover;
                                 if (prey.lifeFormObject.kingdom == foodSource)
                                 {
-                                    path.Add(neighbour);
-                                    path.Add(secondaryNeighbour);
-                                    MoveTo(path, "feed");
-                                    return;
+                                    int appeal = PreyAppeal(prey);
+                                    if (appeal > 0)
+                                    {
+                                        path.Add(neighbour);
+                                        path.Add(secondaryNeighbour);
+                                        MoveTo(path, "feed");
+                                        return;
+                                    }
                                 }
                             }
 
@@ -305,22 +361,30 @@ public class LifeForm : MonoBehaviour
                                 LifeForm prey = trinaryNeighbour.stationary;
                                 if (prey.lifeFormObject.kingdom == foodSource)
                                 {
-                                    path.Add(neighbour);
-                                    path.Add(secondaryNeighbour);
-                                    MoveTo(path, "feed");
-                                    return;
+                                    int appeal = PreyAppeal(prey);
+                                    if (appeal > 0)
+                                    {
+                                        path.Add(neighbour);
+                                        path.Add(secondaryNeighbour);
+                                        MoveTo(path, "feed");
+                                        return;
+                                    }
                                 }
                             }
 
-                            if (trinaryNeighbour.mobileFilled)
+                            if (trinaryNeighbour.mobileFilled && trinaryNeighbour.mobile != null)
                             {
                                 LifeForm prey = trinaryNeighbour.mobile;
                                 if (prey.lifeFormObject.kingdom == foodSource)
                                 {
-                                    path.Add(neighbour);
-                                    path.Add(secondaryNeighbour);
-                                    MoveTo(path, "feed"); ;
-                                    return;
+                                    int appeal = PreyAppeal(prey);
+                                    if (appeal > 0)
+                                    {
+                                        path.Add(neighbour);
+                                        path.Add(secondaryNeighbour);
+                                        MoveTo(path, "feed"); ;
+                                        return;
+                                    }
                                 }
                             }
                         }
@@ -339,15 +403,43 @@ public class LifeForm : MonoBehaviour
                 if (options.Count >= 1)
                 {
                     path = new() { options[UnityEngine.Random.Range(0, options.Count)] };
-                    MoveTo(path, "procreation");
+                    MoveTo(path, "feed");
                 }
+
+                health -= 1;
+                feedingDesperation += 1;
             }
         }
     }
 
+    private int PreyAppeal(LifeForm prey)
+    {
+        bool sameSpecies = (prey.lifeFormObject.title == this.lifeFormObject.title);
+        int sameSpeciesScore = 0;
+        if (sameSpecies == true)
+        {
+            sameSpeciesScore = -5;
+        }
+        int risk = 0;
+        if (prey.health - lifeFormObject.damage > 0)
+        {
+            risk += 1;
+        }
+        if (health - prey.lifeFormObject.damage < 0)
+        {
+            risk += 2;
+        }
+        if (prey.lifeFormObject.mobility > lifeFormObject.mobility)
+        {
+            risk += 2;
+        }
+
+        return (feedingDesperation + sameSpeciesScore) - risk;
+    }
+
     private void FeedOn(LifeForm prey)
     {
-        prey.DamageLifeform(1);
+        prey.DamageLifeform(lifeFormObject.damage);
         if (health < lifeFormObject.maxHealth)
         {
             health += 1;
@@ -361,20 +453,17 @@ public class LifeForm : MonoBehaviour
         if (lifeFormObject.objType == BuildModeObject.ObjectType.Cover)
         { 
             parentHex.coverFilled = false;
-            parentHex.cover = null;
         }
 
         if (lifeFormObject.objType == BuildModeObject.ObjectType.Stationary)
         { 
-            parentHex.stationaryFilled = false;
-            parentHex.stationary = null;
+            parentHex.stationaryFilled = false;   
         }
 
         if (lifeFormObject.objType == BuildModeObject.ObjectType.Mobile)
         { 
             parentHex.mobileFilled = false;
-            parentHex.mobile = null;
-            Destroy(this.gameObject);
+            GameObject.Destroy(this.gameObject);
         }
 
         if (lifeFormObject.objType == BuildModeObject.ObjectType.Cover || lifeFormObject.objType == BuildModeObject.ObjectType.Stationary)
@@ -454,7 +543,7 @@ public class LifeForm : MonoBehaviour
                         {
                             foreach (HexTile tritaryNeighbour in secondaryNeighbour.neighboringHexTiles)
                             {
-                                if (tritaryNeighbour.mobileFilled)
+                                if (tritaryNeighbour.mobileFilled && tritaryNeighbour.mobile != null)
                                 {
                                     LifeForm neighbourLifeform = tritaryNeighbour.mobile;
                                     if (neighbourLifeform.lifeFormObject.title == lifeFormObject.title)
@@ -510,7 +599,7 @@ public class LifeForm : MonoBehaviour
                     HexTile random = possiblePlacement[UnityEngine.Random.Range(0, possiblePlacement.Count - 1)];
                     LifeForm prefab;
 
-                    if (lifeFormObject.objType == BuildModeObject.ObjectType.Cover)
+                    if (lifeFormObject.objType == BuildModeObject.ObjectType.Cover && random.coverFilled == false)
                     {
                         var instantiated = Instantiate(lifeFormObject.prefab, random.coverContainer.transform);
                         prefab = instantiated.GetComponent<LifeForm>();
@@ -518,7 +607,7 @@ public class LifeForm : MonoBehaviour
                         random.coverFilled = true;
                         prefab.createLifeForm(random);
                     }
-                    else if (lifeFormObject.objType == BuildModeObject.ObjectType.Stationary)
+                    else if (lifeFormObject.objType == BuildModeObject.ObjectType.Stationary && random.stationaryFilled == false)
                     {
                         var instantiated = Instantiate(lifeFormObject.prefab, random.stationaryContainer.transform);
                         prefab = instantiated.GetComponent<LifeForm>();
@@ -526,7 +615,7 @@ public class LifeForm : MonoBehaviour
                         random.stationaryFilled = true;
                         prefab.createLifeForm(random);
                     }
-                    else if (lifeFormObject.objType == BuildModeObject.ObjectType.Mobile)
+                    else if (lifeFormObject.objType == BuildModeObject.ObjectType.Mobile && random.mobileFilled == false)
                     {
                         var instantiated = Instantiate(lifeFormObject.prefab, random.mobileContainer.transform);
                         prefab = instantiated.GetComponent<LifeForm>();
@@ -545,7 +634,6 @@ public class LifeForm : MonoBehaviour
     {
         if (tiles.Count == 1)
         {
-            this.parentHex.mobileFilled = false;
             this.gameObject.transform.SetParent(tiles[0].mobileContainer.transform, false);
             tiles[0].mobileFilled = true;
             this.parentHex = tiles[0];
@@ -553,7 +641,6 @@ public class LifeForm : MonoBehaviour
         //Add some sort of delay
         if (tiles.Count == 2)
         {
-            this.parentHex.mobileFilled = false;
             this.gameObject.transform.SetParent(tiles[1].mobileContainer.transform, false);
             tiles[1].mobileFilled = true;
             this.parentHex = tiles[1];
@@ -571,6 +658,10 @@ public class LifeForm : MonoBehaviour
     public void DamageLifeform(int damage)
     {
         health -= damage;
+        if (health > 0)
+        { 
+            //aggressor.DamageLifeform(lifeformobject.damage)     Damage aggressor
+        }
     }
 
     public void Poop(int nitrateScore) 
@@ -589,7 +680,7 @@ public class LifeForm : MonoBehaviour
         }
 
         obj.transform.localScale = smallerScale;
-        Destroy(this.gameObject);
+        GameObject.Destroy(this.gameObject);
     }
 
     IEnumerator CoverOrStationaryInitAnimation(GameObject obj, Vector3 largerScale, Vector3 smallerScale, float duration)

@@ -10,31 +10,31 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: f82f5a222ccd0494396f8eb81eab9806, type: 3}
-  m_Name: Trema
+  m_Name: Kixen
   m_EditorClassIdentifier: 
-  title: 
-  description: 
+  title: Kixen
+  description: A vicious little predator
   objType: 3
   unlocked: 1
-  prefab: {fileID: 6620169047557142508, guid: f5872dd99c582fa4aabe1255f4d7b414, type: 3}
+  prefab: {fileID: 4836571246998638124, guid: db65b91b9d13bb74c99bd143a738b328, type: 3}
   sprite: {fileID: 0}
-  cost: 60
-  lifeCoinGeneration: 5
+  cost: 100
+  lifeCoinGeneration: 10
   waterNeed: 4
-  soilTypes: 0100000005000000040000000200000003000000
-  selected: 1
-  unlockCost: 130
+  soilTypes: 01000000020000000300000004000000
+  selected: 0
+  unlockCost: 300
   lifeType: 2
   kingdom: 1
-  lifeForm: {fileID: 6620169047557142508, guid: f5872dd99c582fa4aabe1255f4d7b414,
+  lifeForm: {fileID: 4836571246998638124, guid: db65b91b9d13bb74c99bd143a738b328,
     type: 3}
   startingForm: {fileID: 0}
-  mobility: 2
-  damage: 2
-  maxHealth: 3
-  feedingRate: 1
-  foodSources: 00000000
-  lifeSpan: 30
+  mobility: 3
+  damage: 4
+  maxHealth: 4
+  feedingRate: 2
+  foodSources: 
+  lifeSpan: 10
   procreationType: 1
   procreationTime: 2
-  procreationRate: 3
+  procreationRate: 1

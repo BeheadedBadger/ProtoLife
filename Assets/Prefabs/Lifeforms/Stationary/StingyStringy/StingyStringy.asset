@@ -29,9 +29,9 @@ MonoBehaviour:
   kingdom: 0
   lifeForm: {fileID: 7988824616940609175, guid: 1ecf7e8b49e2de14a8c8bd9ff7257d4d,
     type: 3}
-  fossil: {fileID: 0}
   startingForm: {fileID: 0}
   mobility: 0
+  damage: 3
   maxHealth: 20
   feedingRate: 2
   foodSources: 0100000002000000

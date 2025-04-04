@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using Unity.VisualScripting;
 using UnityEngine;
 
 public class GameManager : MonoBehaviour
@@ -21,11 +20,12 @@ public class GameManager : MonoBehaviour
 
     public float turnsSinceStart;
     float turnSpeed = 0.5f;
+    public int hours = 0;
     public int days = 1;
     public int months = 1;
     public int years = 1;
     public DateTime currentDate = new();
-    int nextTimeUpdate = 24;
+    int nextTimeUpdate = 1;
 
     void Start()
     {
@@ -50,14 +50,18 @@ public class GameManager : MonoBehaviour
 
         if (nextTimeUpdate < turnsSinceStart)
         {
-            currentDate = currentDate.AddDays(1);
-            nextTimeUpdate = Mathf.RoundToInt(turnsSinceStart) + 24;
+            currentDate = currentDate.AddHours(1);
+            nextTimeUpdate = Mathf.RoundToInt(turnsSinceStart) + 1;
 
+            if (days < currentDate.Day)
+            {
+                Save();
+            }
+
+            hours = currentDate.Hour;
             days = currentDate.Day;
             months = currentDate.Month;
             years = currentDate.Year;
-
-            Save();
         }
     }
 
@@ -102,9 +106,7 @@ public class GameManager : MonoBehaviour
         {
             if (tile != null)
             {
-                List<float> gridPosition = new List<float> { tile.tileBasicPosition.x, tile.tileBasicPosition.y, tile.tileBasicPosition.z };
-                List<float> soilPosition = new List<float> { tile.soilBasicPosition.x, tile.soilBasicPosition.y, tile.soilBasicPosition.z };
-                Data.TileData tileData = new(gridPosition.ToArray(), soilPosition.ToArray(), tile.soilFill.thisSoilType.ToString(), tile.soilFill.nutrientScore, tile.soilFill.waterScore, tile.GetInstanceID());
+                Data.TileData tileData = new(tile.soilFill.thisSoilType.ToString(), tile.soilFill.nutrientScore, tile.soilFill.waterScore, tile.GetInstanceID());
 
                 if (tile.cover != null && tile.coverFilled)
                 {
@@ -131,8 +133,6 @@ public class GameManager : MonoBehaviour
             }
         }
 
-        //Save lifeforms
-
         Data data = new Data(Mathf.RoundToInt(LifeCoins), Amber, days, months, years, AllTileData.ToArray(), AllLifeformData.ToArray());
         Data.SaveGame(data);
     }
@@ -158,17 +158,19 @@ public class GameManager : MonoBehaviour
                 if (tile != null)
                 {
                     Data.TileData tiledata = data.Tiles.Where(x => x.ID == tile.GetInstanceID()).FirstOrDefault();
-                    tile.grid.transform.position = new Vector3(tiledata.PositionGrid[0], tiledata.PositionGrid[1], tiledata.PositionGrid[2]);
-                    tile.soilFill.transform.position = new Vector3(tiledata.PositionSoil[0], tiledata.PositionSoil[1], tiledata.PositionSoil[2]);
+
+                    SoilObject.SoilType type = (SoilObject.SoilType)Enum.Parse(typeof(SoilObject.SoilType), tiledata.SoilType);
+                    if (type != SoilObject.SoilType.Ash)
+                    {
+                        tile.soilFilled = true;
+                    }
                     tile.soilFill.nutrientScore = tiledata.NutrientScore;
                     tile.soilFill.waterScore = tiledata.HumidityScore;
 
-                    tile.FindNeighbors(tile.grid.transform.position);
-
-                    SoilObject.SoilType type = (SoilObject.SoilType)Enum.Parse(typeof(SoilObject.SoilType), tiledata.SoilType);
                     tile.soilFill.SetSoilType(type, tile);
-                    if (type != SoilObject.SoilType.Ash)
-                    { tile.soilFilled = true; }
+                    tile.soilFill.soilBasicPosition = tile.soilBasicPosition;
+                    tile.soilFill.soilSelectedPosition = tile.soilSelectedPosition;
+                    tile.FindNeighbors(tile.grid.transform.position);
 
                     if (tiledata.Cover != null)
                     {
