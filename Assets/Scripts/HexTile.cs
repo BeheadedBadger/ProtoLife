@@ -359,20 +359,21 @@ public class HexTile : MonoBehaviour
             return;
         }
 
-        else if (gameManager.selectedObj != null && gameManager.selectedObj.soilTypes.Contains(soilFill.thisSoilType) &&
-            soilFill.waterScore - 2 <= gameManager.selectedObj.waterNeed &&
-            soilFill.waterScore + 2 >= gameManager.selectedObj.waterNeed)
+        else if (gameManager.selectedObj != null && gameManager.selectedObj.soilTypes.Contains(soilFill.thisSoilType))
         {
-            if (gameManager.selectedObj.objType == BuildModeObject.ObjectType.Cover && !coverFilled)
+            if (soilFill.waterScore - 2 <= gameManager.selectedObj.waterNeed && soilFill.waterScore + 2 >= gameManager.selectedObj.waterNeed)
             {
-                placementPossible = true;
-                return;
-            }
+                if (gameManager.selectedObj.objType == BuildModeObject.ObjectType.Cover && !coverFilled)
+                {
+                    placementPossible = true;
+                    return;
+                }
 
-            if (gameManager.selectedObj.objType == BuildModeObject.ObjectType.Stationary && !stationaryFilled)
-            {
-                placementPossible = true;
-                return;
+                if (gameManager.selectedObj.objType == BuildModeObject.ObjectType.Stationary && !stationaryFilled)
+                {
+                    placementPossible = true;
+                    return;
+                }
             }
 
             if (gameManager.selectedObj.objType == BuildModeObject.ObjectType.Mobile && !mobileFilled)
@@ -393,26 +394,28 @@ public class HexTile : MonoBehaviour
 
     public bool CheckIfPlacementIsPossible(LifeFormObject lifeform)
     {
-        if (lifeform.soilTypes.Contains(soilFill.thisSoilType) &&
-            soilFill.waterScore - 2 <= lifeform.waterNeed &&
-            soilFill.waterScore + 2 >= lifeform.waterNeed)
+        if (lifeform.soilTypes.Contains(soilFill.thisSoilType))
         {
-            if (lifeform.objType == BuildModeObject.ObjectType.Cover && !coverFilled)
+            if (soilFill.waterScore - 2 <= lifeform.waterNeed && soilFill.waterScore + 2 >= lifeform.waterNeed)
             {
-                return true;
+                if (lifeform.objType == BuildModeObject.ObjectType.Cover && !coverFilled)
+                {
+                    return true;
+                }
+                if (lifeform.objType == BuildModeObject.ObjectType.Stationary && !stationaryFilled)
+                {
+                    return true;
+                }
             }
-            if (lifeform.objType == BuildModeObject.ObjectType.Stationary && !stationaryFilled)
-            {
-                return true;
-            }
+
             if (lifeform.objType == BuildModeObject.ObjectType.Mobile && !mobileFilled)
             {
                 return true;
             }
 
-            else 
-            { 
-                return false; 
+            else
+            {
+                return false;
             }
         }
 

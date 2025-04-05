@@ -82,7 +82,10 @@ public class LifeForm : MonoBehaviour
 
     private void CheckTimeBasedEvents()
     {
-        age++;
+        if (gameManager.currentDate.Day > previousUpdate.Day)
+        {
+            age++;
+        }
 
         if (procreationTime < gameManager.currentDate)
         {

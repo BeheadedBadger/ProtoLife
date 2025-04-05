@@ -35017,6 +35017,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: CameraRig
       objectReference: {fileID: 0}
+    - target: {fileID: 7749738502928383154, guid: 5e35c22780aeea54f9a49c6c23fa5c8e,
+        type: 3}
+      propertyPath: m_RenderShadows
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 7749738502928383155, guid: 5e35c22780aeea54f9a49c6c23fa5c8e,
         type: 3}
       propertyPath: m_LocalPosition.x
