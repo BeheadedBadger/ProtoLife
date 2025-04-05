@@ -22,8 +22,6 @@ public class LifeForm : MonoBehaviour
     public int feedingDesperation;
     public int procreationDesperation;
 
-    //Appeal of target, feeding = feedingDesperation + speciesScore (same species is - other species is +) - risk (target.health - this.damage is + / this.health - target.damage is +))
-
     private void Awake()
     {
         InitializationCompleted = false;

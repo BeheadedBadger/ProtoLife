@@ -22,7 +22,7 @@ MonoBehaviour:
   lifeCoinGeneration: 5
   waterNeed: 4
   soilTypes: 0100000005000000040000000200000003000000
-  selected: 0
+  selected: 1
   unlockCost: 130
   lifeType: 2
   kingdom: 1
@@ -36,5 +36,5 @@ MonoBehaviour:
   foodSources: 00000000
   lifeSpan: 30
   procreationType: 1
-  procreationTime: 2
+  procreationTime: 3
   procreationRate: 3

@@ -159,16 +159,24 @@ public class HexTile : MonoBehaviour
                 {
                     return;
                 }
-
+                if (highlighted && !placementPossible)
+                {
+                    SoundManager.PlaySound(soundType.VeryShortFail);
+                }
+                
                 if (highlighted && gameManager.selectedObj != null && placementPossible)
                 {
                     bool canPay = CanPay();
 
                     if (canPay == false)
-                    { return; }
+                    {
+                        SoundManager.PlaySound(soundType.VeryShortFail);
+                        return; 
+                    }
 
                     if (gameManager.selectedObj.objType == BuildModeObject.ObjectType.Soil && gameManager.selectedSoil != null)
                     {
+                        SoundManager.PlaySound(soundType.VeryShortSuccess);
                         gameManager.LifeCoins -= gameManager.selectedObj.cost;
 
                         SetHeight(gameManager.selectedSoil.soilType);
@@ -176,8 +184,9 @@ public class HexTile : MonoBehaviour
                         soilFilled = true;
                     }
 
-                    if (gameManager.selectedObj.objType == BuildModeObject.ObjectType.Cover)
+                    else if (gameManager.selectedObj.objType == BuildModeObject.ObjectType.Cover)
                     {
+                        SoundManager.PlaySound(soundType.VeryShortSuccess);
                         gameManager.LifeCoins -= gameManager.selectedObj.cost;
                         GameObject coverGO = Instantiate(gameManager.selectedObj.prefab, coverContainer.transform.transform);
                         cover = coverGO.GetComponent<LifeForm>();
@@ -185,8 +194,9 @@ public class HexTile : MonoBehaviour
                         coverFilled = true;
                     }
 
-                    if (gameManager.selectedObj.objType == BuildModeObject.ObjectType.Stationary)
+                    else if (gameManager.selectedObj.objType == BuildModeObject.ObjectType.Stationary)
                     {
+                        SoundManager.PlaySound(soundType.ShortSuccess);
                         gameManager.LifeCoins -= gameManager.selectedObj.cost;
                         GameObject stationaryGO = Instantiate(gameManager.selectedObj.prefab, stationaryContainer.transform.transform);
                         stationary = stationaryGO.GetComponent<LifeForm>();
@@ -194,13 +204,19 @@ public class HexTile : MonoBehaviour
                         stationaryFilled = true;
                     }
 
-                    if (gameManager.selectedObj.objType == BuildModeObject.ObjectType.Mobile)
+                    else if (gameManager.selectedObj.objType == BuildModeObject.ObjectType.Mobile)
                     {
+                        SoundManager.PlaySound(soundType.Success);
                         gameManager.LifeCoins -= gameManager.selectedObj.cost;
                         GameObject mobileGO = Instantiate(gameManager.selectedObj.prefab, mobileContainer.transform.transform);
                         mobile = mobileGO.GetComponent<LifeForm>();
                         mobile.createLifeForm(this);
                         mobileFilled = true;
+                    }
+
+                    else
+                    {
+                        SoundManager.PlaySound(soundType.ShortFail);
                     }
                 }
             }
