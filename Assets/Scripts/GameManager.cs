@@ -150,7 +150,10 @@ public class GameManager : MonoBehaviour
             foreach (BuildModeObject obj in inventory.objects)
             {
                 Data.LifeformData lifedata = data.Lifeforms.Where(x => x.Name == obj.title).FirstOrDefault();
-                obj.unlocked = lifedata.Unlocked;
+                if (lifedata != null)
+                {
+                    obj.unlocked = lifedata.Unlocked;
+                }
             }
 
             foreach (HexTile tile in hexTiles)

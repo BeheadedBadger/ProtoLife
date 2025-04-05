@@ -1,0 +1,40 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f82f5a222ccd0494396f8eb81eab9806, type: 3}
+  m_Name: Fungle
+  m_EditorClassIdentifier: 
+  title: Fungle
+  description: Secretly delicious, but disguises itself as a very bitter-tasting
+    mushroom. //ToDo, camoflauge
+  objType: 3
+  unlocked: 0
+  prefab: {fileID: 150327004519963803, guid: d4dbd30e12fcbfb479945ba0fdfad38c, type: 3}
+  sprite: {fileID: 0}
+  cost: 300
+  lifeCoinGeneration: 40
+  waterNeed: 4
+  soilTypes: 02000000030000000100000004000000
+  selected: 0
+  unlockCost: 300
+  lifeType: 2
+  kingdom: 1
+  lifeForm: {fileID: 150327004519963803, guid: d4dbd30e12fcbfb479945ba0fdfad38c, type: 3}
+  startingForm: {fileID: 0}
+  mobility: 4
+  damage: 1
+  maxHealth: 30
+  feedingRate: 3
+  foodSources: 00000000
+  lifeSpan: 10
+  procreationType: 1
+  procreationTime: 3
+  procreationRate: 1

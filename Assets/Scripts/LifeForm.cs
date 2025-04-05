@@ -491,7 +491,7 @@ public class LifeForm : MonoBehaviour
                 if (neighbour.mobileFilled)
                 {
                     LifeForm neighbourLifeform = neighbour.mobile;
-                    if (neighbourLifeform.lifeFormObject.name == lifeFormObject.name)
+                    if (neighbourLifeform.lifeFormObject.title == lifeFormObject.title)
                     {
                         Procreate();
                     }
@@ -509,7 +509,7 @@ public class LifeForm : MonoBehaviour
                 if (neighbour.mobileFilled && neighbour.mobile != null)
                 {
                     LifeForm neighbourLifeform = neighbour.mobile;
-                    if (neighbourLifeform.lifeFormObject.name == lifeFormObject.name)
+                    if (neighbourLifeform.lifeFormObject.title == lifeFormObject.title)
                     {
                         Procreate();
                         return;
@@ -525,7 +525,7 @@ public class LifeForm : MonoBehaviour
                     if (secondaryNeighbour.mobileFilled && secondaryNeighbour.mobile != null)
                     {
                         LifeForm neighbourLifeform = secondaryNeighbour.mobile;
-                        if (neighbourLifeform.lifeFormObject.name == lifeFormObject.name && neighbour.mobileFilled == false)
+                        if (neighbourLifeform.lifeFormObject.title == lifeFormObject.title && neighbour.mobileFilled == false)
                         {
                             path.Add(neighbour);
                             MoveTo(path, "procreation");
