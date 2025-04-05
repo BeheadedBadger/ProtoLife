@@ -98,7 +98,7 @@ Material:
     - _AlphaClip: 0
     - _AlphaClipThreshold: 0.33
     - _BaseLight: 0.727
-    - _BendStrength: 3
+    - _BendStrength: 1
     - _BillboardKwToggle: 0
     - _BillboardShadowFade: 0
     - _Blend: 0

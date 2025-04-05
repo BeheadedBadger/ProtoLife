@@ -21,22 +21,22 @@ MonoBehaviour:
   prefab: {fileID: 5323785143128242283, guid: 915aca0d5795a5a4bb0a8ea40c4ca3a9, type: 3}
   sprite: {fileID: 21300000, guid: da1c0f1e6b1ce074e8aebecd3be458d0, type: 3}
   cost: 50
-  lifeCoinGeneration: 5
+  lifeCoinGeneration: 0.2
   waterNeed: 2
   soilTypes: 010000000200000004000000
-  selected: 0
+  selected: 1
   unlockCost: 10
   lifeType: 1
   kingdom: 0
   lifeForm: {fileID: 5323785143128242283, guid: 915aca0d5795a5a4bb0a8ea40c4ca3a9,
     type: 3}
-  fossil: {fileID: 0}
   startingForm: {fileID: 0}
   mobility: 0
+  damage: 0
   maxHealth: 20
-  feedingRate: 4
+  feedingRate: 96
   foodSources: 0400000000000000
-  lifeSpan: 10
+  lifeSpan: 250
   procreationType: 0
-  procreationTime: 3
+  procreationTime: 60
   procreationRate: 1

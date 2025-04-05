@@ -22,6 +22,8 @@ public class LifeForm : MonoBehaviour
     public int feedingDesperation;
     public int procreationDesperation;
 
+    public List<GameObject> LifeStages;
+
     private void Awake()
     {
         InitializationCompleted = false;
@@ -45,24 +47,29 @@ public class LifeForm : MonoBehaviour
             health = lifeFormObject.maxHealth;
         }
 
+        procreationTime = gameManager.currentDate.AddHours(lifeFormObject.procreationTime);
+        coinGenerationTime = gameManager.currentDate.AddHours(lifeFormObject.lifeCoinGeneration);
+/*
         procreationTime = gameManager.currentDate.AddDays(lifeFormObject.procreationTime);
         coinGenerationTime = gameManager.currentDate.AddDays(lifeFormObject.lifeCoinGeneration);
-
+*/
         if (age > 0)
         {
             int lifespanRemaining = lifeFormObject.lifeSpan - age;
             if (lifespanRemaining > 0)
             {
-                deathTime = gameManager.currentDate.AddDays(lifespanRemaining);
+                deathTime = gameManager.currentDate.AddHours(lifespanRemaining);
+                if (LifeStages.Count > 0)
+                { CheckStage(); }
             }
             else Death();
         }
         else 
         {
-            deathTime = gameManager.currentDate.AddDays(lifeFormObject.lifeSpan);
+            deathTime = gameManager.currentDate.AddHours(lifeFormObject.lifeSpan);
         }
 
-        feedingTime = gameManager.currentDate.AddDays(lifeFormObject.feedingRate);
+        feedingTime = gameManager.currentDate.AddHours(lifeFormObject.feedingRate);
         previousUpdate = gameManager.currentDate;
 
         InitializationCompleted = true;
@@ -73,22 +80,26 @@ public class LifeForm : MonoBehaviour
     {
         if (InitializationCompleted && gameManager.currentDate > previousUpdate)
         {
-            previousUpdate = gameManager.currentDate;
             CheckTimeBasedEvents();
+            previousUpdate = gameManager.currentDate;
         }
     }
 
     private void CheckTimeBasedEvents()
     {
-        if (gameManager.currentDate.Day > previousUpdate.Day)
+        if (gameManager.currentDate.Hour > previousUpdate.Hour)
         {
             age++;
+            if (LifeStages.Count > 0)
+            {
+                CheckStage();
+            }
         }
 
         if (procreationTime < gameManager.currentDate)
         {
             AttemptProcreation();
-            procreationTime = procreationTime.AddDays(lifeFormObject.procreationTime);
+            procreationTime = procreationTime.AddHours(lifeFormObject.procreationTime);
         }
 
         if (deathTime < gameManager.currentDate || health <= 0)
@@ -99,14 +110,35 @@ public class LifeForm : MonoBehaviour
         if (coinGenerationTime < gameManager.currentDate)
         {
             gameManager.LifeCoins += lifeFormObject.lifeCoinGeneration;
-            int days = (gameManager.currentDate - coinGenerationTime).Days;
-            coinGenerationTime = coinGenerationTime.AddDays(1);
+            coinGenerationTime = coinGenerationTime.AddHours(1);
         }
 
         if (feedingTime < gameManager.currentDate)
         {
             Feed();
             feedingTime = feedingTime.AddDays(lifeFormObject.feedingRate);
+        }
+    }
+
+    private void CheckStage()
+    {
+        float durationOfStage = lifeFormObject.lifeSpan / LifeStages.Count;
+        for (int i = 1; i <= LifeStages.Count + 1; i++)
+        {
+            if (age > (durationOfStage * i))
+            {
+                foreach (GameObject lifestage in LifeStages)
+                {
+                    if (lifestage == LifeStages[i - 1])
+                    {
+                        lifestage.SetActive(true);
+                    }
+                    else
+                    {
+                        lifestage.SetActive(false);
+                    }
+                }
+            }
         }
     }
 

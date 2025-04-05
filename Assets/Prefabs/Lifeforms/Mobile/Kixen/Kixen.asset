@@ -19,7 +19,7 @@ MonoBehaviour:
   prefab: {fileID: 4836571246998638124, guid: db65b91b9d13bb74c99bd143a738b328, type: 3}
   sprite: {fileID: 0}
   cost: 100
-  lifeCoinGeneration: 10
+  lifeCoinGeneration: 0.42
   waterNeed: 4
   soilTypes: 01000000020000000300000004000000
   selected: 0
@@ -32,9 +32,9 @@ MonoBehaviour:
   mobility: 3
   damage: 4
   maxHealth: 4
-  feedingRate: 2
+  feedingRate: 50
   foodSources: 
-  lifeSpan: 10
+  lifeSpan: 300
   procreationType: 1
-  procreationTime: 2
+  procreationTime: 120
   procreationRate: 1

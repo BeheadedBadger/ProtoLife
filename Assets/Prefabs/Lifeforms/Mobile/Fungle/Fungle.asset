@@ -16,11 +16,11 @@ MonoBehaviour:
   description: Secretly delicious, but disguises itself as a very bitter-tasting
     mushroom. //ToDo, camoflauge
   objType: 3
-  unlocked: 0
+  unlocked: 1
   prefab: {fileID: 150327004519963803, guid: d4dbd30e12fcbfb479945ba0fdfad38c, type: 3}
   sprite: {fileID: 0}
   cost: 300
-  lifeCoinGeneration: 40
+  lifeCoinGeneration: 1.2
   waterNeed: 4
   soilTypes: 02000000030000000100000004000000
   selected: 0
@@ -32,9 +32,9 @@ MonoBehaviour:
   mobility: 4
   damage: 1
   maxHealth: 30
-  feedingRate: 3
+  feedingRate: 72
   foodSources: 00000000
-  lifeSpan: 10
+  lifeSpan: 240
   procreationType: 1
-  procreationTime: 3
+  procreationTime: 75
   procreationRate: 1
