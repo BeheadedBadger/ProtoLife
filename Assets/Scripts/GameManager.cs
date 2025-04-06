@@ -145,7 +145,13 @@ public class GameManager : MonoBehaviour
         {
             LifeCoins = data.LifeCoins;
             Amber = data.Amber;
-            currentDate = new DateTime(data.Year, data.Month, data.Day);
+            currentDate = new DateTime();
+            currentDate = currentDate.AddDays(data.Day);
+            currentDate = currentDate.AddMonths(data.Month);
+            currentDate = currentDate.AddYears(data.Year);
+            days = data.Day;
+            months = data.Month;
+            years = data.Year;
 
             foreach (BuildModeObject obj in inventory.objects)
             {
