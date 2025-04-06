@@ -137,7 +137,7 @@ public class GameManager : MonoBehaviour
         Data.SaveGame(data);
     }
 
-    public void Load()
+    public void Load()    
     {
         Data data = Data.LoadGame();
 

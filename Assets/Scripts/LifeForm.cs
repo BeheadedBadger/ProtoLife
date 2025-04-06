@@ -196,13 +196,15 @@ public class LifeForm : MonoBehaviour
         if (lifeFormObject.lifeType != LifeFormObject.LifeType.Mobile)
         {
             feedingDesperation += 1;
-            feedingTime = feedingTime.AddHours(5/feedingDesperation);
+            feedingTime = feedingTime.AddHours(lifeFormObject.feedingRate/feedingDesperation);
 
             //hunger damage
             if (feedingDesperation > 4)
             {
                 health =-1;
             }
+
+            return;
         }
 
         if (lifeFormObject.lifeType == LifeFormObject.LifeType.Mobile)
@@ -337,7 +339,7 @@ public class LifeForm : MonoBehaviour
             HexTile tile = parentHex.neighboringHexTiles[UnityEngine.Random.Range(0, parentHex.neighboringHexTiles.Count)];
             if (tile.CheckIfPlacementIsPossible(lifeFormObject))
             {
-                MoveTo(new List<HexTile> { parentHex.neighboringHexTiles[UnityEngine.Random.Range(0, parentHex.neighboringHexTiles.Count)] }, "feedingFailed");
+                MoveTo(new List<HexTile> { tile }, "feedingFailed");
             }
         }
     }
@@ -412,6 +414,7 @@ public class LifeForm : MonoBehaviour
         if (lifeFormObject.procreationType == LifeFormObject.ProcreationType.Asexual)
         {
             Procreate();
+            return;
         }
 
         //Sexual and immobile
@@ -424,6 +427,7 @@ public class LifeForm : MonoBehaviour
                     neighbour.mobile?.lifeFormObject.title == lifeFormObject.title)
                 {
                     Procreate();
+                    return;
                 }
             }
         }
@@ -491,16 +495,13 @@ public class LifeForm : MonoBehaviour
                     }
                 }
             }
-        }
 
-        //Failed to find a path to a suitable mate. Move in random direction and try again later.
-        foreach (HexTile neighbour in parentHex.neighboringHexTiles)
-        {
-            if (neighbour.CheckIfPlacementIsPossible(lifeFormObject))
+            //Failed to find a path to a suitable mate. Move in random direction and try again later.
+            HexTile tile = parentHex.neighboringHexTiles[UnityEngine.Random.Range(0, parentHex.neighboringHexTiles.Count)];
+            if (tile.CheckIfPlacementIsPossible(lifeFormObject))
             {
-                MoveTo(new List<HexTile>{ neighbour }, "procreationFailed");
+                MoveTo(new List<HexTile> { tile }, "procreationFailed");
             }
-                
         }
     }
 
@@ -557,30 +558,27 @@ public class LifeForm : MonoBehaviour
         }
     }
 
-    private void MoveTo(List<HexTile> tiles, string Goal)
+    public void MoveTo(List<HexTile> tiles, string Goal)
     {
-        for(int i = 0; i < tiles.Count; i++)
-        {
-            if (tiles[i].CheckIfPlacementIsPossible(lifeFormObject))
-            {
-                StartCoroutine(MovementToTile(this.gameObject, this.parentHex.transform.position, tiles[i].mobileContainer.transform.position, 0.5f));
-                this.gameObject.transform.SetParent(tiles[i].mobileContainer.transform, false);
-                this.parentHex = tiles[i];
-            }
-        }
+        StartCoroutine(MovementToTile(this.gameObject, this.parentHex.transform.position, tiles, 0.5f));
+        //StartCoroutine(MovementToTile(this.gameObject, this.parentHex.transform.position, tiles[i].mobileContainer.transform.position, 0.5f));
+       this.parentHex = tiles[tiles.Count - 1];
 
         if (Goal == "procreation")
         {
-            AttemptProcreation();
+            procreationTime = gameManager.currentDate.AddHours(1);
         }
         if (Goal == "procreationFailed")
         {
-            procreationDesperation += 1;
-            procreationTime = gameManager.currentDate.AddHours(lifeFormObject.procreationTime / procreationDesperation);
+            if (procreationDesperation < 5)
+            {
+                procreationDesperation += 1;
+            }
+            procreationTime = gameManager.currentDate.AddHours((lifeFormObject.procreationTime / 3) / procreationDesperation);
         }
         if (Goal == "feeding")
         {
-            Feed();
+            feedingTime = gameManager.currentDate.AddHours(1);
         }
         if (Goal == "feedingFailed")
         {
@@ -651,16 +649,24 @@ public class LifeForm : MonoBehaviour
         obj.transform.localScale = largerScale;
     }
 
-    IEnumerator MovementToTile(GameObject obj, Vector3 startingPosition, Vector3 targetPosition, float duration)
+    IEnumerator MovementToTile(GameObject obj, Vector3 startingPosition, List<HexTile> targetPosition, float duration)
     {
-        float time = 0;
-        while (time < duration)
+        for (int i = 0; i < targetPosition.Count; i++)
         {
-            obj.transform.position = Vector3.Lerp(startingPosition, targetPosition, time / duration);
-            time += Time.deltaTime;
-            yield return null;
-        }
+            if (targetPosition[i].CheckIfPlacementIsPossible(lifeFormObject))
+            {
+                this.gameObject.transform.SetParent(targetPosition[targetPosition.Count - 1].mobileContainer.transform, true);
 
-        obj.transform.position = targetPosition;
+                float time = 0;
+                while (time < duration)
+                {
+                    obj.transform.position = Vector3.Lerp(this.gameObject.transform.position, targetPosition[i].transform.position, time / duration);
+                    time += Time.deltaTime;
+                    yield return null;
+                }
+            }
+
+            this.gameObject.transform.SetParent(targetPosition[targetPosition.Count - 1].mobileContainer.transform, false);
+        }
     }
 }

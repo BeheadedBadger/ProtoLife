@@ -347,7 +347,13 @@ public class HexTile : MonoBehaviour
                 {
                     if (i != 0)
                     {
-                        GameObject.Destroy(mobileContainer.transform.GetChild(i).gameObject);
+                        HexTile neighbour = neighboringHexTiles[UnityEngine.Random.Range(0, neighboringHexTiles.Count - 1)];
+                        if (mobile != null && neighbour.CheckIfPlacementIsPossible(mobile.lifeFormObject))
+                        {
+                            mobile.MoveTo(new List<HexTile> { neighbour }, "crowding");
+                            return;
+                        }
+                       return;
                     }
                 }
             }
