@@ -68,16 +68,16 @@ public class LifeForm : MonoBehaviour
         InitializationCompleted = true;
     }
 
-    void FixedUpdate()
+    /*void FixedUpdate()
     {
         if (InitializationCompleted && (gameManager.currentDate.Hour > previousUpdate.Hour || gameManager.currentDate.Date > previousUpdate.Date))
         {
             CheckTimeBasedEvents();
             previousUpdate = gameManager.currentDate;
         }
-    }
+    }*/
 
-    private void CheckTimeBasedEvents()
+    public void CheckTimeBasedEvents()
     {
         if (age > lifeFormObject.lifeSpan || health <= 0)
         {

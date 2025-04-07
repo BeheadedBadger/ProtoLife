@@ -62,6 +62,31 @@ public class GameManager : MonoBehaviour
             days = currentDate.Day;
             months = currentDate.Month;
             years = currentDate.Year;
+
+            CreatureController();
+        }
+    }
+
+    private void CreatureController()
+    {
+        foreach (HexTile tile in hexTiles)
+        {
+            if (tile.cover != null)
+            {
+                tile.cover.CheckTimeBasedEvents();
+            }
+
+            if (tile.stationary != null)
+            {
+                tile.stationary.CheckTimeBasedEvents();
+            }
+
+            if (tile.mobile != null)
+            {
+                tile.mobile.CheckTimeBasedEvents();
+            }
+
+            tile.LifeFormCheck();
         }
     }
 

@@ -223,7 +223,7 @@ public class HexTile : MonoBehaviour
         }
 
         SoilCheck();
-        LifeFormCheck();
+        //LifeFormCheck();
     }
 
     private void SoilCheck()
@@ -302,7 +302,7 @@ public class HexTile : MonoBehaviour
         StartCoroutine(LerpPosition(soil, soil.transform.position, soilBasicPosition, speed));
     }
 
-    private void LifeFormCheck()
+    public void LifeFormCheck()
     {
         if (coverContainer.transform.childCount > 0)
         {
@@ -343,20 +343,28 @@ public class HexTile : MonoBehaviour
 
             if (mobileContainer.transform.childCount > 1)
             {
-                for (int i = 0; i < mobileContainer.transform.childCount; i++)
+                HexTile neighbour = neighboringHexTiles[UnityEngine.Random.Range(0, neighboringHexTiles.Count - 1)];
+                if (mobile != null && neighbour.CheckIfPlacementIsPossible(mobile.lifeFormObject))
                 {
-                    if (i != 0)
-                    {
-                        HexTile neighbour = neighboringHexTiles[UnityEngine.Random.Range(0, neighboringHexTiles.Count - 1)];
-                        if (mobile != null && neighbour.CheckIfPlacementIsPossible(mobile.lifeFormObject))
-                        {
-                            mobile.MoveTo(new List<HexTile> { neighbour }, "crowding");
-                            return;
-                        }
-                       return;
-                    }
+                    mobile.MoveTo(new List<HexTile> { neighbour }, "crowding");
+                    return;
                 }
+                return;
             }
+            /* for (int i = 0; i < mobileContainer.transform.childCount; i++)
+             {
+                 if (i != 0)
+                 {
+                     HexTile neighbour = neighboringHexTiles[UnityEngine.Random.Range(0, neighboringHexTiles.Count - 1)];
+                     if (mobile != null && neighbour.CheckIfPlacementIsPossible(mobile.lifeFormObject))
+                     {
+                         mobile.MoveTo(new List<HexTile> { neighbour }, "crowding");
+                         return;
+                     }
+                    return;
+                 }
+             }
+         }*/
         }
         else { mobileFilled = false; }
     }
