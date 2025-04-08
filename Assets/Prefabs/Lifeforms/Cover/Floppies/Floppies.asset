@@ -26,7 +26,7 @@ MonoBehaviour:
   selected: 1
   unlockCost: 2
   lifeType: 0
-  kingdom: 0
+  kingdom: 3
   lifeForm: {fileID: 3552898181022442474, guid: 0d4dedb54df061244944701b8a7ea0d5,
     type: 3}
   startingForm: {fileID: 0}
@@ -39,3 +39,6 @@ MonoBehaviour:
   procreationType: 0
   procreationTime: 24
   procreationRate: 3
+  materials: []
+  standardGenetics: []
+  standardColouration: 0

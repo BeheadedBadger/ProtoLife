@@ -1,3 +1,4 @@
+using Assets.Scripts.LifeForms;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -28,6 +29,11 @@ public class LifeFormObject : BuildModeObject
     public ProcreationType procreationType;
     public float procreationTime; 
     public int procreationRate;
+
+    //Genetics
+    public List<Material> materials;
+    public List<GeneInfo> standardGenetics;
+    public int standardColouration;
 
     public void Awake()
     {

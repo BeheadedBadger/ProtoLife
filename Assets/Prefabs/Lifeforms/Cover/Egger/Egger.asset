@@ -10,9 +10,9 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: f82f5a222ccd0494396f8eb81eab9806, type: 3}
-  m_Name: Bungles
+  m_Name: Egger
   m_EditorClassIdentifier: 
-  title: Bungles
+  title: Egger
   description: Will eat almost anything and spreads fast, but only lives for a brief
     time. Does well near water.
   objType: 1
@@ -39,3 +39,20 @@ MonoBehaviour:
   procreationType: 0
   procreationTime: 48
   procreationRate: 3
+  materials:
+  - {fileID: 2100000, guid: a8fc976219f352a4997ac1183e35735b, type: 2}
+  - {fileID: 2100000, guid: 2775e556831935242a6be5525beda1c5, type: 2}
+  - {fileID: 2100000, guid: fd5c76bd760aea74b8a1057f4473d3e7, type: 2}
+  - {fileID: 2100000, guid: 8e0e5237d139b0a458d00ec0a0ce74ff, type: 2}
+  - {fileID: 2100000, guid: 28810f9446df28f4687ddc578972bb4d, type: 2}
+  - {fileID: 2100000, guid: 84309b63aaece5a4b8de21e66286e22d, type: 2}
+  - {fileID: 2100000, guid: 0b859c8901ce4234999a602124419823, type: 2}
+  - {fileID: 2100000, guid: c378aef76171ff44e871bfa6672f788e, type: 2}
+  - {fileID: 2100000, guid: 3cf07606da4eb1145aae5c9b04e48c5f, type: 2}
+  - {fileID: 2100000, guid: cc90e87576f937248850732538004882, type: 2}
+  standardGenetics:
+  - {fileID: 4992149675510995640, guid: 680694c2b1cf252419539de333989470, type: 3}
+  - {fileID: 8508926059794484789, guid: ad9c884e698737447b4d41a443151f22, type: 3}
+  - {fileID: 2263749256623289173, guid: 89bfa7c3f493e314a9ca7614a1136d9f, type: 3}
+  - {fileID: 6725028843081499072, guid: b19d3bec26f5d6749bfe53f06aab27ef, type: 3}
+  standardColouration: 5

@@ -1,9 +1,8 @@
+using Assets.Scripts.LifeForms;
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.IO;
 using UnityEngine;
-using static UnityEngine.RuleTile.TilingRuleOutput;
 
 public class LifeForm : MonoBehaviour
 {
@@ -14,8 +13,6 @@ public class LifeForm : MonoBehaviour
     DateTime procreationTime;
     DateTime coinGenerationTime;
     DateTime feedingTime;
-
-    bool InitializationCompleted;
     DateTime previousUpdate;
     public int health;
     public int age;
@@ -24,14 +21,20 @@ public class LifeForm : MonoBehaviour
     public int procreationDesperation;
 
     public List<GameObject> LifeStages;
-
-    private void Awake()
-    {
-        InitializationCompleted = false;
-    }
+    public Material material;
+    public List<GeneInfo> genes;
 
     public void createLifeForm(HexTile parent)
     {
+        if (genes == lifeFormObject.standardGenetics)
+        {
+            material = lifeFormObject.materials[lifeFormObject.standardColouration];
+        }
+        else 
+        {
+            CheckMaterial();
+        }
+
         List<int> rotation = new List<int>() { 0, 60, 120, 180, 240, 300 };
         this.gameObject.transform.rotation = Quaternion.Euler(new Vector3(0, rotation[UnityEngine.Random.Range(0, 5)], 0));
 
@@ -64,18 +67,17 @@ public class LifeForm : MonoBehaviour
 
         feedingTime = gameManager.currentDate.AddHours(lifeFormObject.feedingRate);
         previousUpdate = gameManager.currentDate;
-
-        InitializationCompleted = true;
     }
 
-    /*void FixedUpdate()
+    private void CheckMaterial()
     {
-        if (InitializationCompleted && (gameManager.currentDate.Hour > previousUpdate.Hour || gameManager.currentDate.Date > previousUpdate.Date))
+        if (lifeFormObject.kingdom == LifeFormObject.Kingdom.Fungi)
         {
-            CheckTimeBasedEvents();
-            previousUpdate = gameManager.currentDate;
+            FungiGenes fungiGenes = new FungiGenes();
+            int fungiMat = fungiGenes.CheckMat(genes);
+            material = lifeFormObject.materials[fungiMat];
         }
-    }*/
+    }
 
     public void CheckTimeBasedEvents()
     {
@@ -505,8 +507,17 @@ public class LifeForm : MonoBehaviour
         }
     }
 
-    private void Procreate()
+    private void Procreate(/*LifeForm mate*/)
     {
+/*        if ( mate == null)
+        {
+            if (lifeFormObject.kingdom == LifeFormObject.Kingdom.Fungi)
+            {
+                FungiGenes fungiGenetics = new FungiGenes(); 
+                fungiGenes = fungiGenetics.SetGenes(fungiGenes, null); 
+            }
+        }*/
+
         procreationDesperation = 0;
         procreationTime = procreationTime.AddHours(lifeFormObject.procreationTime);
 
@@ -561,8 +572,7 @@ public class LifeForm : MonoBehaviour
     public void MoveTo(List<HexTile> tiles, string Goal)
     {
         StartCoroutine(MovementToTile(this.gameObject, this.parentHex.transform.position, tiles, 0.5f));
-        //StartCoroutine(MovementToTile(this.gameObject, this.parentHex.transform.position, tiles[i].mobileContainer.transform.position, 0.5f));
-       this.parentHex = tiles[tiles.Count - 1];
+        this.parentHex = tiles[tiles.Count - 1];
 
         if (Goal == "procreation")
         {
