@@ -28,7 +28,7 @@ public class LifeForm : MonoBehaviour
     public FungiGenes fungiGenes;
     public PlantGenes plantGenes;
 
-    int lifespan = new();
+    public int lifespan = new();
     //TODO other genes
 
     public void createLifeForm(HexTile parent)
@@ -102,7 +102,7 @@ public class LifeForm : MonoBehaviour
             //Short lifespan
             foreach (GeneInfo gene in genes)
             {
-                if (gene.name == "NoChlo" && gene.Expression == GeneExpression.On)
+                if (gene.Name == "NoChlo" && gene.Expression == GeneExpression.On)
                 { 
                     lifespan = (lifeFormObject.lifeSpan / 2);
                 }
@@ -414,22 +414,22 @@ public class LifeForm : MonoBehaviour
 
     private int PreyAppeal(LifeForm prey)
     {
-        bool sameSpecies = (prey?.lifeFormObject?.title == lifeFormObject?.title);
+        bool sameSpecies = (prey.lifeFormObject?.title == lifeFormObject.title);
         int sameSpeciesScore = 0;
         if (sameSpecies == true)
         {
             sameSpeciesScore = -5;
         }
         int risk = 0;
-        if (prey?.health - lifeFormObject.damage > 0)
+        if (prey.health - lifeFormObject.damage > 0)
         {
             risk += 1;
         }
-        if (health - prey?.lifeFormObject.damage < 0)
+        if (health - prey.lifeFormObject.damage < 0)
         {
             risk += 2;
         }
-        if (prey?.lifeFormObject.mobility > lifeFormObject.mobility)
+        if (prey.lifeFormObject.mobility > lifeFormObject.mobility)
         {
             risk += 2;
         }
