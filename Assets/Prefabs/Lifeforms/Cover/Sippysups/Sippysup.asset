@@ -22,7 +22,7 @@ MonoBehaviour:
   lifeCoinGeneration: 0.042
   waterNeed: 5
   soilTypes: 01000000020000000300000004000000
-  selected: 1
+  selected: 0
   unlockCost: 3
   lifeType: 0
   kingdom: 0

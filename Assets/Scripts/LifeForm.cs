@@ -27,10 +27,13 @@ public class LifeForm : MonoBehaviour
 
     public FungiGenes fungiGenes;
     public PlantGenes plantGenes;
+
+    int lifespan = new();
     //TODO other genes
 
     public void createLifeForm(HexTile parent)
     {
+        lifespan = lifeFormObject.lifeSpan;
         if (genes.Count == 0)
         {
             foreach (GeneInfo gene in lifeFormObject.standardGenetics)
@@ -52,6 +55,7 @@ public class LifeForm : MonoBehaviour
         if (standardColouration == false) 
         {
             CheckMaterial();
+            CheckEffects();
         }
 
         List<int> rotation = new List<int>() { 0, 60, 120, 180, 240, 300 };
@@ -75,7 +79,7 @@ public class LifeForm : MonoBehaviour
 
         if (age > 0)
         {
-            int lifespanRemaining = lifeFormObject.lifeSpan - age;
+            int lifespanRemaining = lifespan - age;
             if (lifespanRemaining > 0)
             {
                 if (LifeStages.Count > 0)
@@ -86,6 +90,24 @@ public class LifeForm : MonoBehaviour
 
         feedingTime = gameManager.currentDate.AddHours(lifeFormObject.feedingRate);
         previousUpdate = gameManager.currentDate;
+    }
+
+    private void CheckEffects()
+    {
+        if (lifeFormObject.kingdom == LifeFormObject.Kingdom.Fungi)
+        { }
+
+        if (lifeFormObject.kingdom == LifeFormObject.Kingdom.Plant)
+        {
+            //Short lifespan
+            foreach (GeneInfo gene in genes)
+            {
+                if (gene.name == "NoChlo" && gene.Expression == GeneExpression.On)
+                { 
+                    lifespan = (lifeFormObject.lifeSpan / 2);
+                }
+            }
+        }
     }
 
     private void CheckMaterial()
@@ -122,7 +144,7 @@ public class LifeForm : MonoBehaviour
 
     public void CheckTimeBasedEvents()
     {
-        if (age > lifeFormObject.lifeSpan || health <= 0)
+        if (age > lifespan || health <= 0)
         {
             Death();
             return;

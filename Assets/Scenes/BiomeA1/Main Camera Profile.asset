@@ -15,19 +15,19 @@ MonoBehaviour:
   active: 1
   postExposure:
     m_OverrideState: 1
-    m_Value: 0.2
+    m_Value: 0.5
   contrast:
     m_OverrideState: 1
-    m_Value: -4
+    m_Value: -5
   colorFilter:
     m_OverrideState: 0
     m_Value: {r: 0.77577394, g: 0.6975347, b: 0.8962264, a: 1}
   hueShift:
-    m_OverrideState: 0
-    m_Value: -19
+    m_OverrideState: 1
+    m_Value: -11
   saturation:
     m_OverrideState: 1
-    m_Value: 2
+    m_Value: 20
 --- !u!114 &11400000
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -44,6 +44,7 @@ MonoBehaviour:
   - {fileID: -4686772960464900695}
   - {fileID: 921399469958636672}
   - {fileID: 4636883398794677572}
+  - {fileID: 6885579077364688493}
 --- !u!114 &921399469958636672
 MonoBehaviour:
   m_ObjectHideFlags: 3
@@ -59,13 +60,13 @@ MonoBehaviour:
   active: 1
   threshold:
     m_OverrideState: 1
-    m_Value: 0.6
+    m_Value: 0.5
   intensity:
     m_OverrideState: 1
-    m_Value: 0.5
+    m_Value: 0.1
   scatter:
     m_OverrideState: 1
-    m_Value: 1
+    m_Value: 0.196
   clamp:
     m_OverrideState: 0
     m_Value: 65472
@@ -100,10 +101,29 @@ MonoBehaviour:
   active: 1
   shadows:
     m_OverrideState: 1
-    m_Value: {r: 0.7087979, g: 0.5947846, b: 0.7735849, a: 1}
+    m_Value: {r: 0.6910842, g: 0.627047, b: 0.7264151, a: 1}
   highlights:
     m_OverrideState: 1
-    m_Value: {r: 0.89726377, g: 0.9056604, b: 0.66215736, a: 1}
+    m_Value: {r: 0.817133, g: 0.8207547, b: 0.70848167, a: 1}
   balance:
     m_OverrideState: 1
-    m_Value: -48.5
+    m_Value: -36.6
+--- !u!114 &6885579077364688493
+MonoBehaviour:
+  m_ObjectHideFlags: 3
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 221518ef91623a7438a71fef23660601, type: 3}
+  m_Name: WhiteBalance
+  m_EditorClassIdentifier: 
+  active: 1
+  temperature:
+    m_OverrideState: 1
+    m_Value: 12.5
+  tint:
+    m_OverrideState: 1
+    m_Value: 5.9
