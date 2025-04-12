@@ -1,24 +1,5 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
---- !u!114 &-6602296648913884297
-MonoBehaviour:
-  m_ObjectHideFlags: 3
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 221518ef91623a7438a71fef23660601, type: 3}
-  m_Name: WhiteBalance
-  m_EditorClassIdentifier: 
-  active: 0
-  temperature:
-    m_OverrideState: 1
-    m_Value: 14.8
-  tint:
-    m_OverrideState: 1
-    m_Value: -7.9
 --- !u!114 &-4686772960464900695
 MonoBehaviour:
   m_ObjectHideFlags: 3
@@ -37,7 +18,7 @@ MonoBehaviour:
     m_Value: 0.2
   contrast:
     m_OverrideState: 1
-    m_Value: -17.7
+    m_Value: -4
   colorFilter:
     m_OverrideState: 0
     m_Value: {r: 0.77577394, g: 0.6975347, b: 0.8962264, a: 1}
@@ -46,32 +27,7 @@ MonoBehaviour:
     m_Value: -19
   saturation:
     m_OverrideState: 1
-    m_Value: 7.6
---- !u!114 &-3589894699793319983
-MonoBehaviour:
-  m_ObjectHideFlags: 3
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ccf1aba9553839d41ae37dd52e9ebcce, type: 3}
-  m_Name: MotionBlur
-  m_EditorClassIdentifier: 
-  active: 0
-  mode:
-    m_OverrideState: 0
-    m_Value: 0
-  quality:
-    m_OverrideState: 1
-    m_Value: 0
-  intensity:
-    m_OverrideState: 1
-    m_Value: 0.108
-  clamp:
-    m_OverrideState: 1
-    m_Value: 0.05
+    m_Value: 2
 --- !u!114 &11400000
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -86,5 +42,68 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   components:
   - {fileID: -4686772960464900695}
-  - {fileID: -6602296648913884297}
-  - {fileID: -3589894699793319983}
+  - {fileID: 921399469958636672}
+  - {fileID: 4636883398794677572}
+--- !u!114 &921399469958636672
+MonoBehaviour:
+  m_ObjectHideFlags: 3
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0b2db86121404754db890f4c8dfe81b2, type: 3}
+  m_Name: Bloom
+  m_EditorClassIdentifier: 
+  active: 1
+  threshold:
+    m_OverrideState: 1
+    m_Value: 0.6
+  intensity:
+    m_OverrideState: 1
+    m_Value: 0.5
+  scatter:
+    m_OverrideState: 1
+    m_Value: 1
+  clamp:
+    m_OverrideState: 0
+    m_Value: 65472
+  tint:
+    m_OverrideState: 0
+    m_Value: {r: 1, g: 1, b: 1, a: 1}
+  highQualityFiltering:
+    m_OverrideState: 0
+    m_Value: 0
+  skipIterations:
+    m_OverrideState: 0
+    m_Value: 1
+  dirtTexture:
+    m_OverrideState: 0
+    m_Value: {fileID: 0}
+    dimension: 1
+  dirtIntensity:
+    m_OverrideState: 0
+    m_Value: 0
+--- !u!114 &4636883398794677572
+MonoBehaviour:
+  m_ObjectHideFlags: 3
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 70afe9e12c7a7ed47911bb608a23a8ff, type: 3}
+  m_Name: SplitToning
+  m_EditorClassIdentifier: 
+  active: 1
+  shadows:
+    m_OverrideState: 1
+    m_Value: {r: 0.7087979, g: 0.5947846, b: 0.7735849, a: 1}
+  highlights:
+    m_OverrideState: 1
+    m_Value: {r: 0.89726377, g: 0.9056604, b: 0.66215736, a: 1}
+  balance:
+    m_OverrideState: 1
+    m_Value: -48.5

@@ -51,7 +51,7 @@ public class CameraControls : MonoBehaviour
         }
         else if (Input.GetKey(KeyCode.KeypadPlus))
         {
-            newZoom += (zoomAmount / 100);
+            newZoom += (zoomAmount / 10);
         }
 
         if (Input.GetAxis("Mouse ScrollWheel") < 0)
@@ -60,7 +60,7 @@ public class CameraControls : MonoBehaviour
         }
         else if (Input.GetKey(KeyCode.KeypadMinus))
         {
-            newZoom -= (zoomAmount / 100);
+            newZoom -= (zoomAmount / 10);
         }
 
         transform.position = Vector3.Lerp(transform.position, newPosition, Time.deltaTime * movementTime);
@@ -69,7 +69,7 @@ public class CameraControls : MonoBehaviour
 
     void HandleBoundries()
     {
-        if (rig.transform.position.x < -120) 
+        if (rig.transform.position.x < -120)
         {
             rig.transform.position = new Vector3(-120, rig.transform.position.y, rig.transform.position.z);
             newPosition = rig.transform.position;
@@ -80,7 +80,7 @@ public class CameraControls : MonoBehaviour
             newPosition = rig.transform.position;
         }
 
-        if (rig.transform.position.z < -100) 
+        if (rig.transform.position.z < -100)
         {
             rig.transform.position = new Vector3(rig.transform.position.x, rig.transform.position.y, -100);
             newPosition = rig.transform.position;
@@ -91,15 +91,16 @@ public class CameraControls : MonoBehaviour
             newPosition = rig.transform.position;
         }
 
-        if (cameraTransform.localPosition.z < -100)
-        { 
-            cameraTransform.localPosition = new Vector3(cameraTransform.localPosition.x, 100, -100);
-            newZoom = cameraTransform.localPosition;
-        }
-        if (cameraTransform.localPosition.z > 60)
+        if (cameraTransform.localPosition.z < -80)
         {
-            cameraTransform.localPosition = new Vector3(cameraTransform.localPosition.x, -60, 60);
+            cameraTransform.localPosition = new Vector3(cameraTransform.localPosition.x, 80, -80);
             newZoom = cameraTransform.localPosition;
         }
+        if (cameraTransform.localPosition.z > 80)
+        {
+            cameraTransform.localPosition = new Vector3(cameraTransform.localPosition.x, -80, 80);
+            newZoom = cameraTransform.localPosition;
+        }
+
     }
 }

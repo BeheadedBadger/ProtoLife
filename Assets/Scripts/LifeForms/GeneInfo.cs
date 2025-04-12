@@ -6,7 +6,16 @@ namespace Assets.Scripts.LifeForms
 
     public class GeneInfo : MonoBehaviour
     {
-        public string name;
-        public GeneExpression expression;
+        public string Name;
+        public GeneExpression Expression;
+
+        public GeneInfo Gene(string name, GeneExpression expression)
+        {
+            GeneInfo gene = new();
+            gene.Name = name;
+            gene.Expression = expression;
+
+            return gene;
+        }
     }
 }

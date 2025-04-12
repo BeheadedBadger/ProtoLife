@@ -22,15 +22,34 @@ public class LifeForm : MonoBehaviour
 
     public List<GameObject> LifeStages;
     public Material material;
-    public List<GeneInfo> genes;
+    public List<GeneInfo> genes = new();
+    public List<Renderer> materialsToSet;
+
+    public FungiGenes fungiGenes;
+    public PlantGenes plantGenes;
+    //TODO other genes
 
     public void createLifeForm(HexTile parent)
     {
-        if (genes == lifeFormObject.standardGenetics)
+        if (genes.Count == 0)
         {
+            foreach (GeneInfo gene in lifeFormObject.standardGenetics)
+            {
+                GeneInfo newGene = gameObject.AddComponent(typeof(GeneInfo)) as GeneInfo;
+                newGene.Name = gene.Name;
+                newGene.Expression = gene.Expression;
+                genes.Add(newGene);
+            }
+
             material = lifeFormObject.materials[lifeFormObject.standardColouration];
         }
-        else 
+        bool standardColouration = true;
+        foreach (GeneInfo gene in genes)
+        {
+            if (gene.Expression != lifeFormObject.standardGenetics[genes.IndexOf(gene)].Expression)
+            { standardColouration = false; }
+        }
+        if (standardColouration == false) 
         {
             CheckMaterial();
         }
@@ -73,10 +92,32 @@ public class LifeForm : MonoBehaviour
     {
         if (lifeFormObject.kingdom == LifeFormObject.Kingdom.Fungi)
         {
-            FungiGenes fungiGenes = new FungiGenes();
-            int fungiMat = fungiGenes.CheckMat(genes);
-            material = lifeFormObject.materials[fungiMat];
+            int? fungiMat = fungiGenes.CheckMat(genes);
+            if (fungiMat != null)
+            {
+                material = lifeFormObject.materials[(int)fungiMat];
+            }
+            else
+            {
+                material = lifeFormObject.materials[lifeFormObject.standardColouration];
+                genes = lifeFormObject.standardGenetics;
+            }
         }
+        if (lifeFormObject.kingdom == LifeFormObject.Kingdom.Plant)
+        {
+            int? plantMat = plantGenes.CheckMat(genes);
+            if (plantMat != null)
+            {
+                material = lifeFormObject.materials[(int)plantMat];
+            }
+            else
+            {
+                material = lifeFormObject.materials[lifeFormObject.standardColouration];
+                genes = lifeFormObject.standardGenetics;
+            }
+        }
+        for (int i = 0; i < materialsToSet.Count; i++)
+        { materialsToSet[i].material = material; }
     }
 
     public void CheckTimeBasedEvents()
@@ -125,11 +166,14 @@ public class LifeForm : MonoBehaviour
         float durationOfStage = lifeFormObject.lifeSpan / LifeStages.Count;
         for (int i = 1; i < LifeStages.Count; i++)
         {
-            if (age > (durationOfStage * i))
+            if (age > (durationOfStage * i) && age < (durationOfStage * (i+1))) 
             {
-                foreach (GameObject lifestage in LifeStages)
-                { lifestage.SetActive(false); }
-                LifeStages[i].SetActive(true);
+                if (LifeStages[i].activeSelf == false)
+                {
+                    foreach (GameObject lifestage in LifeStages)
+                    { lifestage.SetActive(false); }
+                    StartCoroutine(LifeFormGrowAnimation(LifeStages[i - 1], LifeStages[i], 0.2f));
+                }
             }
         }
     }
@@ -415,22 +459,31 @@ public class LifeForm : MonoBehaviour
         //Asexual
         if (lifeFormObject.procreationType == LifeFormObject.ProcreationType.Asexual)
         {
-            Procreate();
+            Procreate(null);
             return;
         }
 
         //Sexual and immobile
-        if (lifeFormObject.procreationType == LifeFormObject.ProcreationType.Sexual && lifeFormObject.objType != LifeFormObject.ObjectType.Mobile)
+        if (lifeFormObject.procreationType == LifeFormObject.ProcreationType.Sexual)
         {
             foreach (HexTile neighbour in parentHex.neighboringHexTiles)
             {
-                if (neighbour.stationary?.lifeFormObject.title == lifeFormObject.title ||
-                    neighbour.cover?.lifeFormObject.title == lifeFormObject.title ||
-                    neighbour.mobile?.lifeFormObject.title == lifeFormObject.title)
+                if (neighbour.stationary != null && neighbour.stationary.lifeFormObject.title == lifeFormObject.title)
                 {
-                    Procreate();
+                    Procreate(neighbour.stationary);
                     return;
                 }
+                if (neighbour.cover != null && neighbour.cover.lifeFormObject.title == lifeFormObject.title)
+                {
+                    Procreate(neighbour.cover);
+                    return;
+                }
+                if (neighbour.mobile != null && neighbour.mobile.lifeFormObject.title == lifeFormObject.title)
+                {
+                    Procreate(neighbour.mobile);
+                    return;
+                }
+                
             }
         }
 
@@ -442,11 +495,6 @@ public class LifeForm : MonoBehaviour
             //Find targets
             foreach (HexTile neighbour in parentHex.neighboringHexTiles)
             {
-                if (neighbour.mobile != null && neighbour.mobile.lifeFormObject.title == lifeFormObject.title)
-                {
-                    Procreate();
-                    return;
-                }
                 foreach (HexTile secondaryNeighbour in neighbour.neighboringHexTiles)
                 {
                     if (secondaryNeighbour.mobile != null && secondaryNeighbour.mobile.lifeFormObject.title == lifeFormObject.title)
@@ -507,17 +555,8 @@ public class LifeForm : MonoBehaviour
         }
     }
 
-    private void Procreate(/*LifeForm mate*/)
+    private void Procreate(LifeForm mate)
     {
-/*        if ( mate == null)
-        {
-            if (lifeFormObject.kingdom == LifeFormObject.Kingdom.Fungi)
-            {
-                FungiGenes fungiGenetics = new FungiGenes(); 
-                fungiGenes = fungiGenetics.SetGenes(fungiGenes, null); 
-            }
-        }*/
-
         procreationDesperation = 0;
         procreationTime = procreationTime.AddHours(lifeFormObject.procreationTime);
 
@@ -538,6 +577,36 @@ public class LifeForm : MonoBehaviour
             {
                 if (possiblePlacement.Count > 0)
                 {
+                    //Calculate genes
+                    List<GeneInfo> childGenes = new();
+
+                    if (mate != null)
+                    {
+                        if (lifeFormObject.kingdom == LifeFormObject.Kingdom.Fungi)
+                        {
+                            childGenes = fungiGenes.SetGenes(genes, mate.genes);
+                        }
+
+                        if (lifeFormObject.kingdom == LifeFormObject.Kingdom.Plant)
+                        {
+                            childGenes = plantGenes.SetGenes(genes, mate.genes);
+                        }
+                    }
+
+                    if (mate == null)
+                    {
+                        if (lifeFormObject.kingdom == LifeFormObject.Kingdom.Fungi)
+                        {
+                            childGenes = fungiGenes.SetGenes(genes, null);
+                        }
+
+                        if (lifeFormObject.kingdom == LifeFormObject.Kingdom.Plant)
+                        {
+                            childGenes = plantGenes.SetGenes(genes, null);
+                        }
+                    }
+
+                    //Place
                     HexTile random = possiblePlacement[UnityEngine.Random.Range(0, possiblePlacement.Count - 1)];
                     LifeForm prefab;
 
@@ -546,6 +615,7 @@ public class LifeForm : MonoBehaviour
                         var instantiated = Instantiate(lifeFormObject.prefab, random.coverContainer.transform);
                         prefab = instantiated.GetComponent<LifeForm>();
                         random.cover = prefab;
+                        prefab.genes = childGenes;
                         prefab.createLifeForm(random);
                     }
                     else if (lifeFormObject.objType == BuildModeObject.ObjectType.Stationary && random.stationary == null)
@@ -553,6 +623,7 @@ public class LifeForm : MonoBehaviour
                         var instantiated = Instantiate(lifeFormObject.prefab, random.stationaryContainer.transform);
                         prefab = instantiated.GetComponent<LifeForm>();
                         random.stationary = prefab;
+                        prefab.genes = childGenes;
                         prefab.createLifeForm(random);
                     }
                     else if (lifeFormObject.objType == BuildModeObject.ObjectType.Mobile && random.mobile == null)
@@ -560,6 +631,7 @@ public class LifeForm : MonoBehaviour
                         var instantiated = Instantiate(lifeFormObject.prefab, random.mobileContainer.transform);
                         prefab = instantiated.GetComponent<LifeForm>();
                         random.mobile = prefab;
+                        prefab.genes = childGenes;
                         prefab.createLifeForm(random);
                     }
 
@@ -617,6 +689,28 @@ public class LifeForm : MonoBehaviour
     public void Poop(int nitrateScore) 
     {
         parentHex.soilFill.nutrientScore += nitrateScore;
+    }
+
+    IEnumerator LifeFormGrowAnimation(GameObject oldObj, GameObject newObj, float duration)
+    {
+        float time = 0;
+        oldObj.SetActive(true);
+        while (time < duration)
+        {
+            oldObj.transform.localScale = Vector3.Lerp(new(1, 1, 1), new Vector3(0,0,0), time / duration);
+            time += Time.deltaTime;
+            yield return null;
+        }
+        oldObj.SetActive(false);
+
+        time = 0;
+        newObj.SetActive(true);
+        while (time < duration)
+        {
+            newObj.transform.localScale = Vector3.Lerp(new(0, 0, 0), new(1, 1, 1), time / duration);
+            time += Time.deltaTime;
+            yield return null;
+        }
     }
 
     IEnumerator CoverOrStationaryDestroyAnimation(GameObject obj, Vector3 smallerScale, Vector3 largerScale, float duration)

@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Runtime.InteropServices.ComTypes;
 using System.Runtime.Serialization.Formatters.Binary;
@@ -27,14 +28,17 @@ public class Data
         public string Cover;
         public int coverAge;
         public int coverHealth;
+        public List<int> coverGenetics = new();
 
         public string Stationary;
         public int stationaryAge;
         public int stationaryHealth;
+        public List<int> stationaryGenetics = new();
 
         public string Mobile;
         public int mobileAge;
         public int mobileHealth;
+        public List<int> mobileGenetics = new();
 
         public TileData(string soilType, int nutrientScore, int humidityScore, int id)
         {

@@ -116,7 +116,7 @@ public class ItemSlot : MonoBehaviour
 
         if (associatedObj.objType != BuildModeObject.ObjectType.Soil)
         {
-            generates.text = associatedObj.lifeCoinGeneration.ToString();
+            generates.text = (associatedObj.lifeCoinGeneration * 24).ToString("N1");
             SetSoilTypes();
             SetWaterRequirements();
         }

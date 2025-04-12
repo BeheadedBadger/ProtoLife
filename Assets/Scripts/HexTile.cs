@@ -1,4 +1,3 @@
-using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -22,6 +21,10 @@ public class HexTile : MonoBehaviour
     float speed = 0.2f;
 
     //Fill
+    [SerializeField] public GameObject obscured;
+    [SerializeField] public GameObject revealed;
+    public bool isRevealed;
+
     public Soil soilFill;
     public Vector3 soilBasicPosition;
     public Vector3 soilSelectedPosition;
@@ -98,12 +101,37 @@ public class HexTile : MonoBehaviour
 
     void Update()
     {
+        if (soilFilled)
+        {
+            foreach (HexTile neighbor in neighboringHexTiles)
+            {
+                if (neighbor.isRevealed == false)
+                { neighbor.isRevealed = true; }
+            }
+        }
+
+        if (!isRevealed && soilFilled)
+        {
+            isRevealed = true;
+        }
+
+        if ((isRevealed && obscured.activeSelf == true) || (isRevealed && revealed.activeSelf == false))
+        {
+            obscured.SetActive(false);
+            revealed.SetActive(true);
+        }
+        else if ((!isRevealed && obscured.activeSelf == false) || (!isRevealed && revealed.activeSelf == true))
+        {
+            obscured.SetActive(true);
+            revealed.SetActive(false);
+        }
+
         if (!gameManager.BuildMode && grid.activeSelf)
         {
             grid.gameObject.SetActive(false);
         }
 
-        if (gameManager.BuildMode)
+        if (gameManager.BuildMode && isRevealed)
         {
             if (grid.activeSelf == false)
             { grid.gameObject.SetActive(true); }
@@ -351,20 +379,6 @@ public class HexTile : MonoBehaviour
                 }
                 return;
             }
-            /* for (int i = 0; i < mobileContainer.transform.childCount; i++)
-             {
-                 if (i != 0)
-                 {
-                     HexTile neighbour = neighboringHexTiles[UnityEngine.Random.Range(0, neighboringHexTiles.Count - 1)];
-                     if (mobile != null && neighbour.CheckIfPlacementIsPossible(mobile.lifeFormObject))
-                     {
-                         mobile.MoveTo(new List<HexTile> { neighbour }, "crowding");
-                         return;
-                     }
-                    return;
-                 }
-             }
-         }*/
         }
         else { mobileFilled = false; }
     }

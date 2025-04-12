@@ -1,7 +1,9 @@
+using Assets.Scripts.LifeForms;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using UnityEngine.Rendering.Universal;
 
 public class GameManager : MonoBehaviour
 {
@@ -138,6 +140,15 @@ public class GameManager : MonoBehaviour
                     tileData.Cover = tile.cover.lifeFormObject.title;
                     tileData.coverAge = tile.cover.age;
                     tileData.coverHealth = tile.cover.health;
+                    foreach (GeneInfo gene in tile.cover.genes)
+                    {
+                        if (gene.Expression == GeneExpression.On)
+                        { tileData.coverGenetics.Add(2); }
+                        if (gene.Expression == GeneExpression.Recessive)
+                        { tileData.coverGenetics.Add(1); }
+                        if (gene.Expression == GeneExpression.Off)
+                        { tileData.coverGenetics.Add(0); }
+                    }   
                 }
 
                 if (tile.stationary != null && tile.stationaryFilled)
@@ -145,13 +156,31 @@ public class GameManager : MonoBehaviour
                     tileData.Stationary = tile.stationary.lifeFormObject.title;
                     tileData.stationaryAge = tile.stationary.age;
                     tileData.stationaryHealth = tile.stationary.health;
+                    foreach (GeneInfo gene in tile.stationary.genes)
+                    {
+                        if (gene.Expression == GeneExpression.On)
+                        { tileData.stationaryGenetics.Add(2); }
+                        if (gene.Expression == GeneExpression.Recessive)
+                        { tileData.stationaryGenetics.Add(1); }
+                        if (gene.Expression == GeneExpression.Off)
+                        { tileData.stationaryGenetics.Add(0); }
+                    }
                 }
 
                 if (tile.mobile != null && tile.mobileFilled)
                 {
                     tileData.Mobile = tile.mobile.lifeFormObject.title;
                     tileData.mobileAge = tile.mobile.age;
-                    tileData.mobileHealth = tile.mobile.health;
+                    tileData.mobileHealth = tile.mobile.health; 
+                    foreach (GeneInfo gene in tile.mobile.genes)
+                    {
+                        if (gene.Expression == GeneExpression.On)
+                        { tileData.mobileGenetics.Add(2); }
+                        if (gene.Expression == GeneExpression.Recessive)
+                        { tileData.mobileGenetics.Add(1); }
+                        if (gene.Expression == GeneExpression.Off)
+                        { tileData.mobileGenetics.Add(0); }
+                    }
                 }
 
                 AllTileData.Add(tileData);
@@ -212,10 +241,12 @@ public class GameManager : MonoBehaviour
                         {
                             if (tiledata.Cover == obj.title)
                             {
-                                GameObject instantiated = Instantiate(obj.prefab, tile.coverContainer.transform); 
+                                GameObject instantiated = Instantiate(obj.prefab, tile.coverContainer.transform);
                                 LifeForm lifeform = instantiated.GetComponent<LifeForm>();
                                 lifeform.age = tiledata.coverAge;
                                 lifeform.health = tiledata.coverHealth;
+
+                                GetGenes(tiledata, lifeform);
 
                                 lifeform.createLifeForm(tile);
                                 tile.coverFilled = true;
@@ -235,6 +266,8 @@ public class GameManager : MonoBehaviour
                                 lifeform.age = tiledata.stationaryAge;
                                 lifeform.health = tiledata.stationaryHealth;
 
+                                GetGenes(tiledata, lifeform);
+
                                 lifeform.createLifeForm(tile);
                                 tile.stationaryFilled = true;
                                 tile.stationary = lifeform;
@@ -253,6 +286,8 @@ public class GameManager : MonoBehaviour
                                 lifeform.age = tiledata.mobileAge;
                                 lifeform.health = tiledata.mobileHealth;
 
+                                GetGenes(tiledata, lifeform);
+
                                 lifeform.createLifeForm(tile);
                                 tile.mobileFilled = true;
                                 tile.mobile = lifeform;
@@ -261,6 +296,27 @@ public class GameManager : MonoBehaviour
                     }
                 }
             }
+        }
+    }
+
+    private void GetGenes(Data.TileData tiledata, LifeForm lifeform)
+    {
+        foreach (GeneInfo gene in lifeform.lifeFormObject.standardGenetics)
+        {
+            GeneInfo newGene = gameObject.AddComponent(typeof(GeneInfo)) as GeneInfo;
+            newGene.Name = gene.Name;
+            newGene.Expression = gene.Expression;
+            lifeform.genes.Add(newGene);
+        }
+
+        for (int i = 0; i < tiledata.coverGenetics.Count; i++)
+        {
+            if (tiledata.coverGenetics[i] == 2)
+            { lifeform.genes[i].Expression = GeneExpression.On; }
+            if (tiledata.coverGenetics[i] == 1)
+            { lifeform.genes[i].Expression = GeneExpression.Recessive; }
+            if (tiledata.coverGenetics[i] == 0)
+            { lifeform.genes[i].Expression = GeneExpression.Off; }
         }
     }
 

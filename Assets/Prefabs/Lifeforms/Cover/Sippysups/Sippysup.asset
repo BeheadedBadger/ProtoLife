@@ -22,7 +22,7 @@ MonoBehaviour:
   lifeCoinGeneration: 0.042
   waterNeed: 5
   soilTypes: 01000000020000000300000004000000
-  selected: 0
+  selected: 1
   unlockCost: 3
   lifeType: 0
   kingdom: 0
@@ -35,6 +35,23 @@ MonoBehaviour:
   feedingRate: 144
   foodSources: 04000000
   lifeSpan: 240
-  procreationType: 0
+  procreationType: 1
   procreationTime: 125
   procreationRate: 3
+  materials:
+  - {fileID: 2100000, guid: ad33f4a63543dfc41bab008d4234112f, type: 2}
+  - {fileID: 2100000, guid: 16589b24fa0deee4a94c66a6f1b594f0, type: 2}
+  - {fileID: 2100000, guid: 14f66aa5ebc05b74da2cb389217dbecf, type: 2}
+  - {fileID: 2100000, guid: 8cc19fde940443a479907d711ad229c3, type: 2}
+  - {fileID: 2100000, guid: 40831b10244388345b944fa058432a6f, type: 2}
+  - {fileID: 2100000, guid: 2fb20d404a0e84b43872a6bc670ca120, type: 2}
+  - {fileID: 2100000, guid: 13a446d3af502e54697ab75bf1fdf6c6, type: 2}
+  - {fileID: 2100000, guid: acfc24e333da44843a344e0899901ea1, type: 2}
+  - {fileID: 2100000, guid: ef92bda033c5d784199f1d9a2577f442, type: 2}
+  - {fileID: 2100000, guid: f8a2eb41be701d94598c56c7ff638ab9, type: 2}
+  standardGenetics:
+  - {fileID: 4992149675510995640, guid: b8d144985bbc003458eba6debcc58879, type: 3}
+  - {fileID: 8508926059794484789, guid: 7264125cf6dbfa3429483fbc4c8a863d, type: 3}
+  - {fileID: 2263749256623289173, guid: b59100d826350d547b422986ce2f34d4, type: 3}
+  - {fileID: 6725028843081499072, guid: b7e4fe59c805f8f47a5a286e6f17bc77, type: 3}
+  standardColouration: 1

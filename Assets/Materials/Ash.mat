@@ -167,13 +167,13 @@ Material:
     - _LocalDisplacementScale: 0
     - _LocalDisplacementSpeed: 1
     - _Mode: 0
-    - _NormalStrength: 1
+    - _NormalStrength: 0
     - _OcclusionStrength: 1
     - _Offset: -0.8
     - _Parallax: 0.02
     - _QueueControl: 0
     - _QueueOffset: 0
-    - _Size: 0.5
+    - _Size: 0.51
     - _SmoothnessTextureChannel: 0
     - _SpecularHighlights: 1
     - _SrcBlend: 1
