@@ -3,7 +3,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
-using UnityEngine.Rendering.Universal;
 
 public class GameManager : MonoBehaviour
 {
@@ -92,7 +91,7 @@ public class GameManager : MonoBehaviour
         }
     }
 
-    public void selectSoil()
+    public void SelectSoil()
     {
         selectedSoil = (SoilObject)selectedObj;
     }

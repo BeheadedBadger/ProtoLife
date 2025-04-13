@@ -488,6 +488,7 @@ public class HexTile : MonoBehaviour
         }
     }
 
+
 //Animations
 IEnumerator LerpSize(GameObject obj, Vector3 startScale, Vector3 targetScale, float duration)
     {

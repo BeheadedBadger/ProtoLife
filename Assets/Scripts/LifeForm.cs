@@ -31,6 +31,8 @@ public class LifeForm : MonoBehaviour
     public int lifespan = new();
     //TODO other genes
 
+    public bool dead = false;
+
     public void createLifeForm(HexTile parent)
     {
         lifespan = lifeFormObject.lifeSpan;
@@ -144,48 +146,56 @@ public class LifeForm : MonoBehaviour
 
     public void CheckTimeBasedEvents()
     {
-        if (age > lifespan || health <= 0)
+        if (!dead)
         {
-            Death();
-            return;
-        }
-
-        if (gameManager.currentDate.Hour > previousUpdate.Hour)
-        {
-            age++;
-            if (LifeStages.Count > 0)
+            if (age > lifespan || health <= 0)
             {
-                CheckStage();
+                Death();
+                return;
             }
-        }
 
-        if (procreationTime < gameManager.currentDate)
-        {
-            AttemptProcreation();
-        }
-
-        if (coinGenerationTime < gameManager.currentDate)
-        {
-            gameManager.LifeCoins += lifeFormObject.lifeCoinGeneration;
-            coinGenerationTime = coinGenerationTime.AddHours(1);
-        }
-
-        if (feedingTime < gameManager.currentDate)
-        {
-            if (lifeFormObject.kingdom == LifeFormObject.Kingdom.Animal)
+            if (gameManager.currentDate.Hour > previousUpdate.Hour)
             {
-                //ToDo: Adjust value when we assign sizes to lifeforms
-                Poop(1);
+                age++;
+                if (LifeStages.Count > 0)
+                {
+                    CheckStage();
+                }
             }
-            Feed();
+
+            if (procreationTime < gameManager.currentDate)
+            {
+                AttemptProcreation();
+            }
+
+            if (coinGenerationTime < gameManager.currentDate)
+            {
+                gameManager.LifeCoins += lifeFormObject.lifeCoinGeneration;
+                coinGenerationTime = coinGenerationTime.AddHours(1);
+            }
+
+            if (feedingTime < gameManager.currentDate)
+            {
+                if (lifeFormObject.kingdom == LifeFormObject.Kingdom.Animal)
+                {
+                    //ToDo: Adjust value when we assign sizes to lifeforms
+                    Poop(1);
+                }
+                Feed();
+            }
+
+            previousUpdate = gameManager.currentDate;
         }
 
-        previousUpdate = gameManager.currentDate;
+        if (dead && health == 0 || dead && age >= (lifeFormObject.lifeSpan * 1.3))
+        {
+            StartCoroutine(CoverOrStationaryDestroyAnimation(this.gameObject, new Vector3(0, 0, 0), new Vector3(1, 1, 1), 0.3f));
+        }
     }
 
     private void CheckStage()
     {
-        float durationOfStage = lifeFormObject.lifeSpan / LifeStages.Count;
+        float durationOfStage = lifeFormObject.lifeSpan / LifeStages.Count - 1;
         for (int i = 1; i < LifeStages.Count; i++)
         {
             if (age > (durationOfStage * i) && age < (durationOfStage * (i+1))) 
@@ -421,15 +431,15 @@ public class LifeForm : MonoBehaviour
             sameSpeciesScore = -5;
         }
         int risk = 0;
-        if (prey.health - lifeFormObject.damage > 0)
+        if (((prey.health - lifeFormObject.damage) > 0) && prey.dead == false)
         {
             risk += 1;
         }
-        if (health - prey.lifeFormObject.damage < 0)
+        if (((health - prey.lifeFormObject.damage) < 0) && prey.dead == false)
         {
             risk += 2;
         }
-        if (prey.lifeFormObject.mobility > lifeFormObject.mobility)
+        if (((prey.lifeFormObject.mobility) > lifeFormObject.mobility) && prey.dead == false)
         {
             risk += 2;
         }
@@ -462,16 +472,28 @@ public class LifeForm : MonoBehaviour
     private void Death()
     {
         parentHex.soilFill.nutrientScore += 1;
+        for (int i = 0; i < LifeStages.Count; i++)
+        {
+            if (LifeStages[i].activeSelf == true)
+            {
+                StartCoroutine(LifeFormGrowAnimation(LifeStages[i], LifeStages[^1], 0.2f));
+            }
+        }
 
+        dead = true;
+        
+        health = lifeFormObject.maxHealth;
+      /*
+        LifeStages[LifeStages.Count].SetActive(true);
         if (lifeFormObject.objType == BuildModeObject.ObjectType.Mobile)
         {
             GameObject.Destroy(this.gameObject);
         }
-
+        
         if (lifeFormObject.objType == BuildModeObject.ObjectType.Cover || lifeFormObject.objType == BuildModeObject.ObjectType.Stationary)
         {
             StartCoroutine(CoverOrStationaryDestroyAnimation(this.gameObject, new Vector3(0, 0, 0), new Vector3(1, 1, 1), 0.25f));
-        }
+        }*/
     }
 
     private void AttemptProcreation()

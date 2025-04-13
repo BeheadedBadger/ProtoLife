@@ -48,5 +48,9 @@ MonoBehaviour:
   - {fileID: 2100000, guid: 00e3b124e5d76a34f8e948201d6e5ded, type: 2}
   - {fileID: 2100000, guid: f2d1913c1c9c310428c78df1933b685b, type: 2}
   - {fileID: 2100000, guid: 48970c8386d56c348bc46c3f4e90afe2, type: 2}
-  standardGenetics: []
+  standardGenetics:
+  - {fileID: 8508926059794484789, guid: 1ef14b063c8e7d44795771d56e31d4ec, type: 3}
+  - {fileID: 8508926059794484789, guid: c8d959ec3228ade4fbd6812804ddc18d, type: 3}
+  - {fileID: 2263749256623289173, guid: 53ce14cd522560c419e898d9c4da7449, type: 3}
+  - {fileID: 4992149675510995640, guid: f9481340b5cdff44eab2c539baba7f01, type: 3}
   standardColouration: 3

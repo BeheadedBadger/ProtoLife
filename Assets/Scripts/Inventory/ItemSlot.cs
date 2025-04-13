@@ -87,7 +87,7 @@ public class ItemSlot : MonoBehaviour
             gameManager.selectedObj = associatedObj;
             if (associatedObj.objType == BuildModeObject.ObjectType.Soil)
             {
-                gameManager.selectSoil();
+                gameManager.SelectSoil();
             }
         }
     }

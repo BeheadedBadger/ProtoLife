@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using TMPro;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.UIElements;
@@ -19,6 +20,11 @@ public class UI_Handler : MonoBehaviour
 
     [SerializeField] TextMeshProUGUI title;
     [SerializeField] TextMeshProUGUI flavourText;
+    [SerializeField] UnityEngine.UI.Image kingdom;
+    [SerializeField] GameObject kingdomHolder;
+    [SerializeField] List<Sprite> Kingdoms;
+    [SerializeField] List<GameObject> Diet;
+    [SerializeField] GameObject dietHolder;
 
     [SerializeField] UnityEngine.UI.Image ViewMode;
     [SerializeField] Sprite activeViewMode;
@@ -84,7 +90,39 @@ public class UI_Handler : MonoBehaviour
         {
             title.text = gameManager.selectedObj.title;
             flavourText.text = gameManager.selectedObj.description;
+
+            if (gameManager.selectedObj.GetType() != typeof(LifeFormObject))
+            {
+                kingdomHolder.SetActive(false);
+                dietHolder.SetActive(false);
+                foreach (GameObject dieticon in Diet)
+                {
+                    dieticon.SetActive(false);
+                }
+            }
+
+            if (gameManager.selectedObj.GetType() == typeof(LifeFormObject))
+            {
+                LifeForm lifeform = gameManager.selectedObj.prefab.GetComponent<LifeForm>();
+                LifeFormObject.Kingdom kingdomNr = (LifeFormObject.Kingdom)lifeform.lifeFormObject.kingdom;
+                kingdomHolder.SetActive(true);
+
+                dietHolder.SetActive(true);
+                kingdom.sprite = Kingdoms[(int)kingdomNr];
+                for (int i = 0; i < Diet.Count; i++)
+                {
+                    if (lifeform.lifeFormObject.foodSources.Contains((LifeFormObject.Kingdom)i))
+                    {
+                        Diet[i].SetActive(true);
+                    }
+                    else
+                    {
+                        Diet[i].SetActive(false);
+                    }
+                }
+            }
         }
+
         else
         {
             title.text = "";
