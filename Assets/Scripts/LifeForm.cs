@@ -187,7 +187,7 @@ public class LifeForm : MonoBehaviour
             previousUpdate = gameManager.currentDate;
         }
 
-        if (dead && health == 0 || dead && age >= (lifeFormObject.lifeSpan * 1.3))
+        if (dead && health == 0 || dead && age >= (lifeFormObject.lifeSpan * 1.1))
         {
             StartCoroutine(CoverOrStationaryDestroyAnimation(this.gameObject, new Vector3(0, 0, 0), new Vector3(1, 1, 1), 0.3f));
         }
@@ -424,27 +424,32 @@ public class LifeForm : MonoBehaviour
 
     private int PreyAppeal(LifeForm prey)
     {
-        bool sameSpecies = (prey.lifeFormObject?.title == lifeFormObject.title);
-        int sameSpeciesScore = 0;
-        if (sameSpecies == true)
+        if (prey != null)
         {
-            sameSpeciesScore = -5;
-        }
-        int risk = 0;
-        if (((prey.health - lifeFormObject.damage) > 0) && prey.dead == false)
-        {
-            risk += 1;
-        }
-        if (((health - prey.lifeFormObject.damage) < 0) && prey.dead == false)
-        {
-            risk += 2;
-        }
-        if (((prey.lifeFormObject.mobility) > lifeFormObject.mobility) && prey.dead == false)
-        {
-            risk += 2;
-        }
+            bool sameSpecies = (prey.lifeFormObject?.title == lifeFormObject.title);
+            int sameSpeciesScore = 0;
 
-        return (feedingDesperation + sameSpeciesScore) - risk;
+            if (sameSpecies == true)
+            {
+                sameSpeciesScore = -5;
+            }
+            int risk = 0;
+            if (((prey.health - lifeFormObject.damage) > 0) && prey.dead == false)
+            {
+                risk += 1;
+            }
+            if (((health - prey.lifeFormObject.damage) < 0) && prey.dead == false)
+            {
+                risk += 2;
+            }
+            if (((prey.lifeFormObject.mobility) > lifeFormObject.mobility) && prey.dead == false)
+            {
+                risk += 2;
+            }
+
+            return (feedingDesperation + sameSpeciesScore) - risk;
+        }
+        return -1;
     }
 
     private void FeedOn(LifeForm prey)

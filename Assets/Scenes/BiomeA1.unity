@@ -7042,6 +7042,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 47d845dc4d303404a8a4774d39199011, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!1 &225991533 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 2612095140684221364, guid: a8bdc6abd66d3754da41745fdbe0e744,
+    type: 3}
+  m_PrefabInstance: {fileID: 8002965962465223744}
+  m_PrefabAsset: {fileID: 0}
 --- !u!114 &226105567 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 6806515276217337431, guid: 163b3a185c8fea540b71bf6615e83015,
@@ -20549,7 +20555,7 @@ MonoBehaviour:
   amber: {fileID: 583576475}
   title: {fileID: 41473584}
   flavourText: {fileID: 2072329772}
-  kingdom: {fileID: 0}
+  kingdom: {fileID: 1228162547}
   kingdomHolder: {fileID: 1228162545}
   Kingdoms:
   - {fileID: 21300000, guid: 6b8deab1c32d8bb4a873d77ed2e8063c, type: 3}
@@ -20563,6 +20569,7 @@ MonoBehaviour:
   - {fileID: 1317377426}
   - {fileID: 17790409}
   - {fileID: 80817318}
+  dietHolder: {fileID: 225991533}
   ViewMode: {fileID: 602084054}
   activeViewMode: {fileID: 21300000, guid: a1c9b067375b41b46965b5ad14c8bebb, type: 3}
   inactiveViewMode: {fileID: 21300000, guid: a43b3436d9568984e9fcd6246100ba0b, type: 3}
@@ -24892,6 +24899,18 @@ GameObject:
     type: 3}
   m_PrefabInstance: {fileID: 8002965962465223744}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &1228162547 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 4826099200514653999, guid: a8bdc6abd66d3754da41745fdbe0e744,
+    type: 3}
+  m_PrefabInstance: {fileID: 8002965962465223744}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1228162545}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!114 &1228339922 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 6806515276959172582, guid: 163b3a185c8fea540b71bf6615e83015,
