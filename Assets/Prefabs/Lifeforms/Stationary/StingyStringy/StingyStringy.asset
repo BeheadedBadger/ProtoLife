@@ -13,8 +13,9 @@ MonoBehaviour:
   m_Name: StingyStringy
   m_EditorClassIdentifier: 
   title: Stingy Stringy
-  description: Carnivorous fungi that can sting it's prey with miniscule spikes on
-    it's cap
+  description: 'Highly toxic, carnivorous plant that stings it''s prey and digest
+    small parts of them. Generally doesn''t kill other lifeforms, unless eaten by
+    them. '
   objType: 2
   unlocked: 1
   prefab: {fileID: 7988824616940609175, guid: 1ecf7e8b49e2de14a8c8bd9ff7257d4d, type: 3}
@@ -22,11 +23,11 @@ MonoBehaviour:
   cost: 60
   lifeCoinGeneration: 0.2
   waterNeed: 4
-  soilTypes: 0200000003000000
+  soilTypes: 02000000030000000100000004000000
   selected: 0
   unlockCost: 5
   lifeType: 1
-  kingdom: 0
+  kingdom: 3
   lifeForm: {fileID: 7988824616940609175, guid: 1ecf7e8b49e2de14a8c8bd9ff7257d4d,
     type: 3}
   startingForm: {fileID: 0}
@@ -39,3 +40,13 @@ MonoBehaviour:
   procreationType: 0
   procreationTime: 75
   procreationRate: 3
+  materials:
+  - {fileID: 2100000, guid: b0573eef48c820d4f960c827574927ab, type: 2}
+  - {fileID: 2100000, guid: edd95e9c88b8d154aa3c9fd825020fc4, type: 2}
+  - {fileID: 2100000, guid: d55ff469b2c5b3d438f469791bc5b397, type: 2}
+  - {fileID: 2100000, guid: 245b8da3bdb8a1a44b708ced043f99ed, type: 2}
+  - {fileID: 2100000, guid: 00e3b124e5d76a34f8e948201d6e5ded, type: 2}
+  - {fileID: 2100000, guid: f2d1913c1c9c310428c78df1933b685b, type: 2}
+  - {fileID: 2100000, guid: 48970c8386d56c348bc46c3f4e90afe2, type: 2}
+  standardGenetics: []
+  standardColouration: 3

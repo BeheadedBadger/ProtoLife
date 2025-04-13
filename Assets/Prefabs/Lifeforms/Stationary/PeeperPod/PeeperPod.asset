@@ -37,7 +37,7 @@ MonoBehaviour:
   feedingRate: 96
   foodSources: 0400000000000000
   lifeSpan: 250
-  procreationType: 0
+  procreationType: 1
   procreationTime: 60
   procreationRate: 1
   materials:
