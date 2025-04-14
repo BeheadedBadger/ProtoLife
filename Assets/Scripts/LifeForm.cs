@@ -196,7 +196,7 @@ public class LifeForm : MonoBehaviour
     private void CheckStage()
     {
         float durationOfStage = lifeFormObject.lifeSpan / LifeStages.Count - 1;
-        for (int i = 1; i < LifeStages.Count; i++)
+        for (int i = 1; i < LifeStages.Count - 1; i++)
         {
             if (age > (durationOfStage * i) && age < (durationOfStage * (i+1))) 
             {
