@@ -17,7 +17,7 @@ MonoBehaviour:
     is a great food source for herbivores. '
   objType: 1
   unlocked: 1
-  prefab: {fileID: 3552898181022442474, guid: 0d4dedb54df061244944701b8a7ea0d5, type: 3}
+  prefab: {fileID: 1857065530116232799, guid: 29094536d4c692a469c7e7f33b790174, type: 3}
   sprite: {fileID: 21300000, guid: b4aeab2912e93b545a910e70944dad9f, type: 3}
   cost: 10
   lifeCoinGeneration: 0.0125
@@ -27,7 +27,7 @@ MonoBehaviour:
   unlockCost: 2
   lifeType: 0
   kingdom: 3
-  lifeForm: {fileID: 3552898181022442474, guid: 0d4dedb54df061244944701b8a7ea0d5,
+  lifeForm: {fileID: 1857065530116232799, guid: 29094536d4c692a469c7e7f33b790174,
     type: 3}
   startingForm: {fileID: 0}
   mobility: 0
