@@ -94,7 +94,10 @@ public class HexTile : MonoBehaviour
             if (neighbourRay.transform.position != this.transform.position)
             {
                 neighboringTiles.Add(neighbourRay.transform.gameObject);
-                neighboringHexTiles.Add(neighbourRay.transform.gameObject.GetComponent<HexTile>());
+                if (neighbourRay.transform.gameObject.TryGetComponent<HexTile>(out var neighbourHex))
+                {
+                    neighboringHexTiles.Add(neighbourHex);
+                }
             }
         }
     }

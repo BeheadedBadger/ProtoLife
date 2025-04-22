@@ -187,16 +187,25 @@ public class LifeForm : MonoBehaviour
             previousUpdate = gameManager.currentDate;
         }
 
-        if (dead && health == 0 || dead && age >= (lifeFormObject.lifeSpan * 1.1))
+        if (dead)
         {
-            StartCoroutine(CoverOrStationaryDestroyAnimation(this.gameObject, new Vector3(0, 0, 0), new Vector3(1, 1, 1), 0.3f));
+            if (gameManager.currentDate.Hour > previousUpdate.Hour)
+            {
+                age++;
+            }
+
+            previousUpdate = gameManager.currentDate;
+            if (health == 0 || age >= (lifeFormObject.lifeSpan * 1.1))
+            {
+                StartCoroutine(CoverOrStationaryDestroyAnimation(this.gameObject, new Vector3(0, 0, 0), new Vector3(1, 1, 1), 0.3f));
+            }
         }
     }
 
     private void CheckStage()
     {
         float durationOfStage = lifeFormObject.lifeSpan / LifeStages.Count - 1;
-        for (int i = 1; i < LifeStages.Count; i++)
+        for (int i = 1; i < LifeStages.Count - 1; i++)
         {
             if (age > (durationOfStage * i) && age < (durationOfStage * (i+1))) 
             {
