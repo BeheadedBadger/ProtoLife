@@ -64,7 +64,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 84309b63aaece5a4b8de21e66286e22d, type: 2}
+  - {fileID: 2100000, guid: b655043fb062d224c920fcf526e24ec5, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -322,7 +322,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 84309b63aaece5a4b8de21e66286e22d, type: 2}
+  - {fileID: 2100000, guid: b655043fb062d224c920fcf526e24ec5, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -601,9 +601,6 @@ MonoBehaviour:
   - {fileID: 6904177450458489242}
   - {fileID: 4752093911552297929}
   - {fileID: 1404425560055226357}
-  - {fileID: 4747855494529239567}
-  - {fileID: 6898521236065823226}
-  - {fileID: 5006925234185818819}
   fungiGenes: {fileID: 7345586067492047737, guid: 31931186f403dd24990c75ddb799ba23,
     type: 3}
   plantGenes: {fileID: 0}
@@ -747,7 +744,7 @@ LODGroup:
   m_AnimateCrossFading: 0
   m_LastLODIsBillboard: 0
   m_LODs:
-  - screenRelativeHeight: 0.045994963
+  - screenRelativeHeight: 0.06
     fadeTransitionWidth: 0
     renderers:
     - renderer: {fileID: 5948794438430512050}
@@ -756,10 +753,10 @@ LODGroup:
     - renderer: {fileID: 6904177450458489242}
     - renderer: {fileID: 4752093911552297929}
     - renderer: {fileID: 1404425560055226357}
-  - screenRelativeHeight: 0.045994963
+  - screenRelativeHeight: 0.06
     fadeTransitionWidth: 0
     renderers: []
-  - screenRelativeHeight: 0.045994963
+  - screenRelativeHeight: 0.06
     fadeTransitionWidth: 0
     renderers: []
   m_Enabled: 1
@@ -865,7 +862,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &6870214735864055798
 Transform:
   m_ObjectHideFlags: 0
@@ -975,7 +972,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 84309b63aaece5a4b8de21e66286e22d, type: 2}
+  - {fileID: 2100000, guid: b655043fb062d224c920fcf526e24ec5, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0

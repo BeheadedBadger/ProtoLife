@@ -12,7 +12,6 @@ public class LifeFormObject : BuildModeObject
     public Kingdom kingdom;
 
     public GameObject lifeForm;
-    public GameObject startingForm; //Egg, spore, seed, etc.
 
     public int mobility;
     public int damage;
