@@ -335,7 +335,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &5086136872700018817
 Transform:
   m_ObjectHideFlags: 0
@@ -1073,7 +1073,6 @@ MonoBehaviour:
   - {fileID: 4731336556448637371}
   - {fileID: 8560379088807891370}
   - {fileID: 6879845894961326817}
-  - {fileID: 2463336728828315983}
   fungiGenes: {fileID: 7345586067492047737, guid: 31931186f403dd24990c75ddb799ba23,
     type: 3}
   plantGenes: {fileID: 0}
