@@ -28,7 +28,7 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0.216, y: -0.097, z: 0.129}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalScale: {x: 0.8, y: 0.8, z: 0.8}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 4627513746071075462}
@@ -457,7 +457,7 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -1, z: -0, w: -0.00000004371139}
   m_LocalPosition: {x: -0, y: 0.09, z: 0.129}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalScale: {x: 0.7, y: 0.7, z: 0.7}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 1880734694167270809}
@@ -479,11 +479,11 @@ LODGroup:
   m_AnimateCrossFading: 0
   m_LastLODIsBillboard: 0
   m_LODs:
-  - screenRelativeHeight: 0.06
+  - screenRelativeHeight: 0.044101503
     fadeTransitionWidth: 0
     renderers:
     - renderer: {fileID: 3970698420162519371}
-  - screenRelativeHeight: 0.02
+  - screenRelativeHeight: 0.011396642
     fadeTransitionWidth: 0
     renderers:
     - renderer: {fileID: 8027501702665671493}
@@ -606,7 +606,7 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0.216, y: -0.097, z: 0.129}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalScale: {x: 0.8, y: 0.8, z: 0.8}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 759557298456414195}
@@ -812,7 +812,7 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0.216, y: -0.097, z: 0.129}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalScale: {x: 0.8, y: 0.8, z: 0.8}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 759557298456414195}
@@ -898,7 +898,7 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0.216, y: -0.097, z: 0.129}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalScale: {x: 0.8, y: 0.8, z: 0.8}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 759557298456414195}
@@ -1070,7 +1070,7 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0.216, y: -0.097, z: 0.129}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalScale: {x: 0.8, y: 0.8, z: 0.8}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 4627513746071075462}
@@ -1241,7 +1241,7 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -1, z: -0, w: -0.00000004371139}
   m_LocalPosition: {x: -0.02, y: 0.054, z: 0.129}
-  m_LocalScale: {x: 0.8, y: 0.8, z: 0.8}
+  m_LocalScale: {x: 0.7, y: 0.7, z: 0.7}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 6922826855252551748}
@@ -1263,11 +1263,11 @@ LODGroup:
   m_AnimateCrossFading: 0
   m_LastLODIsBillboard: 0
   m_LODs:
-  - screenRelativeHeight: 0.06
+  - screenRelativeHeight: 0.04151249
     fadeTransitionWidth: 0
     renderers:
     - renderer: {fileID: 6807351619502329720}
-  - screenRelativeHeight: 0.02
+  - screenRelativeHeight: 0.011396642
     fadeTransitionWidth: 0
     renderers:
     - renderer: {fileID: 6242264687263064310}
@@ -1303,7 +1303,7 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -1, z: -0, w: -0.00000004371139}
   m_LocalPosition: {x: -0.045, y: 0.066, z: 0.129}
-  m_LocalScale: {x: 0.8, y: 0.8, z: 0.8}
+  m_LocalScale: {x: 0.7, y: 0.7, z: 0.7}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 5127862361222430519}
@@ -1325,11 +1325,11 @@ LODGroup:
   m_AnimateCrossFading: 0
   m_LastLODIsBillboard: 0
   m_LODs:
-  - screenRelativeHeight: 0.06
+  - screenRelativeHeight: 0.044101503
     fadeTransitionWidth: 0
     renderers:
     - renderer: {fileID: 269837007775406995}
-  - screenRelativeHeight: 0.02
+  - screenRelativeHeight: 0.011396642
     fadeTransitionWidth: 0
     renderers:
     - renderer: {fileID: 1133076804501715650}
@@ -1533,7 +1533,7 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -1, z: -0, w: -0.00000004371139}
   m_LocalPosition: {x: -0.192, y: 0.163, z: 0.178}
-  m_LocalScale: {x: 0.8, y: 0.8, z: 0.8}
+  m_LocalScale: {x: 0.7, y: 0.7, z: 0.7}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 8059954631193265284}

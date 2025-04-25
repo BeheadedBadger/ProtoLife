@@ -47,21 +47,19 @@ public class HexTile : MonoBehaviour
     public List<GameObject> neighboringTiles;
     public List<HexTile> neighboringHexTiles;
 
-    void OnMouseEnter()
+    public void OnMouseOver()
     {
-        if (gameManager.BuildMode == true)
-        {
-            highlighted = true;
-        }
+        gameManager.selectedHex = this.gameObject;
+        //Highlight();
     }
 
-    void OnMouseExit()
-    {
-        if (gameManager.BuildMode == true)
-        {
-            highlighted = false;
-        }
-    }
+    /* public void OnMouseExit()
+     {
+         if (gameManager.selectedHex == this)
+         { gameManager.selectedHex = null; } 
+
+         //DeactivateHighlight();
+     }*/
 
     void Start()
     {
@@ -69,6 +67,8 @@ public class HexTile : MonoBehaviour
         gridColour.color = gridInactive;
 
         SetPositions(grid.transform.position, soil.transform.position);
+        if (soilFill.thisSoilType != SoilObject.SoilType.Ash)
+        { Reveal(); }
     }
 
     public void SetPositions(Vector3 basicPosition, Vector3 soilPosition)
@@ -104,53 +104,86 @@ public class HexTile : MonoBehaviour
 
     void Update()
     {
-        if (soilFilled)
-        {
-            foreach (HexTile neighbor in neighboringHexTiles)
-            {
-                if (neighbor.isRevealed == false)
-                { neighbor.isRevealed = true; }
-            }
-        }
-
-        if (!isRevealed && soilFilled)
+        //Check for mismatches
+        if ((isRevealed == false) && (soilFill.thisSoilType != SoilObject.SoilType.Ash))
         {
             isRevealed = true;
         }
-
-        if ((isRevealed && obscured.activeSelf == true) || (isRevealed && revealed.activeSelf == false))
+        if (isRevealed && obscured.activeSelf)
         {
-            obscured.SetActive(false);
-            revealed.SetActive(true);
-        }
-        else if ((!isRevealed && obscured.activeSelf == false) || (!isRevealed && revealed.activeSelf == true))
-        {
-            obscured.SetActive(true);
-            revealed.SetActive(false);
+            if (soilFilled)
+            {
+                Reveal();
+            }
+            else
+            {
+                obscured.SetActive(false);
+                revealed.SetActive(true);
+            }
         }
 
-        if (!gameManager.BuildMode && grid.activeSelf)
+        if (gameManager.selectedHex == this.gameObject)
+        {
+            if (!highlighted || soil.transform.position == soilBasicPosition || grid.transform.position == tileBasicPosition)
+            { Highlight(); }
+        }
+
+        else
+        {
+            if (highlighted || soil.transform.position == soilSelectedPosition || grid.transform.position == tileSelectedPosition)
+            { 
+                DeactivateHighlight();
+            }
+
+            gridColour.color = gridInactive;
+        }
+
+        //Deactivate grid for view mode
+        if (!gameManager.BuildMode && !gameManager.DemolishMode && grid.activeSelf)
         {
             grid.gameObject.SetActive(false);
         }
 
-        if (gameManager.BuildMode && isRevealed)
+        else if (gameManager.DemolishMode && isRevealed)
+        {
+            if (grid.activeSelf == false)
+            { grid.gameObject.SetActive(true); }
+
+            //Handle input
+            if (Input.GetKeyDown(KeyCode.Mouse0))
+            {
+                //If the cursor is on the UI, ignore click.
+                if (EventSystem.current.IsPointerOverGameObject())
+                {
+                    return;
+                }
+
+                //Else, destroy all lifeforms on this tile.
+                if (highlighted)
+                {
+                    if (this.cover != null)
+                    {
+                        Destroy(cover.gameObject);
+                    }
+                    if (this.stationary != null)
+                    {
+                        Destroy(stationary.gameObject);
+                    }
+                    if (this.mobile != null)
+                    {
+                        Destroy(mobile.gameObject);
+                    }
+                }
+            }
+        }
+
+        else if (gameManager.BuildMode && isRevealed)
         {
             if (grid.activeSelf == false)
             { grid.gameObject.SetActive(true); }
 
             if (highlighted)
             {
-                if (grid.transform.position != tileSelectedPosition)
-                {
-                    StartCoroutine(LerpPosition(grid, grid.transform.position, tileSelectedPosition, speed));
-                }
-
-                if (soil.transform.position != soilSelectedPosition)
-                {
-                    StartCoroutine(LerpPosition(soil, soil.transform.position, soilSelectedPosition, speed));
-                }
-
                 CheckIfPlacementIsPossible();
 
                 if (placementPossible && gridColour.color != gridInactive)
@@ -162,99 +195,82 @@ public class HexTile : MonoBehaviour
                 {
                     StartCoroutine(LerpColour(gridColour, gridColour.color, Color.red, speed));
                 }
-            }
 
-            if (!highlighted)
-            {
-                if (grid.transform.position != tileBasicPosition)
+                //Handle input
+                if (Input.GetKeyDown(KeyCode.Mouse0))
                 {
-                    StartCoroutine(LerpPosition(grid, grid.transform.position, tileBasicPosition, speed));
-                }
+                    //If the cursor is on the UI, don't place object
+                    if (EventSystem.current.IsPointerOverGameObject())
+                    {
+                        return;
+                    }
 
-                if (soil.transform.position != soilBasicPosition)
-                {
-                    StartCoroutine(LerpPosition(soil, soil.transform.position, soilBasicPosition, speed));
-                }
-
-                if (gridColour.color != gridInactive)
-                {
-                    StartCoroutine(LerpColour(gridColour, gridColour.color, gridInactive, speed));
-                }
-            }
-
-            //Handle input
-            if (Input.GetKeyDown(KeyCode.Mouse0))
-            {
-                //If the cursor is on the UI, don't place object
-                if (EventSystem.current.IsPointerOverGameObject())
-                {
-                    return;
-                }
-                if (highlighted && !placementPossible)
-                {
-                    SoundManager.PlaySound(soundType.VeryShortFail);
-                }
-                
-                if (highlighted && gameManager.selectedObj != null && placementPossible)
-                {
-                    bool canPay = CanPay();
-
-                    if (canPay == false)
+                    else if (!placementPossible)
                     {
                         SoundManager.PlaySound(soundType.VeryShortFail);
-                        return; 
                     }
 
-                    if (gameManager.selectedObj.objType == BuildModeObject.ObjectType.Soil && gameManager.selectedSoil != null)
+                    else if ((gameManager.selectedObj != null) && placementPossible)
                     {
-                        SoundManager.PlaySound(soundType.VeryShortSuccess);
-                        gameManager.LifeCoins -= gameManager.selectedObj.cost;
+                        bool canPay = CanPay();
 
-                        SetHeight(gameManager.selectedSoil.soilType);
-                        grid.SetActive(false);
-                        soilFilled = true;
-                    }
+                        if (canPay == false)
+                        {
+                            SoundManager.PlaySound(soundType.VeryShortFail);
+                            return;
+                        }
 
-                    else if (gameManager.selectedObj.objType == BuildModeObject.ObjectType.Cover)
-                    {
-                        SoundManager.PlaySound(soundType.VeryShortSuccess);
-                        gameManager.LifeCoins -= gameManager.selectedObj.cost;
-                        GameObject coverGO = Instantiate(gameManager.selectedObj.prefab, coverContainer.transform.transform);
-                        cover = coverGO.GetComponent<LifeForm>();
-                        cover.createLifeForm(this);
-                        coverFilled = true;
-                    }
+                        if (gameManager.selectedObj.objType == BuildModeObject.ObjectType.Soil && gameManager.selectedSoil != null)
+                        {
+                            SoundManager.PlaySound(soundType.VeryShortSuccess);
+                            gameManager.LifeCoins -= gameManager.selectedObj.cost;
 
-                    else if (gameManager.selectedObj.objType == BuildModeObject.ObjectType.Stationary)
-                    {
-                        SoundManager.PlaySound(soundType.ShortSuccess);
-                        gameManager.LifeCoins -= gameManager.selectedObj.cost;
-                        GameObject stationaryGO = Instantiate(gameManager.selectedObj.prefab, stationaryContainer.transform.transform);
-                        stationary = stationaryGO.GetComponent<LifeForm>();
-                        stationary.createLifeForm(this);
-                        stationaryFilled = true;
-                    }
+                            SetHeight(gameManager.selectedSoil.soilType);
+                            grid.SetActive(false);
+                            soilFilled = true;
+                            Reveal();
+                        }
 
-                    else if (gameManager.selectedObj.objType == BuildModeObject.ObjectType.Mobile)
-                    {
-                        SoundManager.PlaySound(soundType.Success);
-                        gameManager.LifeCoins -= gameManager.selectedObj.cost;
-                        GameObject mobileGO = Instantiate(gameManager.selectedObj.prefab, mobileContainer.transform.transform);
-                        mobile = mobileGO.GetComponent<LifeForm>();
-                        mobile.createLifeForm(this);
-                        mobileFilled = true;
-                    }
+                        else if (gameManager.selectedObj.objType == BuildModeObject.ObjectType.Cover)
+                        {
+                            SoundManager.PlaySound(soundType.VeryShortSuccess);
+                            gameManager.LifeCoins -= gameManager.selectedObj.cost;
+                            GameObject coverGO = Instantiate(gameManager.selectedObj.prefab, coverContainer.transform.transform);
+                            cover = coverGO.GetComponent<LifeForm>();
+                            cover.createLifeForm(this);
+                            coverFilled = true;
+                        }
 
-                    else
-                    {
-                        SoundManager.PlaySound(soundType.ShortFail);
+                        else if (gameManager.selectedObj.objType == BuildModeObject.ObjectType.Stationary)
+                        {
+                            SoundManager.PlaySound(soundType.VeryShortSuccess);
+                            gameManager.LifeCoins -= gameManager.selectedObj.cost;
+                            GameObject stationaryGO = Instantiate(gameManager.selectedObj.prefab, stationaryContainer.transform.transform);
+                            stationary = stationaryGO.GetComponent<LifeForm>();
+                            stationary.createLifeForm(this);
+                            stationaryFilled = true;
+                        }
+
+                        else if (gameManager.selectedObj.objType == BuildModeObject.ObjectType.Mobile)
+                        {
+                            SoundManager.PlaySound(soundType.VeryShortSuccess);
+                            gameManager.LifeCoins -= gameManager.selectedObj.cost;
+                            GameObject mobileGO = Instantiate(gameManager.selectedObj.prefab, mobileContainer.transform.transform);
+                            mobile = mobileGO.GetComponent<LifeForm>();
+                            mobile.createLifeForm(this);
+                            mobileFilled = true;
+                        }
+
+                        else
+                        {
+                            SoundManager.PlaySound(soundType.VeryShortFail);
+                        }
                     }
                 }
             }
         }
 
         SoilCheck();
-        //LifeFormCheck();
     }
 
     private void SoilCheck()
@@ -289,7 +305,7 @@ public class HexTile : MonoBehaviour
             tileSelectedPosition = new Vector3(tileBasicPosition.x, tileBasicPosition.y + 0.4f, tileBasicPosition.z);
             grid.transform.position = tileBasicPosition;
         }
-        if (soilFill.thisSoilType == SoilObject.SoilType.Silt && soilBasicPosition.y != -0.75f 
+        if (soilFill.thisSoilType == SoilObject.SoilType.Silt && soilBasicPosition.y != -0.75f
             || soilFill.thisSoilType == SoilObject.SoilType.Silt && tileBasicPosition.y != 0f)
         {
             soilBasicPosition.y = -0.75f;
@@ -323,7 +339,7 @@ public class HexTile : MonoBehaviour
         {
             heighten = new Vector3(0, 0.25f, 0);
         }
-        
+
         tileBasicPosition += heighten;
         tileSelectedPosition += heighten;
         soilBasicPosition += heighten;
@@ -335,56 +351,109 @@ public class HexTile : MonoBehaviour
 
     public void LifeFormCheck()
     {
-        if (coverContainer.transform.childCount > 0)
-        {
-            coverFilled = true;
-
-            if (coverContainer.transform.childCount > 1)
-            {
-                for (int i = 0; i < coverContainer.transform.childCount; i++)
+        coverFilled = (cover != null);
+        stationaryFilled = (stationary != null);
+        mobileFilled = (mobile != null);
+        /*
+                if (coverContainer.transform.childCount > 0)
                 {
-                    if (i != 0)
+                    coverFilled = true;
+
+                    if (coverContainer.transform.childCount > 1)
                     {
-                        GameObject.Destroy(coverContainer.transform.GetChild(i).gameObject);
+                        for (int i = 0; i < coverContainer.transform.childCount; i++)
+                        {
+                            if (i != 0)
+                            {
+                                GameObject.Destroy(coverContainer.transform.GetChild(i).gameObject);
+                            }
+                        }
                     }
                 }
-            }
-        }
-        else { coverFilled = false; }
+                else { coverFilled = false; }
 
-        if (stationaryContainer.transform.childCount > 0)
-        {
-            if (stationaryContainer.transform.childCount > 1)
-            {
-                stationaryFilled = true;
-                for (int i = 0; i < stationaryContainer.transform.childCount; i++)
+                if (stationaryContainer.transform.childCount > 0)
                 {
-                    if (i != 0)
+                    if (stationaryContainer.transform.childCount > 1)
                     {
-                        GameObject.Destroy(stationaryContainer.transform.GetChild(i).gameObject);
+                        stationaryFilled = true;
+                        for (int i = 0; i < stationaryContainer.transform.childCount; i++)
+                        {
+                            if (i != 0)
+                            {
+                                GameObject.Destroy(stationaryContainer.transform.GetChild(i).gameObject);
+                            }
+                        }
                     }
                 }
-            }
-        }
-        else { stationaryFilled = false; }
+                else { stationaryFilled = false; }
 
-        if (mobileContainer.transform.childCount > 0)
-        {
-            mobileFilled = true;
-
-            if (mobileContainer.transform.childCount > 1)
-            {
-                HexTile neighbour = neighboringHexTiles[UnityEngine.Random.Range(0, neighboringHexTiles.Count - 1)];
-                if (mobile != null && neighbour.CheckIfPlacementIsPossible(mobile.lifeFormObject))
+                if (mobileContainer.transform.childCount > 0)
                 {
-                    mobile.MoveTo(new List<HexTile> { neighbour }, "crowding");
-                    return;
+                    mobileFilled = true;
+
+                    if (mobileContainer.transform.childCount > 1)
+                    {
+                        HexTile neighbour = neighboringHexTiles[UnityEngine.Random.Range(0, neighboringHexTiles.Count - 1)];
+                        if (mobile != null && neighbour.CheckIfPlacementIsPossible(mobile.lifeFormObject))
+                        {
+                            mobile.MoveTo(new List<HexTile> { neighbour }, "crowding");
+                            return;
+                        }
+                        return;
+                    }
                 }
-                return;
-            }
-        }
-        else { mobileFilled = false; }
+                else { mobileFilled = false; }*/
     }
+
+    private void Highlight()
+    {
+        if (grid.transform.position != tileSelectedPosition)
+        {
+            StartCoroutine(LerpPosition(grid, grid.transform.position, tileSelectedPosition, speed));
+        }
+
+        if (soil.transform.position != soilSelectedPosition)
+        {
+            StartCoroutine(LerpPosition(soil, soil.transform.position, soilSelectedPosition, speed));
+        }
+
+        highlighted = true;
+    }
+
+    private void DeactivateHighlight()
+    {
+        gridColour.color = gridInactive;
+
+        if (grid.transform.position != tileBasicPosition)
+        {
+            StartCoroutine(LerpPosition(grid, grid.transform.position, tileBasicPosition, speed));
+        }
+
+        if (soil.transform.position != soilBasicPosition)
+        {
+            StartCoroutine(LerpPosition(soil, soil.transform.position, soilBasicPosition, speed));
+        }
+
+        highlighted = false;
+        gridColour.color = gridInactive;
+    }
+
+    private void Reveal()
+    {
+        foreach (HexTile neighbor in neighboringHexTiles)
+        {
+            if (!neighbor.isRevealed)
+            { neighbor.isRevealed = true; }
+        }
+
+        obscured.SetActive(false);
+        revealed.SetActive(true);
+        isRevealed = true;
+    }
+
+    private void Hide()
+    { }
 
     private bool CanPay()
     {
@@ -436,7 +505,7 @@ public class HexTile : MonoBehaviour
             }
         }
 
-        placementPossible = false; 
+        placementPossible = false;
     }
 
     public bool CheckIfPlacementIsPossible(LifeFormObject lifeform)
@@ -472,28 +541,8 @@ public class HexTile : MonoBehaviour
         }
     }
 
-    public void OnDeath(LifeFormObject.LifeType type)
-    {
-        if (type == LifeFormObject.LifeType.Cover)
-        {
-            foreach (Transform child in coverContainer.transform)
-            {
-                GameObject.Destroy(child.gameObject);
-            }
-        }
-
-        if (type == LifeFormObject.LifeType.Stationary)
-        {
-            foreach (Transform child in coverContainer.transform)
-            {
-                GameObject.Destroy(child.gameObject);
-            }
-        }
-    }
-
-
-//Animations
-IEnumerator LerpSize(GameObject obj, Vector3 startScale, Vector3 targetScale, float duration)
+    //Animations
+    IEnumerator LerpSize(GameObject obj, Vector3 startScale, Vector3 targetScale, float duration)
     {
         float time = 0;
         Vector3 overshootRange = new Vector3(targetScale.x * 1.25f, targetScale.y * 1.25f, targetScale.z * 1.25f);
@@ -507,7 +556,7 @@ IEnumerator LerpSize(GameObject obj, Vector3 startScale, Vector3 targetScale, fl
         }
 
         time = 0;
-        while (time/4 < duration)
+        while (time / 4 < duration)
         {
             obj.transform.localScale = Vector3.Lerp(overshootRange, targetScale, time / duration);
             time += Time.deltaTime;

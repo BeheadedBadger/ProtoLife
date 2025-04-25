@@ -17,7 +17,7 @@ public class GameManager : MonoBehaviour
 
     public BuildModeObject selectedObj;
     public SoilObject selectedSoil;
-    public HexTile selectedHex;
+    public GameObject selectedHex;
 
     public float turnsSinceStart;
     float turnSpeed = 0.5f;

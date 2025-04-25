@@ -127,6 +127,8 @@ public class UI_Handler : MonoBehaviour
         {
             title.text = "";
             flavourText.text = "";
+            kingdomHolder.SetActive(false);
+            dietHolder.SetActive(false);
         }
 
         time.text = $"Day: {gameManager.days}  Month: {gameManager.months}  Year: {gameManager.years}";
