@@ -354,56 +354,6 @@ public class HexTile : MonoBehaviour
         coverFilled = (cover != null);
         stationaryFilled = (stationary != null);
         mobileFilled = (mobile != null);
-        /*
-                if (coverContainer.transform.childCount > 0)
-                {
-                    coverFilled = true;
-
-                    if (coverContainer.transform.childCount > 1)
-                    {
-                        for (int i = 0; i < coverContainer.transform.childCount; i++)
-                        {
-                            if (i != 0)
-                            {
-                                GameObject.Destroy(coverContainer.transform.GetChild(i).gameObject);
-                            }
-                        }
-                    }
-                }
-                else { coverFilled = false; }
-
-                if (stationaryContainer.transform.childCount > 0)
-                {
-                    if (stationaryContainer.transform.childCount > 1)
-                    {
-                        stationaryFilled = true;
-                        for (int i = 0; i < stationaryContainer.transform.childCount; i++)
-                        {
-                            if (i != 0)
-                            {
-                                GameObject.Destroy(stationaryContainer.transform.GetChild(i).gameObject);
-                            }
-                        }
-                    }
-                }
-                else { stationaryFilled = false; }
-
-                if (mobileContainer.transform.childCount > 0)
-                {
-                    mobileFilled = true;
-
-                    if (mobileContainer.transform.childCount > 1)
-                    {
-                        HexTile neighbour = neighboringHexTiles[UnityEngine.Random.Range(0, neighboringHexTiles.Count - 1)];
-                        if (mobile != null && neighbour.CheckIfPlacementIsPossible(mobile.lifeFormObject))
-                        {
-                            mobile.MoveTo(new List<HexTile> { neighbour }, "crowding");
-                            return;
-                        }
-                        return;
-                    }
-                }
-                else { mobileFilled = false; }*/
     }
 
     private void Highlight()
