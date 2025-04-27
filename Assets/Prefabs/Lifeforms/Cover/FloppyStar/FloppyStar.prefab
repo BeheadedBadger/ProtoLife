@@ -19823,6 +19823,7 @@ GameObject:
   m_Component:
   - component: {fileID: 40178423973236899}
   - component: {fileID: 1214856288257441697}
+  - component: {fileID: 8767343138150896928}
   m_Layer: 0
   m_Name: FloppyStar
   m_TagString: Untagged
@@ -20684,6 +20685,24 @@ MonoBehaviour:
     type: 3}
   lifespan: 0
   dead: 0
+--- !u!114 &8767343138150896928
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1857065530116232799}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5fea29bb7c508c244a1f805a5fd3fc4d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  outlineMode: 1
+  outlineColor: {r: 0.27559876, g: 0.26348343, b: 0.2924528, a: 1}
+  outlineWidth: 2
+  precomputeOutline: 0
+  bakeKeys: []
+  bakeValues: []
 --- !u!1 &1860175331951996251
 GameObject:
   m_ObjectHideFlags: 0

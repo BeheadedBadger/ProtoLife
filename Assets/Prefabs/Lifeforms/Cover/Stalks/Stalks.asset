@@ -1,0 +1,43 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f82f5a222ccd0494396f8eb81eab9806, type: 3}
+  m_Name: Stalks
+  m_EditorClassIdentifier: 
+  title: Stalks
+  description: 
+  objType: 1
+  unlocked: 0
+  prefab: {fileID: 3975671453043437103, guid: 6f80ea296e34e62449a6a7cc0e653cd6, type: 3}
+  sprite: {fileID: 0}
+  cost: 0
+  lifeCoinGeneration: 0
+  waterNeed: 7
+  soilTypes: 01000000020000000300000004000000
+  selected: 0
+  unlockCost: 0
+  lifeType: 0
+  kingdom: 0
+  lifeForm: {fileID: 3975671453043437103, guid: 6f80ea296e34e62449a6a7cc0e653cd6,
+    type: 3}
+  mobility: 0
+  damage: 0
+  maxHealth: 10
+  feedingRate: 10
+  foodSources: 04000000
+  lifeSpan: 100
+  procreationType: 0
+  procreationTime: 2
+  procreationRate: 3
+  materials:
+  - {fileID: 2100000, guid: cba665c7b1fac5c459d41e16c109296a, type: 2}
+  standardGenetics: []
+  standardColouration: 0
